@@ -1,0 +1,36 @@
+# Never commit generic documentation placeholder trees (AI agents sometimes create these literally)
+path/
+
+# Local / tooling (not for publication)
+.orchestrator/
+
+# Cursor agent skills (local; not published)
+.cursor/skills/
+
+# Codex / agent instructions (local; not published)
+AGENTS.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.venv/
+venv/
+
+# Aider (AI coding assistant artifacts)
+.aider*
+
+# Mis-placed alignment output (safety net if an agent writes at git root)
+alignment_result.json
+.alignment_result.json
+
+# Mis-placed workflow handoff (safety net if Aider writes at git root)
+handoff.md
+.handoff.md

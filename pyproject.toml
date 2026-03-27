@@ -1,0 +1,23 @@
+[project]
+name = "replayt-lifecycle-webhooks"
+version = "0.1.0"
+description = "Signed HTTP webhooks for replayt run and approval lifecycle events: Python project using replayt; see docs for scope."
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.6.0",
+  "pip-audit>=2.7.0",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]

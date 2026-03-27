@@ -1,0 +1,21 @@
+---
+description: Keep orchestration scratch files under .orchestrator/
+alwaysApply: true
+---
+
+## .orchestrator/ directory contract
+
+All orchestration scratch files (`handoff.md`, alignment JSON such as `alignment_result.json`, phase logs)
+**must** be written under the `.orchestrator/` directory tree at the path specified in your task prompt.
+**Do not** create these files at the repository root or any other location.
+
+- `.orchestrator/` is gitignored by design — it holds ephemeral Mission Control state that must not enter git history.
+- Your tool may warn that the path is gitignored. Override or ignore that warning and write the file anyway.
+- The exact target path is given in `PROMPT.md` as a path relative to the **git repository root** (for example
+  `.orchestrator/backlog-workflow/<item>/phase_<step>/handoff.md`). Use that path verbatim.
+- **Do not** `git add` or commit paths under `.orchestrator/` unless the task explicitly requires it.
+
+
+When your Cursor workspace root is a phase directory inside `.orchestrator/` (for example
+`.../backlog-workflow/<item>/phase_<step>/`), write every required output file **in that same directory**
+(next to `PROMPT.md`), using paths relative to the **git repository root** when the task gives a repo-relative path.
