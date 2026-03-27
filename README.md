@@ -2,9 +2,27 @@
 
 ## Overview
 
-This project builds on **[replayt](https://pypi.org/project/replayt/)**. Read
-**[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)** for positioning prompts, then
-**[docs/MISSION.md](docs/MISSION.md)** for scope and goals (stubs until you flesh them out).
+This project builds on **[replayt](https://pypi.org/project/replayt/)**. It declares a runtime dependency on
+**replayt `>=0.4.25`** (see `pyproject.toml`). Read **[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)**
+for positioning prompts, then **[docs/MISSION.md](docs/MISSION.md)** for scope and goals (stubs until you flesh them out).
+
+**Compatibility:** After `pip install -e ".[dev]"`, check the installed **replayt** with either:
+
+```bash
+pip show replayt
+```
+
+or:
+
+```bash
+python -c "import importlib.metadata as m; print(m.version('replayt'))"
+```
+
+**Upstream changes:** PyPI lists versions under [Release history](https://pypi.org/project/replayt/#history) on the
+[replayt project page](https://pypi.org/project/replayt/). This package does not mirror upstream release notes; use
+that history (and upstream’s own changelog or GitHub Releases when you need prose per release).
+
+**Report breakage:** Open an issue on [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues).
 
 ## Design principles
 
