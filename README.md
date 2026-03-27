@@ -6,7 +6,7 @@ This project builds on **[replayt](https://pypi.org/project/replayt/)**. It decl
 **replayt `>=0.4.25`** (see `pyproject.toml`). Read **[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)**
 for positioning prompts, then **[docs/MISSION.md](docs/MISSION.md)** for scope and goals (stubs until you flesh them out).
 
-**Compatibility:** After `pip install -e ".[dev]"`, check the installed **replayt** with either:
+**Compatibility:** After `pip install -e .` (or `pip install -e ".[dev]"` when you work in this repo), check the installed **replayt** with either:
 
 ```bash
 pip show replayt
