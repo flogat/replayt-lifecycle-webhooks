@@ -44,7 +44,7 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 
 **Headers:** **`handle_lifecycle_webhook_post`** accepts a **`Mapping[str, str]`** or an iterable of **`(name, value)`** pairs. Names are compared case-insensitively after lowercasing. If the same header name appears more than once, the **last** value wins after normalization (match common single-header usage; duplicate **`Replayt-Signature`** values are otherwise undefined—see **SPEC_WEBHOOK_SIGNATURE**).
 
-**JSON payload:** After verification, the body is decoded as UTF-8 and parsed with **`json.loads`**. The parsed value may be any JSON type; **`on_success`**, if provided, receives that value. Callers who require a JSON object should check **`isinstance(payload, dict)`** in **`on_success`** or in surrounding code.
+**JSON payload:** After verification, the body is decoded as UTF-8 and parsed with **`json.loads`**. The parsed value may be any JSON type; **`on_success`**, if provided, receives that value. Callers who require a JSON object should check **`isinstance(payload, dict)`** in **`on_success`** or in surrounding code. For **run** / **approval** lifecycle objects with stable **`event_type`** and **`summary`** fields, see **[EVENTS.md](EVENTS.md)**.
 
 ## WSGI adapter behavior
 
@@ -67,4 +67,5 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 ## Related docs
 
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification procedure, **401/403** guidance, v1 header format.
+- **[EVENTS.md](EVENTS.md)** — recommended JSON payload shapes after successful parse.
 - **[README.md](../README.md)** — copy-paste examples for **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`**.

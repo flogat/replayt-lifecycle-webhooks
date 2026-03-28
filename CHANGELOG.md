@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/EVENTS.md`:** lifecycle webhook JSON spec (phase **2**, backlog **Map replayt run and approval events to webhook payload shapes** / `076a56b7-afd9-4778-b46a-4dc8875a431f`) — common envelope (`event_type`, `occurred_at`, `event_id`, `correlation`, `summary`, `detail`), **run** and **approval** event registry, prohibited content, synthetic examples, acceptance rows **E1–E6**; cross-links **replayt** concepts without requiring core changes.
+
 ### Added
 
 - **Minimal HTTP POST handler (phase 3, backlog `6e1255ce`):** **`handle_lifecycle_webhook_post`** (framework-agnostic
