@@ -27,7 +27,7 @@ def _h2_section(text: str, title: str) -> str:
         return ""
     out: list[str] = []
     for line in lines[start:]:
-        if line.startswith("## ") and not line.startswith("###"):
+        if line.startswith("## "):
             break
         out.append(line)
     return "\n".join(out)
