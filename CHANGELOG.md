@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`src/replayt_lifecycle_webhooks/events.py`**, **`tests/test_lifecycle_events.py`** (phase **3**, backlog **Define typed lifecycle event payloads (run + approval)** /
+  `0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`): **`events`** module docstring documents **``schema_version``** and **1.0** payload semantics per **EVENTS.md**; **pytest** covers a missing required **`detail`** envelope field (**T4** / **T5**).
 - **`tests/test_replayt_dependency.py`** (phase **3**, backlog **Declare replayt dependency range and compatibility matrix** /
   `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`): asserts README **Compatibility matrix** pointer and dual-version issue reporting,
   **DESIGN_PRINCIPLES** link to **SPEC_REPLAYT_DEPENDENCY**, and the spec **Compatibility matrix** section includes the
