@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **README**; success metrics add **releases and versioning** (SemVer, `pyproject.toml`, changelog
   sections, PyPI); **DESIGN_PRINCIPLES** cross-reference uses a proper in-tree link.
 - **`docs/REPLAYT_ECOSYSTEM_IDEA.md`:** completed **Your choice** (core-gap pitch; pointers to **MISSION** and key specs).
+  Phase **5** (architecture review): **Your choice** references **taxonomy option 1 above** in plain text (section sign removed).
 - **`README.md`:** **Overview** reflects the **MISSION** ecosystem framing (consumer-side gap-fill) and points there for
   scope, success, and release expectations; project layout row updated.
 

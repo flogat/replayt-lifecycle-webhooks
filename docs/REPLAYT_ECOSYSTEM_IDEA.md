@@ -39,7 +39,7 @@ _Novel composition of replayt + other tools._
 
 ## Your choice
 
-- **Primary pattern:** **Core-gap** (§1) — normative statement and scope live in **[MISSION.md](MISSION.md)**.
+- **Primary pattern:** **Core-gap** (taxonomy option 1 above) — normative statement and scope live in **[MISSION.md](MISSION.md)**.
 - **One-paragraph pitch:** Replayt defines run and approval lifecycle **semantics** and HTTP **signing**; integrators still
   need a **small, tested** way to verify **`Replayt-Signature`** over the **raw body** before acting on JSON. This
   repository documents that consumer contract, ships verification (and optional minimal HTTP glue), and keeps **CI** and
