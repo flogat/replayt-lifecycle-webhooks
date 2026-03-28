@@ -84,6 +84,11 @@ The suite **must** include **network-free** **pytest** tests that fail when the 
 Other modules (**mission** doc anchors, **replayt** dependency doc checks, and so on) may coexist; they do **not** replace
 items **1**–**3**.
 
+4. **Public export surface** — Package root **`replayt_lifecycle_webhooks.__all__`** and **`replayt_lifecycle_webhooks.events.__all__`**
+   match **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** § **Supported import paths** (same names as the normative table);
+   documented **internal** module paths in § **Unsupported imports** remain importable. See backlog **`30e133a5`** below.
+   This item does **not** replace items **1**–**3**.
+
 When **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** is implemented, the suite **must** additionally
 include **network-free** tests that fail if the documented **POST** webhook path or **`GET /health`** (or the spec-chosen
 health path) regresses per checklist **S3**, **S4**, and **S6** in that document. Those tests **must not** replace items
@@ -169,6 +174,19 @@ These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
 | L6 | **`redact_mapping`** performs **shallow** redaction for at least one default sensitive key (e.g. **`token`**, **`secret`**, or **`api_key`**) and preserves non-sensitive keys unchanged. | Unit test |
 | L7 | **`extra_sensitive_keys`** causes a **non-default** mapping key to be redacted (lowercase comparison per spec). | Unit test |
 | L8 | At least one test uses **`caplog`**, a **`logging.Handler`**, or equivalent to capture formatted log output showing **`[REDACTED]`** for sensitive fields and **asserting the absence** of a representative **high-entropy secret substring** (for example a fake bearer token) in the captured text. | Unit test (e.g. **`tests/test_redaction.py`** or module name aligned with implementation) |
+
+## Backlog `30e133a5`: public API surface and deprecation policy
+
+Checklist rows for **Define public API surface and deprecation policy before 1.0**
+(`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). Normative contract: **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)**.
+These extend **§ Minimum behavioral coverage** item **4**; they do not replace **A1–A5**, **A6–A10**, **R1–R5**, or items **1**–**3**.
+
+| ID | Criterion | Verification |
+| -- | --------- | ------------ |
+| **API1** | Package root **`__all__`** is **exactly** the public name set in **SPEC_PUBLIC_API** § **Primary: package root** (table). | **`tests/test_public_api.py`** — **`test_package_root___all___matches_spec_table`**; **`test_package_root___all___names_are_importable`** |
+| **API1** (events) | **`replayt_lifecycle_webhooks.events`** **`__all__`** matches the **Events / parsing** row (same symbols as re-exported from the root). | **`tests/test_public_api.py`** — **`test_events___all___matches_spec_events_row`** |
+| **API2** | **SPEC_PUBLIC_API** § **Unsupported imports** module paths exist (internal until **1.0**). | **`tests/test_public_api.py`** — **`test_spec_lists_documented_internal_modules_as_importable`** |
+| **API3** | **SPEC_PUBLIC_API** § **Deprecation policy** documents **CHANGELOG** visibility (**Deprecated**), **minor** / **0.x** notice period, and related bullets. | **`tests/test_public_api.py`** — **`test_spec_public_api_deprecation_policy_mentions_changelog_and_notice`** |
 
 ## Related docs
 

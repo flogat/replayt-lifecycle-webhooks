@@ -24,7 +24,7 @@ import replayt_lifecycle_webhooks as rlw
 from replayt_lifecycle_webhooks import verify_lifecycle_webhook_signature, parse_lifecycle_webhook_event
 ```
 
-The authoritative list of **public** names is the package **`__all__`** in **`src/replayt_lifecycle_webhooks/__init__.py`**. The table below **must** stay in sync with that sequence (Builder + review: when you change `__all__`, update this spec **or** treat the omission as a spec bug).
+The authoritative list of **public** names is the package **`__all__`** in **`src/replayt_lifecycle_webhooks/__init__.py`**. The table below **must** stay in sync with that list and order (Builder + review: when you change `__all__`, update this spec **or** treat the omission as a spec bug). **`tests/test_public_api.py`** asserts the set matches this table.
 
 | Category | Public names (package root) |
 | -------- | --------------------------- |
@@ -114,4 +114,4 @@ At **1.0.0**, tighten policy as maintainers document (this spec should gain a **
 
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — principles **explicit contracts**, **small public surfaces**, **consumer-side maintenance**.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — stability at the **`replayt`** dependency seam (orthogonal to *this* package’s export surface).
-- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; optional future checks that **`__all__`** matches this spec may be added under a dedicated backlog.
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**.

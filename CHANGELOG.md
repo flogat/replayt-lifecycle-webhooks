@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Public API contract tests** (phase **3**, backlog **Define public API surface and deprecation policy before 1.0** /
+  `30e133a5-78fa-4eee-ae56-56a1af4c9f73`): **`tests/test_public_api.py`** asserts package root and **`events`** **`__all__`**
+  match **`docs/SPEC_PUBLIC_API.md`**, documented internal modules import, and deprecation policy anchors in the spec.
+  Package root **`__all__`** order aligned with that spec table.
+
 ### Documentation
 
 - **`docs/SPEC_PUBLIC_API.md`** (phase **2**, backlog **Define public API surface and deprecation policy before 1.0** /
