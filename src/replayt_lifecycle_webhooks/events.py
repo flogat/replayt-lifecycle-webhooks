@@ -3,17 +3,19 @@
 Use after :func:`replayt_lifecycle_webhooks.verify_lifecycle_webhook_signature` succeeds.
 
 **EVENTS.md** documents payload schema **1.0**. Optional ``schema_version`` may be ``\"1.0\"`` or omitted
-(equivalent to **1.0** per the spec). The field is not checked against an allowlist; treat unexpected
-values in application code until **EVENTS.md** defines more versions.
+(equivalent to **1.0** per the spec). If ``schema_version`` is present, it must be one of
+``SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`` (currently ``\"1.0\"`` only). Extend that set when **EVENTS.md**
+adds a new supported wire version and matching models.
 """
 
 from __future__ import annotations
 
 from typing import Annotated, Any, Literal, TypeAlias, Union
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, field_validator
 
 __all__ = [
+    "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
     "LIFECYCLE_WEBHOOK_EVENT_TYPES",
     "LifecycleCorrelation",
     "LifecycleWebhookEvent",
@@ -29,6 +31,25 @@ __all__ = [
     "RunStartedEvent",
     "parse_lifecycle_webhook_event",
 ]
+
+SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS: frozenset[str] = frozenset({"1.0"})
+
+
+class _LifecycleEnvelopeBase(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    schema_version: str | None = None
+
+    @field_validator("schema_version", mode="after")
+    @classmethod
+    def _schema_version_supported(cls, v: str | None) -> str | None:
+        if v is None:
+            return v
+        if v not in SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS:
+            allowed = ", ".join(sorted(SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS))
+            msg = f"unsupported lifecycle webhook schema_version {v!r}; use {allowed} or omit the field"
+            raise ValueError(msg)
+        return v
 
 
 class LifecycleCorrelation(BaseModel):
@@ -80,10 +101,7 @@ class ApprovalResolvedDetail(BaseModel):
     resolved_by_role: str | None = None
 
 
-class RunStartedEvent(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    schema_version: str | None = None
+class RunStartedEvent(_LifecycleEnvelopeBase):
     event_type: Literal["replayt.lifecycle.run.started"]
     occurred_at: str
     event_id: str
@@ -92,10 +110,7 @@ class RunStartedEvent(BaseModel):
     detail: RunStartedDetail
 
 
-class RunCompletedEvent(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    schema_version: str | None = None
+class RunCompletedEvent(_LifecycleEnvelopeBase):
     event_type: Literal["replayt.lifecycle.run.completed"]
     occurred_at: str
     event_id: str
@@ -104,10 +119,7 @@ class RunCompletedEvent(BaseModel):
     detail: RunCompletedDetail
 
 
-class RunFailedEvent(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    schema_version: str | None = None
+class RunFailedEvent(_LifecycleEnvelopeBase):
     event_type: Literal["replayt.lifecycle.run.failed"]
     occurred_at: str
     event_id: str
@@ -116,10 +128,7 @@ class RunFailedEvent(BaseModel):
     detail: RunFailedDetail
 
 
-class ApprovalPendingEvent(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    schema_version: str | None = None
+class ApprovalPendingEvent(_LifecycleEnvelopeBase):
     event_type: Literal["replayt.lifecycle.approval.pending"]
     occurred_at: str
     event_id: str
@@ -128,10 +137,7 @@ class ApprovalPendingEvent(BaseModel):
     detail: ApprovalPendingDetail
 
 
-class ApprovalResolvedEvent(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    schema_version: str | None = None
+class ApprovalResolvedEvent(_LifecycleEnvelopeBase):
     event_type: Literal["replayt.lifecycle.approval.resolved"]
     occurred_at: str
     event_id: str

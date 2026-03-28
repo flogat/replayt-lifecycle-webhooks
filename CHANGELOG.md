@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **`parse_lifecycle_webhook_event`** (phase **3**, backlog **Define canonical webhook payload and event envelope schema** /
+  `df51dbf9`): when **`schema_version`** is present it must be **`1.0`** (see **`SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`**);
+  omitted remains valid per **EVENTS.md**. Informative **`docs/schemas/lifecycle_webhook_payload-1-0.schema.json`** constrains
+  **`schema_version`** with **`enum`** when the key is sent.
+
+### Added
+
+- **`jsonschema`** in **`[project.optional-dependencies].dev`** and **pytest** checks that **`docs/schemas/lifecycle_webhook_payload-1-0.schema.json`**
+  parses and that **`tests/fixtures/events/*.json`** validate under Draft-07 (phase **3**, backlog **Define canonical webhook payload and event envelope schema** / `df51dbf9`).
+
+### Documentation
+
+- **`README.md`** (phase **5**, architecture review, backlog **Define canonical webhook payload and event envelope schema** /
+  `df51dbf9`): **Run / approval payload** paragraph notes **`parse_lifecycle_webhook_event`** and present **`schema_version`**
+  against **`SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`**.
+- **`docs/EVENTS.md`** (phase **3**, backlog **Define canonical webhook payload and event envelope schema** / `df51dbf9`): **T4**
+  documents unsupported **`schema_version`** as a validation failure.
+- **`docs/EVENTS.md`**, **`docs/schemas/lifecycle_webhook_payload-1-0.schema.json`**, **`README.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**
+  (phase **2**, same backlog): canonical **envelope** definition; **`schema_version`** **`MAJOR.MINOR`** rules; **breaking vs additive**
+  maintainer table; package SemVer alignment; informative JSON Schema for **`1.0`**-family payloads; cross-link from signing spec
+  (payload contract orthogonal to HMAC **v1**).
+
 ### Added
 
 - **`tests/test_replayt_boundary.py`**, **`replayt_boundary`** pytest marker in **`pyproject.toml`** (phase **3**, backlog **Ship

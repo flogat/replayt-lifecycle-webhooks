@@ -4,6 +4,7 @@
 
 - Map replayt run and approval events to webhook payload shapes (`076a56b7-afd9-4778-b46a-4dc8875a431f`).
 - Define typed lifecycle event payloads (run + approval) (`0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`).
+- Define canonical webhook payload and event envelope schema (Mission Control `df51dbf9`; phase **2** spec refinement).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators, operators.
 
@@ -13,11 +14,25 @@ This document defines a **recommended JSON object model** for HTTP POST bodies t
 lifecycle notifications, after **`Replayt-Signature`** verification succeeds. It exists so downstream systems get
 **predictable fields** for routing, idempotency, dashboards, and **human-readable digests** (Slack, email, PM tools).
 
+**Canonical contract:** one JSON **object** per POST (the **event envelope**), sharing top-level keys (**`event_type`**,
+**`occurred_at`**, **`event_id`**, **`correlation`**, **`summary`**, **`detail`**, optional **`schema_version`**). **`detail`**
+holds the **event-specific** fields; **`event_type`** selects the expected **`detail`** shape. Run-category and
+approval-category kinds are both **required** surface area for this spec (see **Event registry**).
+
+### Backlog acceptance mapping (`df51dbf9`)
+
+| Backlog criterion | Where addressed |
+| ----------------- | --------------- |
+| Documented schema covers **run** and **approval** lifecycle kinds | **Event registry** (three run + two approval `event_type` values) and matching **`detail`** tables |
+| **Version** field or semantic strategy for payload evolution | **`schema_version`** in **Common envelope**; **Payload schema versioning** (below); independent of signing **v1** |
+| **Breaking** vs **additive** changes for future releases | **Breaking vs additive changes** (below); **CHANGELOG.md** + package SemVer (below) |
+
 | Topic | Where it lives |
 | ----- | -------------- |
 | **Integrity of the HTTP payload** (raw body + `Replayt-Signature`) | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**, **[reference-documentation/REPLAYT_WEBHOOK_SIGNING.md](reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)** |
 | **When events fire in the product** (workflow semantics) | **replayt** upstream documentation and runtime behavior — this repo **does not** redefine those moments |
 | **Field names and examples below** | **Normative for integrators** who adopt this package’s documented payload contract; senders (automation or bridges) should emit compatible JSON when claiming compatibility with this spec |
+| **Machine-readable JSON Schema (informative)** | **[schemas/lifecycle_webhook_payload-1-0.schema.json](schemas/lifecycle_webhook_payload-1-0.schema.json)** — mirrors the **`1.0`**-family shapes; if it disagrees with this file, **EVENTS.md** is authoritative |
 
 Upstream **replayt** `0.4.25` does not publish a single canonical HTTP webhook JSON schema in the installed package.
 This spec is a **consumer-side contract** maintained here: it **cross-references** replayt concepts (workflows, runs,
@@ -263,16 +278,60 @@ All identifiers and text below are **fabricated** for documentation.
   If upstream later publishes an official wire schema, maintainers should align **EVENTS.md**, models, fixtures, and
   **CHANGELOG.md** with that authority.
 
-## Schema versioning and migration
+## Payload schema versioning and migration
 
-- **`schema_version`** (optional on the wire, see **Common envelope**) labels the payload shape described here (e.g.
-  **`1.0`**). Omitting it means “assume behavior described for **`1.0`**” unless a future revision says otherwise.
-- The **Python** implementation MUST document supported schema version(s) in the **`replayt_lifecycle_webhooks.events`**
-  module docstring and/or on the shared envelope model (for example via `Field(description=...)`).
-- **Breaking** changes (removed fields, changed requiredness, renamed `event_type` values, or incompatible **`detail`**
-  shapes) require **CHANGELOG.md** **Unreleased** notes and updates to **EVENTS.md** and JSON fixtures before release.
-- **Additive** changes (new optional fields, new **`event_type`** rows) follow the same documentation and changelog
-  discipline; extend the **Event registry** and acceptance rows accordingly.
+### `schema_version` on the wire
+
+- **Field:** optional string on the **envelope** (see **Common envelope**). It labels the **JSON field contract** in
+  this document, **not** the HMAC signing scheme (**[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** **v1** is
+  orthogonal: signing operates on **raw bytes** regardless of `schema_version`).
+- **Format:** **`MAJOR.MINOR`**, each segment a non-negative integer (e.g. **`1.0`**, **`1.1`**, **`2.0`**). This spec
+  does **not** use a third **PATCH** segment on the wire unless a future revision introduces one; editorial doc fixes
+  alone do not imply a new payload version.
+- **Initial family:** **`1.0`**. If **`schema_version`** is **omitted**, consumers of this package SHOULD treat the
+  payload as the **`1.0`** behavior described here until **EVENTS.md** defines a different default for a newer era.
+
+### Semver-style rules for payload evolution
+
+- **MAJOR** bump (e.g. **`1.x` → `2.0`**): **breaking** JSON changes (see **Breaking vs additive changes**). Integrators
+  MUST upgrade parsers, reject unknown majors, or dead-letter per policy—**no** silent partial acceptance.
+- **MINOR** bump (e.g. **`1.0` → `1.1`**): **additive** only—new **optional** fields, new **`event_type`** registry rows,
+  or documentation that tightens guidance **without** removing or retyping existing documented fields. Valid **`1.0`**
+  payloads remain valid inputs for a **`1.1`** consumer when new fields are absent.
+
+### Relationship to **`replayt-lifecycle-webhooks`** (package SemVer)
+
+Public API and contracts follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html) as declared in
+**CHANGELOG.md**. Maintainers SHOULD align bumps as follows (guidance, not a substitute for judgment):
+
+| Payload / parser change | Typical package bump |
+| ----------------------- | --------------------- |
+| **Breaking** wire or **breaking** strictness in **`parse_lifecycle_webhook_event`** | **MAJOR** |
+| **Additive** wire fields or new **`event_type`** support in models | **MINOR** |
+| Doc-only clarification, same acceptance behavior | **PATCH** |
+
+### Python implementation notes
+
+The **`replayt_lifecycle_webhooks.events`** module MUST keep supported payload / **`schema_version`** expectations
+visible in its module docstring and/or model field descriptions, per **T5** in acceptance criteria below.
+
+## Breaking vs additive changes
+
+Use this table when extending the contract or reviewing sender/receiver upgrades:
+
+| Class | Examples (non-exhaustive) | Maintainer action |
+| ----- | ------------------------- | ------------------- |
+| **Breaking** | Removing a documented field; renaming an **`event_type`** string; changing a field’s JSON type; tightening **required** on **`detail`** or **`correlation`**; redefining the meaning of an existing value | Bump payload **`schema_version` MAJOR**; update **EVENTS.md**, **[schemas/lifecycle_webhook_payload-1-0.schema.json](schemas/lifecycle_webhook_payload-1-0.schema.json)** (or add a new schema file for the new major), Pydantic models, fixtures; **CHANGELOG.md** **Unreleased** with **migration** notes; plan package **MAJOR** if strict parsing rejects old payloads |
+| **Additive** | New optional envelope or **`detail`** field; new **`event_type`** with its own **`detail`** shape; new optional **`correlation`** key | Bump payload **`schema_version` MINOR** (document in **CHANGELOG**); extend **Event registry**, examples, and schema; package **MINOR** when new types or parse paths ship |
+
+**Integrator policy:** Unknown **`schema_version`** **MAJOR** (e.g. receiver knows only **`1.*`** and sees **`2.0`**) should be **rejected** or **quarantined** after verification—not partially parsed.
+
+## Machine-readable JSON Schema (informative)
+
+**[schemas/lifecycle_webhook_payload-1-0.schema.json](schemas/lifecycle_webhook_payload-1-0.schema.json)** is a
+**Draft-07** JSON Schema **`oneOf`** over the six documented **`event_type`** values. It is intended for **non-Python**
+tooling (OpenAPI generators, validators in other languages). **Normative** field rules remain the prose tables and
+examples in **this document**; when the schema drifts, fix the schema or regenerate it from **EVENTS.md**.
 
 ## Typed Python representation (normative package API)
 
@@ -309,7 +368,7 @@ Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; *
 | T1 | Public **`parse_lifecycle_webhook_event`** validates a **`dict`**-like JSON object and returns a typed union discriminated by **`event_type`**. | Unit tests + **`__all__`** / import review. |
 | T2 | Exported types cover at minimum **one run** and **one approval** **`event_type`**; **E1** compliance requires **all** registry rows. | Model/module review + fixtures. |
 | T3 | **JSON fixtures** under **`tests/fixtures/events/`** (one file per documented **`event_type`** when **E1** is satisfied); tests parse each fixture through **`parse_lifecycle_webhook_event`** without error. | **pytest** |
-| T4 | Invalid **`detail`** for a known **`event_type`**, unknown **`event_type`**, or missing required **envelope** / **`correlation`** fields produce **`pydantic.ValidationError`** (or documented equivalent); covered by tests. | **pytest** |
+| T4 | Invalid **`detail`** for a known **`event_type`**, unknown **`event_type`**, unsupported **`schema_version`** when present, or missing required **envelope** / **`correlation`** fields produce **`pydantic.ValidationError`** (or documented equivalent); covered by tests. | **pytest** |
 | T5 | Supported payload / **`schema_version`** expectations are visible in **`events`** module docstrings and/or model fields. | Doc review |
 | T6 | **[README.md](../README.md)** links to **replayt** upstream for **semantics** and states that **wire JSON** is normative in **EVENTS.md** until upstream publishes an official HTTP schema. | Doc review |
 | T7 | User-visible parsing or shape changes appear under **CHANGELOG.md** **Unreleased** (or release section) with migration notes when shapes change. | Release hygiene |
@@ -322,3 +381,4 @@ Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; *
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional handler that verifies then parses JSON.
 - **[MISSION.md](MISSION.md)** — run vs approval scope and consumer responsibilities.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — **replayt** version floor.
+- **[schemas/lifecycle_webhook_payload-1-0.schema.json](schemas/lifecycle_webhook_payload-1-0.schema.json)** — informative Draft-07 schema.

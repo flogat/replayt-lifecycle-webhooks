@@ -7,6 +7,7 @@ import hmac
 import json
 from pathlib import Path
 
+import jsonschema
 import pytest
 from pydantic import ValidationError
 
@@ -18,10 +19,13 @@ from replayt_lifecycle_webhooks import (
 )
 from replayt_lifecycle_webhooks.events import (
     LIFECYCLE_WEBHOOK_EVENT_TYPES,
+    SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS,
     parse_lifecycle_webhook_event,
 )
 
+_REPO_ROOT = Path(__file__).resolve().parents[1]
 _FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures" / "events"
+_LIFECYCLE_SCHEMA_PATH = _REPO_ROOT / "docs" / "schemas" / "lifecycle_webhook_payload-1-0.schema.json"
 _SECRET = "fixture-verify-secret"
 
 
@@ -98,6 +102,49 @@ def test_registry_matches_documented_event_types() -> None:
         "replayt.lifecycle.approval.pending",
         "replayt.lifecycle.approval.resolved",
     )
+
+
+def test_supported_schema_versions_match_events_spec() -> None:
+    assert SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS == frozenset({"1.0"})
+
+
+def test_parse_accepts_omitted_schema_version() -> None:
+    data = json.loads((_FIXTURES_DIR / "run_started.json").read_bytes())
+    del data["schema_version"]
+    event = parse_lifecycle_webhook_event(data)
+    assert event.schema_version is None
+    assert event.event_type == "replayt.lifecycle.run.started"
+
+
+@pytest.mark.parametrize(
+    "bad_version",
+    ["2.0", "1.0.0", "v1.0", "1"],
+)
+def test_parse_rejects_unsupported_schema_version(bad_version: str) -> None:
+    data = json.loads((_FIXTURES_DIR / "run_started.json").read_bytes())
+    data["schema_version"] = bad_version
+    with pytest.raises(ValidationError):
+        parse_lifecycle_webhook_event(data)
+
+
+def test_informative_lifecycle_schema_is_valid_json() -> None:
+    raw = _LIFECYCLE_SCHEMA_PATH.read_bytes()
+    schema = json.loads(raw)
+    assert schema["$schema"] == "http://json-schema.org/draft-07/schema#"
+
+
+def test_event_fixtures_validate_against_informative_json_schema() -> None:
+    schema = json.loads(_LIFECYCLE_SCHEMA_PATH.read_text(encoding="utf-8"))
+    validator = jsonschema.Draft7Validator(schema)
+    for name in (
+        "run_started.json",
+        "run_completed.json",
+        "run_failed.json",
+        "approval_pending.json",
+        "approval_resolved.json",
+    ):
+        data = json.loads((_FIXTURES_DIR / name).read_bytes())
+        validator.validate(data)
 
 
 def test_parse_rejects_non_object() -> None:

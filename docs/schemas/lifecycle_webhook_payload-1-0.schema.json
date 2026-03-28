@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:replayt-lifecycle-webhooks:docs:schemas:lifecycle_webhook_payload-1-0",
+  "title": "Replayt-compatible lifecycle webhook JSON body (schema_version 1.0 family)",
+  "description": "Informative JSON Schema mirroring docs/EVENTS.md tables for integrators who do not use Python. If this file disagrees with EVENTS.md, EVENTS.md is normative; file a maintainer fix.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "event_type",
+        "occurred_at",
+        "event_id",
+        "correlation",
+        "summary",
+        "detail"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "enum": ["1.0"],
+          "description": "Optional per EVENTS.md; if present must be 1.0 for this schema artifact"
+        },
+        "event_type": { "const": "replayt.lifecycle.run.started" },
+        "occurred_at": { "type": "string", "description": "RFC 3339 timestamp" },
+        "event_id": { "type": "string" },
+        "summary": { "type": "string" },
+        "correlation": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["run_id", "workflow_id"],
+          "properties": {
+            "run_id": { "type": "string" },
+            "workflow_id": { "type": "string" },
+            "approval_request_id": { "type": "string" },
+            "deployment_id": { "type": "string" }
+          }
+        },
+        "detail": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["workflow_name"],
+          "properties": {
+            "workflow_name": { "type": "string" },
+            "trigger": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "event_type",
+        "occurred_at",
+        "event_id",
+        "correlation",
+        "summary",
+        "detail"
+      ],
+      "properties": {
+        "schema_version": { "type": "string", "enum": ["1.0"] },
+        "event_type": { "const": "replayt.lifecycle.run.completed" },
+        "occurred_at": { "type": "string" },
+        "event_id": { "type": "string" },
+        "summary": { "type": "string" },
+        "correlation": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["run_id", "workflow_id"],
+          "properties": {
+            "run_id": { "type": "string" },
+            "workflow_id": { "type": "string" },
+            "approval_request_id": { "type": "string" },
+            "deployment_id": { "type": "string" }
+          }
+        },
+        "detail": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["workflow_name", "outcome"],
+          "properties": {
+            "workflow_name": { "type": "string" },
+            "outcome": { "const": "success" },
+            "duration_ms": { "type": "integer" }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "event_type",
+        "occurred_at",
+        "event_id",
+        "correlation",
+        "summary",
+        "detail"
+      ],
+      "properties": {
+        "schema_version": { "type": "string", "enum": ["1.0"] },
+        "event_type": { "const": "replayt.lifecycle.run.failed" },
+        "occurred_at": { "type": "string" },
+        "event_id": { "type": "string" },
+        "summary": { "type": "string" },
+        "correlation": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["run_id", "workflow_id"],
+          "properties": {
+            "run_id": { "type": "string" },
+            "workflow_id": { "type": "string" },
+            "approval_request_id": { "type": "string" },
+            "deployment_id": { "type": "string" }
+          }
+        },
+        "detail": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["workflow_name", "error_code", "error_message"],
+          "properties": {
+            "workflow_name": { "type": "string" },
+            "error_code": { "type": "string" },
+            "error_message": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "event_type",
+        "occurred_at",
+        "event_id",
+        "correlation",
+        "summary",
+        "detail"
+      ],
+      "properties": {
+        "schema_version": { "type": "string", "enum": ["1.0"] },
+        "event_type": { "const": "replayt.lifecycle.approval.pending" },
+        "occurred_at": { "type": "string" },
+        "event_id": { "type": "string" },
+        "summary": { "type": "string" },
+        "correlation": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["run_id", "workflow_id"],
+          "properties": {
+            "run_id": { "type": "string" },
+            "workflow_id": { "type": "string" },
+            "approval_request_id": { "type": "string" },
+            "deployment_id": { "type": "string" }
+          }
+        },
+        "detail": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["step_name"],
+          "properties": {
+            "step_name": { "type": "string" },
+            "policy_hint": { "type": "string" }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "event_type",
+        "occurred_at",
+        "event_id",
+        "correlation",
+        "summary",
+        "detail"
+      ],
+      "properties": {
+        "schema_version": { "type": "string", "enum": ["1.0"] },
+        "event_type": { "const": "replayt.lifecycle.approval.resolved" },
+        "occurred_at": { "type": "string" },
+        "event_id": { "type": "string" },
+        "summary": { "type": "string" },
+        "correlation": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["run_id", "workflow_id"],
+          "properties": {
+            "run_id": { "type": "string" },
+            "workflow_id": { "type": "string" },
+            "approval_request_id": { "type": "string" },
+            "deployment_id": { "type": "string" }
+          }
+        },
+        "detail": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["step_name", "decision"],
+          "properties": {
+            "step_name": { "type": "string" },
+            "decision": { "enum": ["approved", "rejected"] },
+            "resolved_by_role": { "type": "string" }
+          }
+        }
+      }
+    }
+  ]
+}
