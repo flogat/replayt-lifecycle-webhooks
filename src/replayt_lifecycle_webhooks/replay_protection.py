@@ -49,8 +49,16 @@ def ensure_occurred_at_within_replay_window(
     **``delta < -max_event_age_seconds``** or **``delta > max_future_skew_seconds``**.
 
     **``now``** must be timezone-aware (converted to UTC for the comparison).
+
+    Malformed **``occurred_at``** strings raise :exc:`ReplayFreshnessRejected` so HTTP handlers can map them to the same
+    stable **422** path as out-of-window instants (no uncaught parse errors).
     """
-    instant = _parse_rfc3339_instant(occurred_at)
+    try:
+        instant = _parse_rfc3339_instant(occurred_at)
+    except ValueError as exc:
+        raise ReplayFreshnessRejected(
+            "occurred_at is not a valid RFC 3339 instant"
+        ) from exc
     now_utc = now.astimezone(timezone.utc)
     delta = (instant - now_utc).total_seconds()
     if delta < -max_event_age_seconds or delta > max_future_skew_seconds:

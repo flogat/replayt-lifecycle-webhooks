@@ -62,6 +62,35 @@ def test_ensure_occurred_at_rejects_too_far_future() -> None:
         )
 
 
+def test_ensure_occurred_at_rejects_unparseable_instant() -> None:
+    now = datetime(2026, 3, 28, 15, 0, 0, tzinfo=timezone.utc)
+    with pytest.raises(ReplayFreshnessRejected):
+        ensure_occurred_at_within_replay_window(
+            "not-a-valid-rfc3339-instant",
+            now=now,
+            max_event_age_seconds=900.0,
+            max_future_skew_seconds=300.0,
+        )
+
+
+def test_rp4b_malformed_occurred_at_replay_rejected_not_uncaught() -> None:
+    """Invalid **``occurred_at``** must not escape as **``ValueError``** when freshness checks run."""
+    data = json.loads((_FIXTURES_DIR / "run_started.json").read_bytes())
+    data["occurred_at"] = "not-a-valid-rfc3339-instant"
+    raw = json.dumps(data, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+    header = _sign(raw)
+    result = handle_lifecycle_webhook_post(
+        secret=_SECRET,
+        method="POST",
+        body=raw,
+        headers={LIFECYCLE_WEBHOOK_SIGNATURE_HEADER: header},
+        replay_policy=LifecycleWebhookReplayPolicy(),
+    )
+    assert result.status == HTTPStatus.UNPROCESSABLE_ENTITY
+    err = json.loads(result.body.decode("utf-8"))
+    assert err["error"] == "replay_rejected"
+
+
 def test_in_memory_dedup_store_ttl_allows_reclaim_after_expiry() -> None:
     t0 = datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
     clock: list[datetime] = [t0]

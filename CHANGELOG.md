@@ -43,6 +43,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Replay freshness helper** (phase **6** security review, backlog **Add replay protection and idempotency hooks for deliveries** /
+  `f9677140-0803-41c7-9d1c-82fc85f25f8d`): **`ensure_occurred_at_within_replay_window`** now raises **`ReplayFreshnessRejected`**
+  when **`occurred_at`** is not a parseable RFC 3339 instant, instead of letting **`ValueError`** escape (which could surface
+  as an unhandled server error when **`replay_policy`** freshness checks are enabled on **`handle_lifecycle_webhook_post`**).
+
 - **`format_safe_webhook_log_extra`** (phase **5** architecture review, same backlog **`fa75ecf3`**): removed an unused
   **`extra_sensitive_keys`** keyword argument (it was ignored). Use **`redact_mapping(..., extra_sensitive_keys=...)`** for
   non-header fields in **`Logger.*(..., extra={...})`**.
