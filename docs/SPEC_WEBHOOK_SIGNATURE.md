@@ -68,7 +68,7 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
 | Topic | Policy (v1) |
 | ----- | ----------- |
 | **Clock skew** | **Not applicable** to MAC verification alone: v1 does **not** include a normative timestamp in the signed material or required headers. |
-| **Replay / freshness** | **Out of contract for v1.** Integrators who need bounded replay windows must enforce **application-level** controls (e.g. event IDs, idempotency stores, optional middleware that checks a future upstream timestamp if one is added to the contract). Normative **`event_id`** and dedupe guidance: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**. |
+| **Replay / freshness** | **Out of contract for v1 MAC.** Integrators who need bounded replay windows enforce **application-level** controls **after** verification: normative **`event_id`** dedupe **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; freshness (**`occurred_at`** vs **`now`**), optional headers, dedupe store protocol, and test bar **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**. |
 | **If upstream adds a timestamp later** | Update **[`REPLAYT_WEBHOOK_SIGNING.md`](reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)**, this spec, and **CHANGELOG.md**; add **unit tests** for **acceptable skew** and **rejection of expired** (or stale) deliveries **without** real time/network (inject clock or fixed instants). Until then, acceptance criteria that mention “expired/skewed timestamp” are **N/A**.
 
 ### Verification procedure (integrators)
@@ -176,5 +176,6 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H8**.
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — dev **sender** contract; signing **must** stay **v1**-compatible with this spec.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator-facing JSON error envelope, **`error`** codes, post-verify failures, replay/freshness notes for v1.
+- **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — post-verify replay protection, **`occurred_at`** windows, optional wire headers, **`LifecycleWebhookDedupStore`**.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — **replayt** version floor and bump policy.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — small public surfaces and explicit contracts.

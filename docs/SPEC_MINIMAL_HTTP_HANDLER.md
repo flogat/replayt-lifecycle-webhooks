@@ -69,6 +69,11 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 | **H7** | **`on_success`** runs only after verification and successful JSON parse. | **`test_on_success_called_after_verify`** |
 | **H8** | Client error bodies match **SPEC_WEBHOOK_FAILURE_RESPONSES** stable codes and operator-facing **`message`** strings. | **`test_h8_error_messages_match_failure_response_spec`** |
 
+When **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** is implemented, optional handler parameters (**dedupe
+store**, **replay policy**, injectable **`now`**) **may** extend this table with additional rows (e.g. **H9**–**H11**)
+for **422** **`replay_rejected`** on stale **`occurred_at`** and **204** on idempotent duplicate **`event_id`** hits;
+until then, integrators apply replay/idempotency logic inside **`on_success`** or outer wrappers per that spec.
+
 ## Related docs
 
 - **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — optional **reference server**: one documented
@@ -79,4 +84,5 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON contract and typed parsing after a successful parse (see **README**).
 - **[README.md](../README.md)** — copy-paste examples for **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`**.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable JSON **`error`** codes, HTTP mapping, and logging boundaries for operators.
+- **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — optional post-verify freshness, dedupe store, handler hooks (**RP2**, future **H9+**).
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction helpers when logging headers or structured metadata.

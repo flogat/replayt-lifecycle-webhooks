@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_REPLAY_PROTECTION.md`** (phase **2**, backlog **Add replay protection and idempotency hooks for deliveries** /
+  `f9677140-0803-41c7-9d1c-82fc85f25f8d`): normative contract for **stale capture** vs **benign duplicate** delivery;
+  post-MAC processing order; **`occurred_at`** freshness with recommended **900s** max age and **300s** future skew;
+  reserved optional **`Replayt-Delivery-Id`**, **`Replayt-Webhook-Timestamp`**, **`Replayt-Nonce`** headers;
+  **`LifecycleWebhookDedupStore`** + **`InMemoryLifecycleWebhookDedupStore`** requirements; optional
+  **`handle_lifecycle_webhook_post`** extension points; acceptance **RP0**–**RP5** (tests **pending** phase **3**).
+  Cross-links from **README**, **MISSION**, **DESIGN_PRINCIPLES**, **SPEC_DELIVERY_IDEMPOTENCY**, **SPEC_WEBHOOK_SIGNATURE**,
+  **SPEC_MINIMAL_HTTP_HANDLER**, **SPEC_WEBHOOK_FAILURE_RESPONSES**, **SPEC_AUTOMATED_TESTS** (new **Backlog `f9677140`** table).
+
 ### Added
 
 - **Structured logging redaction** (phase **3**, backlog **Add structured logging helper that redacts sensitive keys by default** /

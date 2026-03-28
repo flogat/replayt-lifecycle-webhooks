@@ -1,6 +1,6 @@
 # Spec: delivery guarantees, `event_id`, and consumer idempotency
 
-**Backlog:** Specify idempotency and replay-safe delivery semantics (`4280c054-4193-4754-8e4c-1da320975fac`).  
+**Backlogs:** Specify idempotency and replay-safe delivery semantics (`4280c054-4193-4754-8e4c-1da320975fac`); **replay protection hooks** (`f9677140-0803-41c7-9d1c-82fc85f25f8d`) — see **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.  
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators, operators.
 
 ## Purpose
@@ -22,7 +22,7 @@ semantics** and **idempotency policy** that span envelope fields, verification, 
 | **At-least-once on the wire** | **Assume yes.** Integrators SHOULD design handlers so **duplicate** HTTP POSTs of the **same** logical notification do not cause duplicate **side effects** (double approvals in **your** systems, duplicate tickets, duplicate metrics increments). This repository does **not** implement upstream delivery or HTTP client retry policy; it documents what **consumers** should expect. |
 | **Exactly-once** | **Not guaranteed** between sender and consumer. Achieve **effectively-once** processing with an **application-level idempotency store** (see below). |
 | **Ordering** | **Not guaranteed** across events. Use **`occurred_at`** (and your own ordering keys) for dashboards only unless upstream documents a stronger ordering contract. |
-| **Freshness / anti-replay of old captures** | **Not part of HMAC v1.** Verification proves **integrity** with the shared secret, not that the POST is “new.” Bounded freshness requires **application policy** (TTL on idempotency records, optional future signed timestamps—see **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**). |
+| **Freshness / anti-replay of old captures** | **Not part of HMAC v1.** Verification proves **integrity** with the shared secret, not that the POST is “new.” Bounded freshness and optional header/nonce hooks live in **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** (payload **`occurred_at`**, clock skew, pluggable store). **SPEC_WEBHOOK_SIGNATURE** summarizes MAC scope. |
 
 **Stronger guarantees:** If replayt or a compatible sender later documents **stronger** delivery semantics (e.g. dedupe
 headers, signed timestamps), this repo SHOULD align **EVENTS.md**, **CHANGELOG.md**, and tests in a **minor** or **major**
@@ -107,13 +107,13 @@ silently.
 ## Relationship to signing v1 and “replay”
 
 - **HMAC v1** does **not** embed a nonce or timestamp in the signed bytes. An attacker with an **old** captured POST can
-  replay it until you rotate the secret. **Consumer idempotency** and optional **freshness windows** (e.g. reject
-  **`occurred_at`** older than *N* minutes **after** verification) are **application-layer** defenses—see
-  **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** and **SPEC_WEBHOOK_FAILURE_RESPONSES** (**stale timestamp /
-  replay** tables).
+  replay it until you rotate the secret. **Consumer idempotency** (this document) and **freshness / optional wire hooks**
+  (**[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**) are **application-layer** defenses **after** MAC
+  verification. **SPEC_WEBHOOK_FAILURE_RESPONSES** documents **`replay_rejected`** for policy failures.
 
-- **Duplicate delivery** (sender or network retries the **same** body) is **benign** if idempotency is correct; **replay
-  of a different old event** is a **threat** if freshness is not enforced—do not conflate the two in runbooks.
+- **Duplicate delivery** (sender or network retries the **same** body / **`event_id`**) is **benign** if idempotency is
+  correct (**2xx** ack); **stale capture replay** (valid MAC, unacceptable age) should be **rejected** per
+  **SPEC_REPLAY_PROTECTION**—do not conflate the two in runbooks.
 
 ## Implementation status (this repository)
 
@@ -138,6 +138,8 @@ Use with Spec gate and later phases.
 ## Related docs
 
 - **[EVENTS.md](EVENTS.md)** — envelope fields, **`event_type`** registry, **`schema_version`**.
-- **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification before JSON; v1 replay/freshness limits.
+- **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness (**`occurred_at`**), clock skew, optional headers,
+  dedupe store protocol, test rows **RP4**/**RP5**.
+- **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification before JSON; v1 MAC scope (no wire timestamp).
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — **`replay_rejected`**, logging **`event_id`** safely.
 - **[README.md](../README.md)** — operator entry and troubleshooting.

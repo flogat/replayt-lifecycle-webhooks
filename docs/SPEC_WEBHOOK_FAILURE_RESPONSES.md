@@ -117,14 +117,14 @@ correct.
 | -------- | ------------ | -------------- | ---- |
 | Unknown **`event_type`** | **422** (recommended) or **400** | `unknown_event_type` | Parsed JSON does not match **[EVENTS.md](EVENTS.md)** registry (e.g. **`parse_lifecycle_webhook_event`** raises). Pick one policy per deployment; **422** signals “syntax OK, semantics not supported.” |
 | JSON type wrong for pipeline (e.g. array instead of object) | **400** | `invalid_payload_shape` | Valid JSON but not the expected top-level object for lifecycle events. |
-| Replay, duplicate **`event_id`**, or **freshness** outside integrator window | **422** (recommended) or **409** | `replay_rejected` | **Application-level** idempotency or time window (**not** part of v1 MAC); see below. |
+| Replay, duplicate **`event_id`**, or **freshness** outside integrator window | **422** (recommended) or **409** | `replay_rejected` | **Application-level** idempotency or time window (**not** part of v1 MAC); normative split between **benign duplicate** (**2xx**) vs **policy reject** documented in **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** and **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**. |
 
 ### Stale timestamp / replay (v1 MAC contract)
 
 | Topic | Spec |
 | ----- | ---- |
 | **v1 signing (this repo today)** | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — there is **no** normative timestamp **inside** the signed material for v1. MAC verification alone does **not** prove freshness. |
-| **Operator runbooks** | Still document **`replay_rejected`** (or **`stale_delivery`** as an alias code **only if** you document both as equivalent) for **your** deduplication store, **`event_id`** replay windows, or **future** upstream timestamp headers. Dedupe keys and TTL starting points: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**. |
+| **Operator runbooks** | Still document **`replay_rejected`** (or **`stale_delivery`** as an alias code **only if** you document both as equivalent) for **your** deduplication store, **`event_id`** replay windows, **`occurred_at`** freshness, or **future** upstream timestamp headers. Dedupe keys and TTL: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; freshness parameters and hooks: **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**. |
 | **If upstream adds a signed timestamp later** | Update **SPEC_WEBHOOK_SIGNATURE**, **REPLAYT_WEBHOOK_SIGNING.md**, and this file; add tests with injected clocks; map wire failures to **`replay_rejected`** or a dedicated stable code (e.g. **`timestamp_skew`**) in a minor release. |
 
 ## What not to log or return (normative)
@@ -174,3 +174,4 @@ wrappers may still extend responses (for example **`request_id`**) per the optio
 - **[EVENTS.md](EVENTS.md)** — supported **`event_type`** values; unknown types after verify.
 - **[README.md](../README.md)** — integrator entry and operator runbook pointer.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — tested redaction helpers and integrator extension points.
+- **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — when to use **`replay_rejected`** vs idempotent **2xx** for duplicates.

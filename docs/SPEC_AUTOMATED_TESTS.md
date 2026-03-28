@@ -10,6 +10,8 @@
   **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** and **Backlog `fa75ecf3`** below.
 - Delivery idempotency and **`event_id`** (`4280c054-4193-4754-8e4c-1da320975fac`) — acceptance **I3**/**I4** in
   **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; **`tests/test_lifecycle_events.py`** and packaged duplicate fixture under **Backlog `4280c054`** below.
+- Replay protection and idempotency hooks (`f9677140-0803-41c7-9d1c-82fc85f25f8d`) — acceptance **RP4**/**RP5** in
+  **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**; **Backlog `f9677140`** table below (**RP5** overlaps **I4**).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -30,6 +32,7 @@ behavioral coverage.
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
+| Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
 | **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | Structured logging + redaction (**L1–L8**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
@@ -94,6 +97,10 @@ When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.
 additionally include **network-free** tests that satisfy checklist **L1–L8** under **Backlog `fa75ecf3`** below. Those
 tests **must not** replace items **1**–**3**.
 
+When **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** is implemented, the suite **must** additionally include
+**network-free** tests that satisfy **RP4** and **RP5** under **Backlog `f9677140`** below (**RP5** may alias **I4**).
+Those tests **must not** replace items **1**–**3**.
+
 ## Acceptance criteria (checklist)
 
 Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows **R1–R5** in
@@ -132,6 +139,19 @@ These extend **A1–A5** and lifecycle coverage in **§ Minimum behavioral cover
 | I3 | Fixtures include a byte-identical duplicate-delivery pair with the same **`event_id`**; distinct logical emissions in fixtures use distinct **`event_id`** values. | **`tests/test_lifecycle_events.py`**; **`tests/fixtures/events/run_started.json`** and **`run_started_redelivery.json`** |
 | I4 | Two **`handle_lifecycle_webhook_post`** calls with the same verified body and signature do not double integrator side effects when **`on_success`** dedupes on **`event_id`**. | **`tests/test_lifecycle_events.py`** — **`test_i4_duplicate_signed_post_idempotent_side_effects_pattern`** |
 
+## Backlog `f9677140`: replay protection and idempotency hooks
+
+Checklist rows for **Add replay protection and idempotency hooks for deliveries**
+(`f9677140-0803-41c7-9d1c-82fc85f25f8d`). Normative contract: **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.
+These extend **A1–A5** and **§ Minimum behavioral coverage** item **2**; they do not replace **W** rows, **H1–H8**, or
+**R1–R5**. **RP5** is satisfied by **I4** while that test remains the duplicate-delivery proof; **RP4** requires a
+**distinct** stale-**`occurred_at`** / replay scenario once implemented.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| RP4 | At least one **network-free** test: valid MAC, parsed payload, **`occurred_at`** outside configured freshness window → **`replay_rejected`** (or equivalent) and **no** spurious side effects. | **`pytest`** (module TBD in phase **3**; e.g. handler or **`replay_protection`** unit tests) |
+| RP5 | At least one **network-free** test: same **`event_id`** delivered twice with valid MACs → idempotent side effects. | **`tests/test_lifecycle_events.py`** — **`test_i4_duplicate_signed_post_idempotent_side_effects_pattern`** (or successor) |
+
 ## Backlog `fa75ecf3`: structured logging and redaction
 
 Checklist rows for **Add structured logging helper that redacts sensitive keys by default**
@@ -156,4 +176,5 @@ These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — observable automation and explicit contracts.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
+- **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L8**.
