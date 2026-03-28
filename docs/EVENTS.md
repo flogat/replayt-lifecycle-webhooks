@@ -44,6 +44,8 @@ use. They are **not** a promise that the **replayt** Python API serializes these
 Types such as **`RunResult`**, **`RunFailed`**, and **`ApprovalPending`** in the **replayt** library describe runtime
 outcomes and control flow **inside** a runner; webhook payloads are **parallel notifications** for external systems and
 may use **different** nesting but should preserve the **same identifiers** where possible (`run_id`, workflow identity).
+**Automated boundary tests** **must** keep these imports working on the supported **replayt** floor—see
+**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
 
 ## Common envelope (all events)
 

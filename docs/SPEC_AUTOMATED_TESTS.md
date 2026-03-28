@@ -1,6 +1,10 @@
 # Spec: automated tests and CI entrypoint
 
-**Backlog:** Replace smoke-only test with real package behavior assertions (`a91574f0-1e57-4b34-9922-763f92448a18`).  
+**Backlogs (normative traceability):**
+
+- Replace smoke-only test with real package behavior assertions (`a91574f0-1e57-4b34-9922-763f92448a18`).
+- Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
 ## Purpose and normative status
@@ -18,6 +22,7 @@ behavioral coverage.
 | Optional HTTP handler status codes (**H1–H8**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
+| **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 
 ## CI entrypoint (invariant)
 
@@ -59,9 +64,16 @@ The suite **must** include **network-free** **pytest** tests that fail when the 
 Other modules (**mission** doc anchors, **replayt** dependency doc checks, and so on) may coexist; they do **not** replace
 items **1** and **2**.
 
+3. **Replayt boundary (dependency seam)** — At least one module **imports `replayt`** and asserts **documented** public
+   symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+   This is **in addition to** items **1** and **2**, not a substitute. Existing **`tests/test_replayt_dependency.py`** work
+   counts toward the **version / pyproject** story only when combined with those **import** checks (same module or a
+   dedicated **`tests/test_replayt_boundary.py`**).
+
 ## Acceptance criteria (checklist)
 
-Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**.
+Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows **R1–R5** in
+**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** cover backlog **`d9d6b302`**.
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
@@ -76,3 +88,4 @@ Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**.
 - **[README.md](../README.md)** — quick start; see **Running tests** for the canonical command.
 - **[MISSION.md](MISSION.md)** — success metrics and alignment with what CI runs.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — observable automation and explicit contracts.
+- **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.

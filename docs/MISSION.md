@@ -105,11 +105,13 @@ Integrators and operators are responsible for:
 
 ## Success metrics (v0.x)
 
-- **Automated tests** (e.g. **pytest**) run in **CI** on every change workflow the project uses; they cover claimed
-  verification behavior, dependency contract checks, and spec-driven acceptance where implemented—**green CI** is part
-  of “done.” The suite must **not** rely on placeholder tests (e.g. bare **`assert True`**) as the only proof that
-  verification or parsing works; see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** for the CI entrypoint and
-  minimum behavioral coverage.
+- **Automated tests** (e.g. **pytest**) run in **CI** on every change workflow the project uses; the suite **must** cover
+  claimed verification behavior, dependency contract checks, and spec-driven acceptance where implemented—**green CI** is part
+  of “done.” It **must** also include **replayt** boundary coverage (**`import replayt`**, documented symbols **R1–R5**) per
+  **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** in addition to **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**
+  (signature / parsing minima). The suite must **not** rely on placeholder tests (e.g. bare **`assert True`**) as the only
+  proof that verification or parsing works. Contributors run **`pytest tests -q`** for the full collection; **[README.md](../README.md)**
+  (**Running tests**) lists optional focused commands.
 - **Releases and versioning** — Public API and dependency contract changes are tracked under **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)** as declared in **`CHANGELOG.md`**; cutting a release means updating the version in **`pyproject.toml`**, grouping **Unreleased** notes into a dated section, and publishing to PyPI (or the project’s canonical index) per maintainer practice. Integrators rely on the **replayt** lower bound and changelog for upgrade safety (**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**).
 - **CHANGELOG.md** records user-visible API and dependency changes under **Unreleased** (or the releasing section) per
   project convention.

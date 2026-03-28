@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_REPLAYT_BOUNDARY_TESTS.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**, **`docs/MISSION.md`**,
+  **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/EVENTS.md`** (phase **2**, backlog **Ship
+  contract or integration tests at the replayt boundary** / `d9d6b302-40c7-4e08-af2d-faabb923f2fe`): normative **replayt**
+  boundary bar (**`import replayt`**, **`RunResult`** / **`RunFailed`** / **`ApprovalPending`**, **`replayt_boundary`**
+  pytest marker, **R1–R5** checklist); default **`pytest tests -q`** vs focused runs; CI remains **no undisclosed network**
+  on **`pip install -e ".[dev]"`**; **Builder (phase 3)** implements tests and marker.
+
 ### Changed
 
 - **`handle_lifecycle_webhook_post`** / **`make_lifecycle_webhook_wsgi_app`** (phase **3**, backlog **Document webhook
