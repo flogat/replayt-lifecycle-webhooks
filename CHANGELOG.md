@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   smoke test with real unit and boundary tests** / `2b4c6927-573a-463c-b59f-f2f91dfb6381`; **SPEC_AUTOMATED_TESTS** **A6**,
   **A10**).
 
+### Documentation
+
+- **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **5**, backlog **Replace scaffold smoke test with real unit and boundary tests** /
+  `2b4c6927-573a-463c-b59f-f2f91dfb6381`): **Backlog `2b4c6927`** checklist **A6–A10** so **CHANGELOG** and test
+  comments that cite those rows match the spec.
+
 ### Added
 
 - **Reference HTTP server** (phase **3**, backlog **Expose a minimal HTTP receiver (ASGI/WSGI) behind one entrypoint** /

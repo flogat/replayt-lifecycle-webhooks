@@ -4,6 +4,7 @@
 
 - Replace smoke-only test with real package behavior assertions (`a91574f0-1e57-4b34-9922-763f92448a18`).
 - Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+- Replace scaffold smoke tests with unit and boundary coverage (`2b4c6927-573a-463c-b59f-f2f91dfb6381`) — rows **A6–A10** under **Backlog `2b4c6927`** below.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -88,6 +89,20 @@ Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows
 | A3 | **pytest** exercises **`parse_lifecycle_webhook_event`** (or the handler’s verify-then-parse path) on valid and invalid lifecycle JSON per **EVENTS.md** **T3–T5**. | **`pytest tests -q`**; review **`tests/test_lifecycle_events.py`** / fixtures |
 | A4 | CI runs **`pytest tests -q`** or **`python -m pytest tests -q`** (optional extra flags) against **`tests/`**. | Review **`.github/workflows/ci.yml`** |
 | A5 | Doc or contract changes to the CI command or minimum coverage appear under **CHANGELOG.md** **Unreleased** when user-visible to contributors. | Release hygiene |
+
+## Backlog `2b4c6927`: smoke replacement and module imports
+
+Checklist rows for **Replace scaffold smoke test with real unit and boundary tests**
+(`2b4c6927-573a-463c-b59f-f2f91dfb6381`). These extend **A1–A5**; they do not replace **A1–A5** or the **replayt**
+boundary rows **R1–R5**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| A6 | At least one **golden vector**: fixed UTF-8 secret, fixed raw body bytes, and a **committed** `Replayt-Signature` value (`sha256=…`) checked by **`verify_lifecycle_webhook_signature`** without reusing ad-hoc signing helpers for that vector. | **`tests/test_webhook_signature.py`** — **`test_golden_vector_committed_replayt_signature`** |
+| A7 | Invalid JSON after a good signature maps to the handler contract (**H4**). | **`tests/test_http_handler.py`** — **`test_h4_bad_json_400_after_good_signature`** |
+| A8 | Unknown **`event_type`** is rejected during parsing (**T4** family). | **`tests/test_lifecycle_events.py`** — **`test_parse_rejects_unknown_event_type`** |
+| A9 | After verify, the success path invokes the caller hook (**H7**). | **`tests/test_http_handler.py`** — **`test_on_success_called_after_verify`** |
+| A10 | Tests **`import`** **`replayt_lifecycle_webhooks.signature`**, **`replayt_lifecycle_webhooks.handler`**, and **`replayt_lifecycle_webhooks.events`** directly (not only the package root), and exercise **`replayt_lifecycle_webhooks.serve`** where the reference server is in tree. | Search **`tests/`**; **`tests/test_reference_server.py`** for **serve** |
 
 ## Related docs
 

@@ -20,7 +20,7 @@ from replayt_lifecycle_webhooks.signature import (
 _SECRET = "test-webhook-secret"
 _BODY = b'{"event":"run_finished","run_id":"r1"}'
 
-# A6 (SPEC_AUTOMATED_TESTS § Backlog 2b4c6927): fixed secret + body + committed v1 header
+# A6 (SPEC_AUTOMATED_TESTS Backlog 2b4c6927): fixed secret + body + committed v1 header
 # (HMAC-SHA256 over raw body; secret UTF-8). Independent of _sign() helper below.
 _GOLDEN_SECRET = "2b4c6927-golden-secret"
 _GOLDEN_BODY = b'{"golden":true,"case":"a6"}'
