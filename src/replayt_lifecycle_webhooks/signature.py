@@ -7,7 +7,7 @@ import hmac
 from typing import Final
 
 # HTTP header name for the HMAC (case-insensitive on the wire; use this spelling in docs).
-LIFECYCLE_WEBHOOK_SIGNATURE_HEADER: Final = "Replayt-Signature"
+LIFECYCLE_WEBHOOK_SIGNATURE_HEADER: Final[str] = "Replayt-Signature"
 
 
 class WebhookSignatureError(Exception):

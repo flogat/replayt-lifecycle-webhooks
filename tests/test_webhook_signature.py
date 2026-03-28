@@ -41,6 +41,24 @@ def test_valid_signature_bare_hex() -> None:
     verify_lifecycle_webhook_signature(secret=_SECRET, body=_BODY, signature=bare)
 
 
+def test_valid_signature_uppercase_hex() -> None:
+    """Hex digits in the header may be uppercase (spec: case-insensitive hex)."""
+    verify_lifecycle_webhook_signature(
+        secret=_SECRET,
+        body=_BODY,
+        signature=_sign(_BODY).upper(),
+    )
+
+
+def test_valid_signature_secret_as_bytes() -> None:
+    secret_bytes = _SECRET.encode("utf-8")
+    verify_lifecycle_webhook_signature(
+        secret=secret_bytes,
+        body=_BODY,
+        signature=_sign(_BODY, secret=secret_bytes),
+    )
+
+
 def test_wrong_secret() -> None:
     with pytest.raises(WebhookSignatureMismatchError):
         verify_lifecycle_webhook_signature(
