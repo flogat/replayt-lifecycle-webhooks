@@ -92,6 +92,25 @@ Forbidden** as described in
 **[HTTP responses and logging](docs/SPEC_WEBHOOK_SIGNATURE.md#http-responses-and-logging-normative-for-integrators)**.
 Use **generic** client-facing error bodies; do not echo the secret, the full signature header, or a computed MAC.
 
+**Operator runbooks (status + JSON):** stable **`error` codes**, typical HTTP statuses, redacted example bodies, and
+rules for **what not to log or return** live in
+**[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**. That spec also covers
+**post-verification** failures (**unknown `event_type`**, invalid JSON shape, **application-level replay / freshness**)
+and notes that **v1** MAC verification does **not** include a wire timestamp.
+
+| Situation | Typical HTTP | Stable `error` (JSON) |
+| --------- | ------------ | ----------------------- |
+| Not POST | **405** | `method_not_allowed` |
+| Missing / empty `Replayt-Signature` | **401** | `signature_required` |
+| Malformed signature header (v1) | **401** | `signature_malformed` |
+| MAC mismatch | **403** | `signature_mismatch` |
+| Invalid UTF-8 or JSON **after** verify | **400** | `invalid_json` |
+| Unknown `event_type` **after** verify | **422** (recommended) | `unknown_event_type` |
+| Replay / duplicate / freshness policy | **422** or **409** | `replay_rejected` |
+
+See the spec for full tables and examples. **`handle_lifecycle_webhook_post`** returns **`application/json`** bodies
+(**`error`** + **`message`**) for **405** / **401** / **403** / **400** per that spec; **204** stays empty.
+
 **Drop-in HTTP handler:** **`handle_lifecycle_webhook_post`** maps a POST, raw body, and header map to status **405** /
 **401** / **403** / **400** / **204** as in **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
 **MAC mismatch** uses **403**; missing or malformed **`Replayt-Signature`** uses **401**. Verification runs before
@@ -173,7 +192,8 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** range: contract, **compatibility matrix**, upper-bound policy, checklist, CI expectations |
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
-| `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H7** |
+| `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H8** |
+| `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, synthetic examples |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
 | `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events` (`parse_lifecycle_webhook_event`, models) |

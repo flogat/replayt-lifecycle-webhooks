@@ -30,6 +30,10 @@ Handled in order: method check → signature verification → UTF-8 decode → J
 
 **H5 (ordering):** If verification fails, the implementation must **not** return **400** for JSON errors. Garbage bodies with missing or wrong MAC must yield **401** or **403**, not **400**.
 
+**Response bodies (4xx / 405):** **`handle_lifecycle_webhook_post`** returns JSON per
+**[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** with
+**`Content-Type: application/json; charset=utf-8`**, **`error`**, and **`message`**. **204** success responses have an empty body.
+
 ## Public API (Python)
 
 Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in **`__all__`**.
@@ -52,7 +56,7 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 - Builds header names from **`HTTP_*`** keys using the usual underscore-to-hyphen mapping (e.g. **`HTTP_REPLAYT_SIGNATURE`** → **`Replayt-Signature`**). Non-**`str`** header values are skipped.
 - Does not implement chunked request bodies or request size limits; production deployments should enforce limits at the server or proxy.
 
-## Acceptance tests (H1–H7)
+## Acceptance tests (H1–H8)
 
 | ID | Criterion | Checked by |
 | -- | --------- | ---------- |
@@ -63,6 +67,7 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 | **H5** | Invalid signature with invalid JSON → **401** or **403**, never **400**. | **`test_h5_verify_before_json_invalid_signature_bad_json_is_401_not_400`** |
 | **H6** | Non-POST → **405** with **`Allow: POST`**. | **`test_method_not_allowed_405`**, **`test_wsgi_wrong_method_405`** |
 | **H7** | **`on_success`** runs only after verification and successful JSON parse. | **`test_on_success_called_after_verify`** |
+| **H8** | Client error bodies match **SPEC_WEBHOOK_FAILURE_RESPONSES** stable codes and operator-facing **`message`** strings. | **`test_h8_error_messages_match_failure_response_spec`** |
 
 ## Related docs
 
@@ -71,3 +76,4 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification procedure, **401/403** guidance, v1 header format.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON contract and typed parsing after a successful parse (see **README**).
 - **[README.md](../README.md)** — copy-paste examples for **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`**.
+- **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable JSON **`error`** codes, HTTP mapping, and logging boundaries for operators.

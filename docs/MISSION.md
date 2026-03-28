@@ -74,7 +74,9 @@ Integrators and operators are responsible for:
 - **Raw body discipline** — Provide the **exact** request body **bytes** from the HTTP layer **before** JSON parsing or
   mutation; otherwise the MAC will not match.
 - **Failure mapping** — Map verification failures to **401/403** (or your policy) and **avoid leaking** the secret,
-  full signature header, or computed MAC in responses or logs, per **SPEC_WEBHOOK_SIGNATURE**.
+  full signature header, or computed MAC in responses or logs, per **SPEC_WEBHOOK_SIGNATURE**. For stable JSON **`error`**
+  codes, example bodies, and post-verify failures (**unknown `event_type`**, replay windows), see
+  **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
 - **Payload semantics and privacy** — After verification, **you** decide how to parse JSON, authorize actions, and handle
   **PII or business data** in the body. This package’s contract is **cryptographic integrity** of the octets, not
   redaction or validation of arbitrary JSON fields (unless a spec in this repo explicitly documents them).
