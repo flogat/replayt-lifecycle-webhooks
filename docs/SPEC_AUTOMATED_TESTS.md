@@ -12,6 +12,8 @@
   **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; **`tests/test_lifecycle_events.py`** and packaged duplicate fixture under **Backlog `4280c054`** below.
 - Replay protection and idempotency hooks (`f9677140-0803-41c7-9d1c-82fc85f25f8d`) — acceptance **RP4**/**RP5** in
   **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**; **Backlog `f9677140`** table below (**RP5** overlaps **I4**).
+- PM/support lifecycle event digest format (`069e0240-54c5-44a9-bba3-ad0a80a52c60`) — acceptance **DG1**–**DG6** in
+  **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**; **Backlog `069e0240`** table below.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -31,6 +33,7 @@ behavioral coverage.
 | Reference HTTP server entrypoint (**S1–S8**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
+| Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
 | **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
@@ -107,6 +110,10 @@ When **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** is implemented, 
 **network-free** tests that satisfy **RP4** and **RP5** under **Backlog `f9677140`** below (**RP5** may alias **I4**).
 Those tests **must not** replace items **1**–**3**.
 
+When **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** ships formatters in-tree, the suite **must** additionally include
+**network-free** tests that satisfy **DG1**–**DG6** under **Backlog `069e0240`** below. Those tests **must not** replace
+items **1**–**3**.
+
 ## Acceptance criteria (checklist)
 
 Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows **R1–R5** in
@@ -175,6 +182,22 @@ These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
 | L7 | **`extra_sensitive_keys`** causes a **non-default** mapping key to be redacted (lowercase comparison per spec). | Unit test |
 | L8 | At least one test uses **`caplog`**, a **`logging.Handler`**, or equivalent to capture formatted log output showing **`[REDACTED]`** for sensitive fields and **asserting the absence** of a representative **high-entropy secret substring** (for example a fake bearer token) in the captured text. | Unit test (e.g. **`tests/test_redaction.py`** or module name aligned with implementation) |
 
+## Backlog `069e0240`: PM/support event digest format
+
+Checklist rows for **Publish PM- and support-friendly event digest format**
+(`069e0240-54c5-44a9-bba3-ad0a80a52c60`). Normative contract: **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**.
+These extend **§ Minimum behavioral coverage** item **2** (parse first, then digest); they do not replace **A1–A5**,
+**A6–A10**, **R1–R5**, or items **1**–**3**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **DG1** | Documented **text** line rules cover **all six** **`event_type`** values (**SPEC_EVENT_DIGEST** + **EVENTS.md** registry). | **`tests/test_event_digest.py`** — first-line parametrized cases |
+| **DG2** | At least **two** worked **text** examples (**run** and **approval**) match **SPEC_EVENT_DIGEST** **Worked examples** exactly; third **run.failed** example matches. | **`tests/test_event_digest.py`** — golden string equality after **`parse_lifecycle_webhook_event`** |
+| **DG3** | **Determinism:** fixed parsed model → stable digest text (no trailing **`\\n`**) and stable canonical JSON record bytes (**DG0**). | **`tests/test_event_digest.py`** — **`test_dg3_digest_text_and_record_are_deterministic`** |
+| **DG4** | Optional fields omit lines / record keys when absent. | **`tests/test_event_digest.py`** — **`test_dg4_optional_lines_omitted_when_fields_absent`** |
+| **DG5** | **`approval.resolved`** uses **Approval approved** vs **Approval rejected** first line per **`detail.decision`**. | **`tests/test_event_digest.py`** — **`test_dg5_approval_resolved_rejected_digest_line`** and parametrized **DG1** rows |
+| **DG6** | External-sharing caution appears in integrator docs (**README** / **EVENTS.md**), as required by **SPEC_EVENT_DIGEST**. | **`tests/test_event_digest.py`** — **`test_dg6_integrator_docs_mention_external_sharing_caution`** |
+
 ## Backlog `30e133a5`: public API surface and deprecation policy
 
 Checklist rows for **Define public API surface and deprecation policy before 1.0**
@@ -197,3 +220,4 @@ These extend **§ Minimum behavioral coverage** item **4**; they do not replace 
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L8**.
+- **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.

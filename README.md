@@ -16,7 +16,10 @@ handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.
 **[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Local signed demo POST** (one command,
 dev fixtures, same **v1** signing as verification): **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)**
 (checklist **D1–D9**). **Run / approval JSON envelope** (field
-definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. **Delivery retries, duplicate POSTs, and `event_id`
+definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. **PM/support digest** (deterministic text + optional JSON
+record after parse; **DG1–DG6**): **[docs/SPEC_EVENT_DIGEST.md](docs/SPEC_EVENT_DIGEST.md)** — digest output can still include
+identifiers or sender-controlled text that is **not suitable for external sharing**; read **SPEC_EVENT_DIGEST** section
+**Fields and artifacts not suitable for external sharing** before publishing to untrusted channels. **Delivery retries, duplicate POSTs, and `event_id`**
 idempotency:** **[docs/SPEC_DELIVERY_IDEMPOTENCY.md](docs/SPEC_DELIVERY_IDEMPOTENCY.md)**. **Replay protection** (freshness
 on **`occurred_at`**, clock skew, optional wire headers, pluggable dedupe store contract, test rows **RP4**/**RP5**):
 **[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**. Informative **JSON Schema** mirror (**Draft-07**):

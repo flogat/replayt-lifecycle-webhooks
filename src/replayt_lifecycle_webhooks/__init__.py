@@ -15,6 +15,8 @@ from .events import (
     RunFailedEvent,
     RunStartedDetail,
     RunStartedEvent,
+    lifecycle_event_to_digest_record,
+    lifecycle_event_to_digest_text,
     parse_lifecycle_webhook_event,
 )
 from .handler import (
@@ -72,6 +74,8 @@ __all__ = [
     "RunStartedDetail",
     "RunStartedEvent",
     "parse_lifecycle_webhook_event",
+    "lifecycle_event_to_digest_text",
+    "lifecycle_event_to_digest_record",
     "LifecycleWebhookHttpResult",
     "handle_lifecycle_webhook_post",
     "make_lifecycle_webhook_wsgi_app",

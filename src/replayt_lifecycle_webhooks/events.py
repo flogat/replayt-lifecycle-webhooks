@@ -30,6 +30,8 @@ __all__ = [
     "RunStartedDetail",
     "RunStartedEvent",
     "parse_lifecycle_webhook_event",
+    "lifecycle_event_to_digest_text",
+    "lifecycle_event_to_digest_record",
 ]
 
 SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS: frozenset[str] = frozenset({"1.0"})
@@ -179,3 +181,6 @@ def parse_lifecycle_webhook_event(data: Any) -> RunStartedEvent | RunCompletedEv
         msg = f"lifecycle webhook payload must be a JSON object, got {type(data).__name__}"
         raise TypeError(msg)
     return _LIFECYCLE_EVENT_ADAPTER.validate_python(data)
+
+
+from .digest import lifecycle_event_to_digest_record, lifecycle_event_to_digest_text  # noqa: E402

@@ -13,7 +13,11 @@
 
 This document defines a **recommended JSON object model** for HTTP POST bodies that carry **run** and **approval**
 lifecycle notifications, after **`Replayt-Signature`** verification succeeds. It exists so downstream systems get
-**predictable fields** for routing, idempotency, dashboards, and **human-readable digests** (Slack, email, PM tools).
+**predictable fields** for routing, idempotency, dashboards, and **human-readable summaries** (Slack, email, PM tools;
+sender-controlled wire **`summary`**). Stable **package-computed digests** for reporting (distinct from **`summary`**) are
+implemented as **`lifecycle_event_to_digest_text`** / **`lifecycle_event_to_digest_record`** (see
+**[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**). **Fields and artifacts not suitable for external sharing** in that spec
+also apply to digest lines built from payload strings.
 
 **Canonical contract:** one JSON **object** per POST (the **event envelope**), sharing top-level keys (**`event_type`**,
 **`occurred_at`**, **`event_id`**, **`correlation`**, **`summary`**, **`detail`**, optional **`schema_version`**). **`detail`**

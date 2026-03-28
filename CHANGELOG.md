@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Lifecycle event digests** (phase **3**, backlog **Publish PM- and support-friendly event digest format** /
+  `069e0240-54c5-44a9-bba3-ad0a80a52c60`): **`lifecycle_event_to_digest_text`** and **`lifecycle_event_to_digest_record`**
+  per **`docs/SPEC_EVENT_DIGEST.md`** (**DG0** text layout and **`digest/1`** record). Re-exported from the
+  package root and **`replayt_lifecycle_webhooks.events`**; implementation in **`replayt_lifecycle_webhooks.digest`**
+  (internal). **`tests/test_event_digest.py`** covers **DG1–DG6**. **`docs/SPEC_PUBLIC_API.md`** and **`README.md`** /
+  **`docs/EVENTS.md`** updated for exports and external-sharing guidance.
+
 - **Public API contract tests** (phase **3**, backlog **Define public API surface and deprecation policy before 1.0** /
   `30e133a5-78fa-4eee-ae56-56a1af4c9f73`): **`tests/test_public_api.py`** asserts package root and **`events`** **`__all__`**
   match **`docs/SPEC_PUBLIC_API.md`**, documented internal modules import, and deprecation policy anchors in the spec.
@@ -29,6 +36,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **0.x minor** after the deprecating release, **`DeprecationWarning`** when practical). Acceptance **API1**–**API3**.
   Cross-links from **README**, **MISSION**, **DESIGN_PRINCIPLES** (new **Semantic versioning and deprecation** subsection),
   **SPEC_AUTOMATED_TESTS**.
+
+- **`docs/SPEC_EVENT_DIGEST.md`** (phase **2**, backlog **Publish PM- and support-friendly event digest format** /
+  `069e0240-54c5-44a9-bba3-ad0a80a52c60`): normative **deterministic** digest **text** (line templates for all six
+  **`event_type`** values), **`digest/1`** JSON **record** shape, **DG0** determinism rules, **three** synthetic
+  **worked examples**, external-sharing cautions, and acceptance **DG1–DG6** for Builder/Tester. Cross-links from **README**,
+  **MISSION**, **EVENTS.md**, **DESIGN_PRINCIPLES**, and **SPEC_AUTOMATED_TESTS**.
+
+- **Digest docs and test traceability** (phase **5**, same backlog): **`SPEC_EVENT_DIGEST.md`** updated for shipped
+  **`lifecycle_event_to_digest_*`** helpers; **`SPEC_AUTOMATED_TESTS.md`** adds topic row and **Backlog `069e0240`** table
+  (**DG1**–**DG6**); **`MISSION.md`** and **`DESIGN_PRINCIPLES.md`** link **SPEC_EVENT_DIGEST** (CHANGELOG cross-link list
+  now matches the tree).
+
+- **`CHANGELOG.md`** (phase **6**, security review, backlog **Publish PM- and support-friendly event digest format** /
+  `069e0240-54c5-44a9-bba3-ad0a80a52c60`): recorded security pass — digest implementation does not log or expose signing
+  material; digest text/record carries sender-controlled fields as documented (**SPEC_EVENT_DIGEST** external-sharing
+  section + integrator docs); dependency manifest unchanged in this diff; **CI** still runs **pytest** and **`pip-audit`**.
 
 - **`docs/SPEC_REPLAY_PROTECTION.md`** (phase **2**, backlog **Add replay protection and idempotency hooks for deliveries** /
   `f9677140-0803-41c7-9d1c-82fc85f25f8d`): normative contract for **stale capture** vs **benign duplicate** delivery;
