@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`README.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **3**, backlog **Declare replayt dependency range and compatibility matrix** /
   `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`): **compatibility matrix**, upper-bound policy, dual-backlog traceability, reporting breakage (**both** package versions), acceptance **A5–A7**; README **Compatibility matrix** pointer and layout row; design principles name matrix and optional upper bound.
+- **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`CHANGELOG.md`** (phase **5**, architecture review, same backlog /
+  `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`): spec title uses **dependency range** (replacing **runtime pin**); older **SPEC_REPLAYT_DEPENDENCY** changelog summary lists **compatibility matrix** and optional upper bound.
 - **`docs/MISSION.md`** (phase **2**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
   `3f27ad86-ef1f-4883-8cc2-cee94ba301cb`): **Ecosystem positioning** — primary pattern **Core-gap**; skim links to
   **README**; success metrics add **releases and versioning** (SemVer, `pyproject.toml`, changelog
@@ -111,8 +113,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   version, PyPI and release-history links, and [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues)
   for breakage reports.
 - **`pyproject.toml`:** `Homepage` and `Issues` URLs for this repository.
-- **`docs/SPEC_REPLAYT_DEPENDENCY.md`:** formal spec for the **replayt** lower bound (acceptance criteria, bump policy,
-  CI expectations); linked from README and design/dependency docs.
+- **`docs/SPEC_REPLAYT_DEPENDENCY.md`:** formal spec for the **replayt** dependency range (lower bound, optional upper
+  bound, **compatibility matrix**, acceptance criteria, bump policy, CI expectations); linked from README and design/dependency docs.
 
 ## [0.1.0] - 2026-03-27
 

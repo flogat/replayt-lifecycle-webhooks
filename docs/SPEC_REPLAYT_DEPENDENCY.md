@@ -1,4 +1,4 @@
-# Spec: **replayt** runtime pin and integrator compatibility
+# Spec: **replayt** dependency range and integrator compatibility
 
 **Backlogs (normative traceability):**
 
