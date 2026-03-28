@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import replayt
 import pytest
+import replayt
 from replayt import ApprovalPending, RunFailed, RunResult
 
 
