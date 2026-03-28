@@ -14,6 +14,7 @@
   **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**; **Backlog `f9677140`** table below (**RP5** overlaps **I4**).
 - PM/support lifecycle event digest format (`069e0240-54c5-44a9-bba3-ad0a80a52c60`) — acceptance **DG1**–**DG6** in
   **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**; **Backlog `069e0240`** table below.
+- Add replayt dependency declaration and compatibility matrix stub (`8b16060d-f6e6-4111-bed2-4978b965ff52`) — **SPEC_REPLAYT_DEPENDENCY** matrix (**Python** / CI-tested columns), **A8**, stub checklist when **`replayt`** is absent from **`pyproject.toml`**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -36,7 +37,7 @@ behavioral coverage.
 | Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
-| **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
+| **replayt** dependency / doc contract (**A1**–**A8**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L8**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |

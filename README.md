@@ -54,7 +54,9 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 **Report breakage:** Open an issue on [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues). Include both the installed **replayt** version and **replayt-lifecycle-webhooks** version.
 
-**Compatibility matrix** (**replayt** ↔ this package version line, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
+**Compatibility matrix** (**replayt** and **Python** support, CI-tested interpreter, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
+
+**Python:** `pyproject.toml` sets **`requires-python`** (minimum installers must satisfy). GitHub Actions runs the full **`pytest`** suite on **Python 3.12** (see `.github/workflows/ci.yml`). A broader `requires-python` means other minors may work but are not necessarily exercised in CI until you add matrix jobs.
 
 ## Design principles
 
