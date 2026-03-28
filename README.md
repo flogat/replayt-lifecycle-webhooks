@@ -152,22 +152,56 @@ Checklist rows **A1–A5** (minimum verification / parsing) and **R1–R5** (rep
 
 ## Troubleshooting
 
-**Duplicate deliveries (retries, redelivery of the same event):** Treat lifecycle webhooks as **at-least-once** on the
-wire. After **`Replayt-Signature`** verification succeeds, dedupe using **`event_id`** from the JSON envelope (see
-**[docs/EVENTS.md](docs/EVENTS.md)**). Compatible senders should reuse the **same** **`event_id`** and body for every HTTP
-retry of one logical emission. Use an **application idempotency store** with a **TTL** sized to your longest retry and
-approval windows; if you evict keys too early, a late duplicate may run side effects twice. Full contract, composite-key
-fallbacks for legacy senders, and TTL guidance: **[docs/SPEC_DELIVERY_IDEMPOTENCY.md](docs/SPEC_DELIVERY_IDEMPOTENCY.md)**.
+**Wrong or rotated shared secret:** If the HMAC key on the receiver does not match the sender, verification fails with
+**`signature_mismatch`**. Use one secret out of band on both sides and roll receivers before retiring an old key.
 
-**Replayed captures (valid MAC, stale or disallowed delivery):** Signing does not prove freshness. After verification,
-enforce **payload `occurred_at`** windows (and optionally reserved **`Replayt-*`** headers or a **nonce**) per
-**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**; map rejections to **`replay_rejected`** in
-**[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**. Do not confuse **benign
-duplicates** (idempotent **2xx**) with **policy rejects** (**422** / **`replay_rejected`**).
+**Body not raw bytes:** JSON parsing, whitespace edits, or re-encoding before verification breaks the MAC. Feed the
+**exact** POST **bytes** from the HTTP layer into verification; raw-body rules live in
+**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**.
 
-**Signature verification failures:** See **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)** (raw body
-discipline, header format) and **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)** (stable
-**`error`** codes for operators).
+**`Replayt-Signature` header mistakes:** The header must follow the **v1** **`sha256=<hex>`** shape. Wrong names,
+truncated values, or missing headers surface **`signature_required`**, **`signature_malformed`**, or **`signature_mismatch`**
+per **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
+
+**Treating delivery as exactly-once:** Assume **at-least-once** on the wire. After a good MAC, dedupe with **`event_id`**
+and an idempotency store whose **TTL** covers retries and approval windows. Full rules and legacy fallbacks:
+**[docs/SPEC_DELIVERY_IDEMPOTENCY.md](docs/SPEC_DELIVERY_IDEMPOTENCY.md)**.
+
+**Stale or replayed captures with a valid MAC:** Signing does not prove freshness. Constrain **`occurred_at`** (and
+optional **`Replayt-*`** headers or a nonce) per **[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**.
+**Benign duplicates** (same **`event_id`**, idempotent **2xx**) differ from **policy rejects** (**422** /
+**`replay_rejected`**); map the latter using **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
+
+**Where to look in logs:** Prefer structured **`extra=`** keys such as **`webhook_*`**, **`lifecycle_*`**, and
+**`error_code`**, with headers and dict values passed through **`replayt_lifecycle_webhooks.redaction`** as in
+**[docs/SPEC_STRUCTURED_LOGGING_REDACTION.md](docs/SPEC_STRUCTURED_LOGGING_REDACTION.md)**. That spec lists defaults
+(**`Authorization`**, **`Replayt-Signature`**, and related) and what must never appear in log records.
+
+## Approval webhook flow
+
+**Approval** and **run** deliveries share the same bar: verify **`Replayt-Signature`** on the **raw body**, then parse JSON
+(**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**).
+
+Approval-related **`event_type`** values are defined in **[docs/EVENTS.md](docs/EVENTS.md)**:
+
+- **`replayt.lifecycle.approval.pending`** — automation is blocked until a decision exists.
+- **`replayt.lifecycle.approval.resolved`** — a decision was recorded (approved or rejected; see **`detail`** in **EVENTS.md**).
+
+When **`correlation.approval_request_id`** is present, use it to tie deliveries to tickets or support notes. This package
+does **not** implement approval UIs or policy; your handler runs **after** verification and owns UX and automation.
+
+```mermaid
+sequenceDiagram
+  participant Sender as Sender
+  participant Post as HTTPS POST
+  participant Rx as Receiver
+  participant H as Idempotent handler
+  Sender->>Post: Lifecycle body + Replayt-Signature
+  Post->>Rx: Raw bytes + headers
+  Rx->>Rx: Verify MAC
+  Rx->>H: Parsed JSON (after verify)
+  Note over H: Dedupe on event_id; optional ticket or notify
+```
 
 ## Verifying webhook signatures
 

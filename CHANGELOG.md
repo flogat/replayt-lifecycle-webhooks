@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`README.md`** (phase **3**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
+  `23e2da29-8042-4721-a1eb-e44a2076273f`): operator block uses **`## Troubleshooting`**, **`## Approval webhook flow`**, and
+  **`## Verifying webhook signatures`** (misconfiguration checklist, log pointers, **`event_type`** names and optional
+  Mermaid sequence, copy-paste verification path). **`tests/test_readme_operator_sections.py`** covers **OP1**–**OP8** in
+  **`docs/SPEC_AUTOMATED_TESTS.md`**.
+
 - **`docs/SPEC_README_OPERATOR_SECTIONS.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, **`README.md`** project layout (phase **2**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
   `23e2da29-8042-4721-a1eb-e44a2076273f`): normative contract for **`README.md`** headings (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**), content bullets (misconfigs, logs, error-catalog links, approval **`event_type`** names, copy-paste verify path, secrets hygiene), and **pytest** checklist **OP1**–**OP8** for the Builder phase.
 
