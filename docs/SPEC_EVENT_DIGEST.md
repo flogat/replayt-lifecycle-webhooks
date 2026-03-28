@@ -6,7 +6,7 @@
 
 ## Purpose and normative status
 
-This document defines a **stable, deterministic** **text digest** and an optional **JSON-serializable record** derived from a
+This document defines a **stable, deterministic** **text digest** and a **`digest/1`** **JSON-serializable record** derived from a
 **typed** lifecycle webhook event (**`LifecycleWebhookEvent`** union in **`replayt_lifecycle_webhooks.events`**) **after**
 signature verification and successful parsing per **[EVENTS.md](EVENTS.md)**.
 
@@ -20,7 +20,7 @@ re-exposing raw webhook bytes or crypto material?”*
   follows **fixed English templates** in this spec.
 - Adding a new **required** top-level wire field (for example **`digest`**) to HTTP JSON bodies. Doing so would be an
   **EVENTS.md** / payload **MINOR** (or **MAJOR**) change with **CHANGELOG.md** and schema updates. This backlog’s
-  **default delivery** is a **library function** (and optional record helper), not a change to the POST body contract.
+  **default delivery** is **library functions** (text and record), not a change to the POST body contract.
 
 ## Relationship to **`summary`** vs digest
 
@@ -28,7 +28,7 @@ re-exposing raw webhook bytes or crypto material?”*
 | -------- | ---------------- | --- |
 | **`summary`** (envelope) | Sender | Human-readable hint on the wire; may vary by deployment or locale. |
 | **Digest text** (this spec) | This package’s documented formatter | Stable English lines for reports and automation **given the same parsed model**. |
-| **Digest record** (optional JSON) | Same | Machine columns / ETL without parsing free-form **`summary`**. |
+| **Digest record** (**`digest/1`**) | Same | Machine columns / ETL without parsing free-form **`summary`**. |
 
 Integrators may show **`summary`**, digest text, both, or neither depending on audience and redaction policy.
 
@@ -36,7 +36,7 @@ Integrators may show **`summary`**, digest text, both, or neither depending on a
 
 1. Verify the HTTP body per **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**.
 2. Parse JSON and validate with **`parse_lifecycle_webhook_event`** (**[EVENTS.md](EVENTS.md)** **T1**).
-3. Pass the resulting **`LifecycleWebhookEvent`** instance to the digest helpers (when implemented).
+3. Pass the resulting **`LifecycleWebhookEvent`** instance to **`lifecycle_event_to_digest_text`** and, when you need structured columns, **`lifecycle_event_to_digest_record`** (package root or **`replayt_lifecycle_webhooks.events`**).
 
 **Do not** compute digests from unverified or unparsed **`dict`** data in security-sensitive paths unless you have an
 explicit, reviewed reason (for example offline fixture replay in tests).
@@ -138,10 +138,9 @@ listed. Only lines whose values are present (non-**`None`**) are emitted, except
 8. **`Approval request:`** … (optional but **should** be present)
 9. **`Resolved by role:`** **`detail.resolved_by_role`** (optional)
 
-## Optional JSON digest record
+## JSON digest record (**`digest/1`**)
 
-When implemented, **`lifecycle_event_to_digest_record`** (name indicative; final name in **SPEC_PUBLIC_API.md** when
-exported) **must** return a plain `dict` with **only** JSON-friendly scalars (`str`, `int`, `bool`, or JSON **`null`**) and
+**`lifecycle_event_to_digest_record`** returns a plain `dict` with **only** JSON-friendly scalars (`str`, `int`, `bool`, or JSON **`null`**) and
 the following **minimum keys** (additional keys are **not allowed** unless **EVENTS.md** / this spec is bumped):
 
 | Key | Value |
@@ -165,7 +164,7 @@ the following **minimum keys** (additional keys are **not allowed** unless **EVE
 ## Worked examples (synthetic)
 
 The JSON below matches the fabrications in **[EVENTS.md](EVENTS.md)** **Synthetic examples**. **Normative expected digest
-text** for Builder **golden tests** is the string shown in each **“Expected digest text”** fenced block.
+text** for **`tests/test_event_digest.py`** golden assertions is the string shown in each **“Expected digest text”** fenced block.
 
 ### Run completed (`replayt.lifecycle.run.completed`)
 
@@ -292,24 +291,14 @@ Digest output is **safer** than dumping raw HTTP, but integrators remain respons
 **PM/support-safe default:** Prefer the **digest text** (or a **redacted** subset of the **digest record**) over raw JSON.
 When in doubt, strip **`Event ID:`** / **`event_id`** for customer-visible copy while retaining it in internal ticketing.
 
-## Implementation shape (Builder)
-
-**Preferred public API** (names indicative until **SPEC_PUBLIC_API.md** is updated in phase **3**):
+## Implementation (shipped)
 
 - **`lifecycle_event_to_digest_text(event: LifecycleWebhookEvent) -> str`**
-- **`lifecycle_event_to_digest_record(event: LifecycleWebhookEvent) -> dict[str, Any]`** (optional but recommended for
-  JSON pipelines)
+- **`lifecycle_event_to_digest_record(event: LifecycleWebhookEvent) -> dict[str, Any]`**
 
-Placement options documented here for Builder alignment:
+Both names are **public** on the package root and **`replayt_lifecycle_webhooks.events`** per **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** § **Primary: package root** (**Events / parsing** row). The implementation module is **`replayt_lifecycle_webhooks.digest`** (**internal** until **1.0**); **`events`** imports it **after** model definitions to avoid a circular import.
 
-- **`replayt_lifecycle_webhooks.digest`** module (narrow surface), re-exported from the package root **`__all__`** when
-  stable; **or**
-- Adjacent helpers under **`replayt_lifecycle_webhooks.events`** if maintainers prefer a single import path (must still
-  update **SPEC_PUBLIC_API.md** and root **`__all__`** explicitly).
-
-**Stub phase:** A **`NotImplementedError`** stub is **not** sufficient for “done” on this backlog—ship **working**
-formatters or defer the backlog. If a **skeleton** is needed temporarily, it **must** be clearly marked **private**
-(**`_…`**) and **omitted** from **`__all__`** until behavior matches this spec.
+Integrators should use the package root or **`events`** imports, not **`replayt_lifecycle_webhooks.digest`**, unless a maintainer is debugging the formatter itself.
 
 ## Acceptance criteria (Builder / Tester)
 
@@ -327,5 +316,5 @@ formatters or defer the backlog. If a **skeleton** is needed temporarily, it **m
 - **[EVENTS.md](EVENTS.md)** — wire envelope, **`summary`**, **`detail`** shapes, synthetic JSON fixtures.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verify before parse.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — logging redaction vs human-facing digest.
-- **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** — export surface when functions ship.
+- **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** — supported exports, including digest helpers.
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — **DG1–DG6** checklist row **Backlog `069e0240`**.

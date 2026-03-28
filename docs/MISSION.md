@@ -16,6 +16,8 @@ Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEB
 **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.
 **Public Python import surface** and **deprecation** policy (**`__all__`**, internal modules, **CHANGELOG** alignment):
 **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)**.
+**PM/support lifecycle digests** (fixed English lines and **`digest/1`** record from parsed events; **DG0**–**DG6**):
+**[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**.
 Repository map and quick links:
 **[README.md](../README.md)**.
 

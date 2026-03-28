@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Lifecycle event digests** (phase **3**, backlog **Publish PM- and support-friendly event digest format** /
   `069e0240-54c5-44a9-bba3-ad0a80a52c60`): **`lifecycle_event_to_digest_text`** and **`lifecycle_event_to_digest_record`**
-  per **`docs/SPEC_EVENT_DIGEST.md`** (**DG0** text layout and optional **`digest/1`** record). Re-exported from the
+  per **`docs/SPEC_EVENT_DIGEST.md`** (**DG0** text layout and **`digest/1`** record). Re-exported from the
   package root and **`replayt_lifecycle_webhooks.events`**; implementation in **`replayt_lifecycle_webhooks.digest`**
   (internal). **`tests/test_event_digest.py`** covers **DG1–DG6**. **`docs/SPEC_PUBLIC_API.md`** and **`README.md`** /
   **`docs/EVENTS.md`** updated for exports and external-sharing guidance.
@@ -39,9 +39,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`docs/SPEC_EVENT_DIGEST.md`** (phase **2**, backlog **Publish PM- and support-friendly event digest format** /
   `069e0240-54c5-44a9-bba3-ad0a80a52c60`): normative **deterministic** digest **text** (line templates for all six
-  **`event_type`** values), optional **`digest/1`** JSON **record** shape, **DG0** determinism rules, **three** synthetic
+  **`event_type`** values), **`digest/1`** JSON **record** shape, **DG0** determinism rules, **three** synthetic
   **worked examples**, external-sharing cautions, and acceptance **DG1–DG6** for Builder/Tester. Cross-links from **README**,
   **MISSION**, **EVENTS.md**, **DESIGN_PRINCIPLES**, and **SPEC_AUTOMATED_TESTS**.
+
+- **Digest docs and test traceability** (phase **5**, same backlog): **`SPEC_EVENT_DIGEST.md`** updated for shipped
+  **`lifecycle_event_to_digest_*`** helpers; **`SPEC_AUTOMATED_TESTS.md`** adds topic row and **Backlog `069e0240`** table
+  (**DG1**–**DG6**); **`MISSION.md`** and **`DESIGN_PRINCIPLES.md`** link **SPEC_EVENT_DIGEST** (CHANGELOG cross-link list
+  now matches the tree).
 
 - **`docs/SPEC_REPLAY_PROTECTION.md`** (phase **2**, backlog **Add replay protection and idempotency hooks for deliveries** /
   `f9677140-0803-41c7-9d1c-82fc85f25f8d`): normative contract for **stale capture** vs **benign duplicate** delivery;
