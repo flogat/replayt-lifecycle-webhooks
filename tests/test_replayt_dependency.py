@@ -44,7 +44,7 @@ def test_pyproject_has_single_canonical_replayt_lower_bound() -> None:
 
 
 def test_readme_documents_integrator_compatibility() -> None:
-    """SPEC A2: floor check commands, PyPI/history links, and where to report breakage."""
+    """SPEC A2: floor check commands, PyPI/history links, matrix pointer, and where to report breakage."""
     text = (_repo_root() / "README.md").read_text(encoding="utf-8")
     required = (
         "docs/SPEC_REPLAYT_DEPENDENCY.md",
@@ -53,6 +53,8 @@ def test_readme_documents_integrator_compatibility() -> None:
         "https://github.com/flogat/replayt-lifecycle-webhooks/issues",
         "pip show replayt",
         "importlib.metadata",
+        "Compatibility matrix",
+        "replayt-lifecycle-webhooks",
     )
     missing = [s for s in required if s not in text]
     assert not missing, f"README missing expected integrator strings: {missing}"
@@ -62,3 +64,20 @@ def test_replayt_installed_version_meets_pyproject_lower_bound() -> None:
     minimum = _replayt_lower_bound()
     installed = md.version("replayt")
     assert _version_tuple(installed) >= minimum
+
+
+def test_design_principles_points_at_replayt_dependency_spec() -> None:
+    """SPEC: DESIGN_PRINCIPLES names the matrix and SPEC_REPLAYT_DEPENDENCY."""
+    text = (_repo_root() / "docs" / "DESIGN_PRINCIPLES.md").read_text(encoding="utf-8")
+    assert "SPEC_REPLAYT_DEPENDENCY.md" in text
+    assert "compatibility matrix" in text.lower()
+
+
+def test_spec_compatibility_matrix_matches_pyproject_replayt_floor() -> None:
+    """SPEC A5: matrix documents the same lower bound as [project.dependencies]."""
+    minimum = _replayt_lower_bound()
+    floor = f">={minimum[0]}.{minimum[1]}.{minimum[2]}"
+    spec = (_repo_root() / "docs" / "SPEC_REPLAYT_DEPENDENCY.md").read_text(encoding="utf-8")
+    assert "## Compatibility matrix" in spec
+    assert floor in spec
+    assert "no upper bound" in spec.lower() or "upper bound" in spec.lower()
