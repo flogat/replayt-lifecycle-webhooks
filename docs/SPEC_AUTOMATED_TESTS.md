@@ -18,6 +18,9 @@
 - Add replayt dependency declaration and compatibility matrix stub (`8b16060d-f6e6-4111-bed2-4978b965ff52`) — **SPEC_REPLAYT_DEPENDENCY** matrix (**Python** / CI-tested columns), **A8**, stub checklist when **`replayt`** is absent from **`pyproject.toml`**.
 
 - Run **ruff** in CI for fast lint (and optionally format) feedback (`5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`) — checklist **RF1**–**RF5** under **Backlog `5a3f5a7f`** below.
+- README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
+  checklist **OP1**–**OP8** under **Backlog `23e2da29`** below; normative contract
+  **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -45,6 +48,7 @@ behavioral coverage.
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
+| README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
 
 ## CI entrypoint (invariant)
 
@@ -123,6 +127,10 @@ Those tests **must not** replace items **1**–**3**.
 When **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** ships formatters in-tree, the suite **must** additionally include
 **network-free** tests that satisfy **DG1**–**DG6** under **Backlog `069e0240`** below. Those tests **must not** replace
 items **1**–**3**.
+
+When **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** is in scope for backlog **`23e2da29`**, the
+suite **must** additionally include **network-free** tests that satisfy **OP1**–**OP8** under **Backlog `23e2da29`**
+below. Those tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
 
 ## Acceptance criteria (checklist)
 
@@ -257,6 +265,27 @@ runs on the same triggers and fails the workflow.
 | **RF4** | **README.md** documents local **`ruff check`** in at least one line (for example near **Running tests**). If **`ruff format --check`** is enabled in CI, mention **`ruff format`** for contributors too. There is no **CONTRIBUTING.md** today; adding one is optional as long as **README.md** satisfies this row. | Doc review |
 | **RF5** | Wiring **ruff** into CI is recorded under **CHANGELOG.md** **Unreleased** when the change is user-visible to contributors (typical **Added** or **Changed**). | Release hygiene |
 
+## Backlog `23e2da29`: README operator sections
+
+Checklist rows for **Expand README with operator troubleshooting and approval-flow walkthrough**
+(`23e2da29-8042-4721-a1eb-e44a2076273f`). Normative contract:
+**[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**. These extend **A1**–**A5**; they do not replace
+signature, parsing, boundary, or public-API coverage.
+
+Implement **network-free** **`README.md`** text assertions (read from repo root). Prefer small helpers that slice the file
+between consecutive **`## `** headings so each row scopes content to the right section.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **OP1** | **`README.md`** contains heading **`## Troubleshooting`** (exact line). | **`pytest`** — e.g. **`tests/test_readme_operator_sections.py`** |
+| **OP2** | **`README.md`** contains heading **`## Approval webhook flow`** (exact line). | **`pytest`** (same module) |
+| **OP3** | **`README.md`** contains heading **`## Verifying webhook signatures`** (exact line). | **`pytest`** (same module) |
+| **OP4** | Under **Troubleshooting**, prose links **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`** (error catalog). | **`pytest`** |
+| **OP5** | Under **Approval webhook flow**, prose mentions both **`replayt.lifecycle.approval.pending`** and **`replayt.lifecycle.approval.resolved`**. | **`pytest`** |
+| **OP6** | Under **Approval webhook flow**, prose links **`docs/EVENTS.md`**. | **`pytest`** |
+| **OP7** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** with fragment **`#verification-procedure-integrators`** (substring match). | **`pytest`** |
+| **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
+
 ## Related docs
 
 - **[README.md](../README.md)** — quick start; see **Running tests** for the canonical command.
@@ -267,3 +296,4 @@ runs on the same triggers and fails the workflow.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**.
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.
+- **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP8**.

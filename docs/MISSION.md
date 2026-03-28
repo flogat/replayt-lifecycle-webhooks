@@ -146,7 +146,7 @@ Integrators and operators are responsible for:
 - **Releases and versioning** — Public API and dependency contract changes are tracked under **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)** as declared in **`CHANGELOG.md`**; cutting a release means updating the version in **`pyproject.toml`**, grouping **Unreleased** notes into a dated section, and publishing to PyPI (or the project’s canonical index) per maintainer practice. Integrators rely on the **replayt** lower bound and changelog for upgrade safety (**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**).
 - **CHANGELOG.md** records user-visible API and dependency changes under **Unreleased** (or the releasing section) per
   project convention.
-- Operators can adopt verification using **[README.md](../README.md)** + **SPEC_WEBHOOK_SIGNATURE.md** without reading the whole tree.
+- Operators can adopt verification using **[README.md](../README.md)** + **SPEC_WEBHOOK_SIGNATURE.md** without reading the whole tree. Operator-focused **README** structure (troubleshooting, high-level **approval** path, copy-paste signature checks) is specified in **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** (**OP1**–**OP8** in **SPEC_AUTOMATED_TESTS** when implemented).
 
 ## Doc hygiene (checklist)
 

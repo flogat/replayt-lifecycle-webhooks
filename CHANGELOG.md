@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_README_OPERATOR_SECTIONS.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, **`README.md`** project layout (phase **2**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
+  `23e2da29-8042-4721-a1eb-e44a2076273f`): normative contract for **`README.md`** headings (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**), content bullets (misconfigs, logs, error-catalog links, approval **`event_type`** names, copy-paste verify path, secrets hygiene), and **pytest** checklist **OP1**–**OP8** for the Builder phase.
+
 ### Changed
 
 - **CI / tooling** (phase **3**, backlog **Run ruff in CI for fast style and lint feedback** /
