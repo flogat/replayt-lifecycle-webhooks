@@ -4,8 +4,9 @@
 
 This project builds on **[replayt](https://pypi.org/project/replayt/)** as a **consumer-side** satellite: upstream owns
 lifecycle **semantics** and **signing**; this repo supplies the tested verification primitive, normative specs, and **CI**
-coverage integrators would otherwise reimplement (ecosystem pattern and scope: **[docs/MISSION.md](docs/MISSION.md)**,
-**[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)**). It declares a runtime dependency on
+coverage integrators would otherwise reimplement. **Primary ecosystem pattern — Core-gap** (taxonomy, pitch, and how we
+track **replayt** releases): **[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)**. Broader scope and success
+expectations: **[docs/MISSION.md](docs/MISSION.md)**. It declares a runtime dependency on
 **replayt `>=0.4.25`** (see `pyproject.toml`). Formal contract, bump policy, and acceptance criteria:
 **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Webhook signature verification contract and
 acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. **Optional minimal HTTP POST

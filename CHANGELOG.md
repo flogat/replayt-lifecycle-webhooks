@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/REPLAYT_ECOSYSTEM_IDEA.md`** and **README** Overview (phase **2**, backlog **Record primary ecosystem pattern in REPLAYT_ECOSYSTEM_IDEA** /
+  `c70b89c2-7fd4-4733-b72d-23fd20279617`): **Core-gap** section filled for this repo (what stays upstream vs what ships
+  here); **Your choice** adds a **replayt** release-tracking note (**`pyproject.toml`**, **SPEC_REPLAYT_DEPENDENCY**, **CI** /
+  **pytest** + **SPEC_REPLAYT_BOUNDARY_TESTS**, **CHANGELOG**, PyPI / upstream monitoring). README explicitly cross-links
+  **Core-gap** and the ecosystem doc.
+
 - **`docs/SPEC_PUBLIC_API.md`** (phase **2**, backlog **Define public API surface and deprecation policy before 1.0** /
   `30e133a5-78fa-4eee-ae56-56a1af4c9f73`): normative **supported** imports (package root **`__all__`** and
   **`replayt_lifecycle_webhooks.events`**); **internal** submodule paths until **1.0**; documented **`python -m`**
