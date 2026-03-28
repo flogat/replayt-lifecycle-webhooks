@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **Reverse proxy in front of the reference HTTP server** (phase **2** spec, backlog **`dc212184-8c0d-4ee6-90de-e0d50c370f6f`** /
+  *Operator guide: reverse proxy in front of reference WSGI server*): new **`docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md`**
+  (deliverable **`docs/OPERATOR_REVERSE_PROXY.md`**, acceptance **OG1**–**OG8**, **pytest** when the guide ships). Cross-links
+  and traceability in **`docs/SPEC_HTTP_SERVER_ENTRYPOINT.md`**, **`docs/SPEC_README_OPERATOR_SECTIONS.md`** (README link rule),
+  **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`README.md`** project layout /
+  overview.
+
 - **Optional reference-documentation workflow** (backlog **`eb884da9`**, refinement **`2db687f4`**): new **`CONTRIBUTING.md`**
   entry; **`README.md`** and **`docs/reference-documentation/README.md`** describe when to refresh, small default clones, and
   gitignored **`_upstream_snapshot/`**. **`docs/SPEC_REFERENCE_DOCUMENTATION.md`** adds acceptance mapping, committed-path

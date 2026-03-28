@@ -21,6 +21,9 @@
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
   checklist **OP1**–**OP8** under **Backlog `23e2da29`** below; normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
+- Reverse proxy in front of the reference HTTP server (`dc212184-8c0d-4ee6-90de-e0d50c370f6f`) — checklist **OG1**–**OG8**
+  under **Backlog `dc212184`** below; normative contract
+  **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; deliverable **`docs/OPERATOR_REVERSE_PROXY.md`**.
 - Optional reference-documentation snapshot workflow (`eb884da9-5273-4ce0-b105-5130c6b1ac79`; Mission Control refinement
   **`2db687f4-23d2-4aff-8827-c3da11cdf283`**) — checklist **RD1**–**RD8** (pytest) in
   **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`** below;
@@ -42,6 +45,7 @@ behavioral coverage.
 | Signature verification behavior and **W** rows | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** |
 | Optional HTTP handler status codes (**H1–H12**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
 | Reference HTTP server entrypoint (**S1–S8**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
+| Operator reverse-proxy guide (**OG1–OG8**), when implemented | **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; **§ Backlog `dc212184`** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
@@ -136,6 +140,10 @@ items **1**–**3**.
 Backlog **`23e2da29`** (**[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**) is covered by **network-free**
 **pytest** rows **OP1**–**OP8** under **Backlog `23e2da29`** below (**`tests/test_readme_operator_sections.py`**). Those
 tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
+
+When **`docs/OPERATOR_REVERSE_PROXY.md`** ships per **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**,
+the suite **must** additionally include **network-free** **pytest** rows **OG1**–**OG8** under **Backlog `dc212184`** below.
+Those tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
 
 ## Acceptance criteria (checklist)
 
@@ -291,6 +299,28 @@ between consecutive **`## `** headings so each row scopes content to the right s
 | **OP7** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** with fragment **`#verification-procedure-integrators`** (substring match). | **`pytest`** |
 | **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
 
+## Backlog `dc212184`: operator reverse-proxy guide
+
+Checklist rows for **Operator guide: reverse proxy in front of reference WSGI server**
+(`dc212184-8c0d-4ee6-90de-e0d50c370f6f`). Normative contract:
+**[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**. These extend **A1**–**A5**; they do not
+replace signature, parsing, boundary, or public-API coverage.
+
+Implement **network-free** assertions by reading **`docs/OPERATOR_REVERSE_PROXY.md`** and **`README.md`** from disk (same
+pattern as **OP1**–**OP8**). **Builder** may use a dedicated module (for example **`tests/test_operator_reverse_proxy_doc.py`**)
+or extend an existing README doc-guard module if maintainers prefer one file—**Tester** ensures all **OG** rows are covered.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **OG1** | **`docs/OPERATOR_REVERSE_PROXY.md`** exists; level-1 heading matches **SPEC_REVERSE_PROXY_REFERENCE_SERVER** **§ Deliverable** intent (reverse proxy / TLS + reference server context). | **`pytest`** |
+| **OG2** | Prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** and addresses **raw body** / signature discipline. | **`pytest`** |
+| **OG3** | Documents **client max body size** (or the chosen proxy’s equivalent directive name) with operator-facing rationale. | **`pytest`** |
+| **OG4** | Documents **timeouts** and links **`docs/SPEC_DELIVERY_IDEMPOTENCY.md`**. | **`pytest`** |
+| **OG5** | Mentions **`Transfer-Encoding`** and/or **chunked** buffering risk to **byte-identical** verification (per spec wording). | **`pytest`** |
+| **OG6** | Contains a fenced **nginx** or **Caddy** block; a **comment inside that block** references **`docs/SPEC_WEBHOOK_SIGNATURE.md`** and/or **`SPEC_WEBHOOK_SIGNATURE`**. | **`pytest`** |
+| **OG7** | Callout against logging full bodies / secrets / full signatures; links **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**. | **`pytest`** |
+| **OG8** | Root **`README.md`** links **`docs/OPERATOR_REVERSE_PROXY.md`** under **`## Troubleshooting`** or **`## Verifying webhook signatures`** (per **SPEC_README_OPERATOR_SECTIONS**). | **`pytest`** |
+
 ## Backlog `eb884da9`: optional reference-documentation snapshot workflow
 
 Checklist rows for **Add optional reference-documentation snapshot workflow**
@@ -324,4 +354,5 @@ workflow** acceptance enforced by **`pytest`** (not a substitute for signature, 
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**.
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.
 - **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP8**.
+- **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — operator reverse-proxy guide, **OG1**–**OG8**.
 - **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)** — optional **`docs/reference-documentation/`** workflow, **RD1**–**RD8**.

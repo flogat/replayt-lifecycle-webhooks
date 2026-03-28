@@ -20,6 +20,13 @@ single entrypoint without making a heavy web stack **mandatory** for consumers w
 - Request size limits, chunked upload handling, or rate limiting beyond a **short** note that production should enforce
   limits at the proxy or server (same posture as **SPEC_MINIMAL_HTTP_HANDLER** WSGI notes).
 
+## Reverse proxy and TLS termination (operator guide)
+
+Production deployments usually place **nginx**, **Caddy**, or another reverse proxy in front of the process. **Normative**
+operator guidance (raw body preservation, body size limits, timeouts, **`Transfer-Encoding`** / buffering pitfalls, logging
+hygiene) lives in **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** and the shipped
+guide **`docs/OPERATOR_REVERSE_PROXY.md`** once backlog **`dc212184`** is implemented.
+
 ## Stack choice (normative for Builder)
 
 The implementation **must** choose **one** primary serving model and document the rationale in **`pyproject.toml`**
@@ -107,4 +114,6 @@ When this backlog is implemented:
 - **[README.md](../README.md)** — operator copy-paste for the canonical start command (once implemented).
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local **signed** fixture POST; default URL **must** stay
   aligned with this spec’s host, port, and **`/webhook`** defaults unless both docs change together (**D2**).
+- **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — reverse proxy in front of the
+  reference server; acceptance **OG1**–**OG8**; deliverable **`docs/OPERATOR_REVERSE_PROXY.md`**.
 - **[MISSION.md](MISSION.md)** — optional HTTP glue scope; no mandatory framework for library-only installs.

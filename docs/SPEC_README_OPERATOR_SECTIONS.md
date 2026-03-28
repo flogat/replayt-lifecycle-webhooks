@@ -22,7 +22,9 @@ the README—**link** to **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md
 **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**,
 **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**,
 **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**,
-**[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** instead of duplicating them verbatim.
+**[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**,
+**[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** / **`docs/OPERATOR_REVERSE_PROXY.md`**
+instead of duplicating them verbatim.
 
 ## Backlog acceptance mapping (`23e2da29`)
 
@@ -35,6 +37,16 @@ the README—**link** to **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md
 | CHANGELOG **Unreleased** when user-visible README changes | **§ Release hygiene** |
 | Verify signing locally; common misconfigurations; logs; error catalog | **§ Content requirements** |
 | Optional sequence diagram (markdown) | **§ Content requirements** — **Approval webhook flow** |
+
+## Backlog acceptance mapping (`dc212184`)
+
+Cross-cutting README rule for **Operator guide: reverse proxy in front of reference WSGI server**
+(`dc212184-8c0d-4ee6-90de-e0d50c370f6f`). Normative detail and **OG1**–**OG8** live in
+**[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**.
+
+| Source criterion | Where addressed in this spec |
+| ---------------- | ---------------------------- |
+| README cross-link to operator reverse-proxy guide | **§ Content requirements** — **Reverse proxy operator guide link** |
 
 ## Required sections (`README.md`)
 
@@ -74,6 +86,14 @@ The section **must**:
    **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**,
    **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** for the matching symptom (duplicate delivery, replay policy,
    raw body discipline).
+
+### Reverse proxy operator guide link (backlog `dc212184`)
+
+When **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** is in scope (operator reverse
+proxy guide backlog **`dc212184-8c0d-4ee6-90de-e0d50c370f6f`**), **`README.md`** **must** include a markdown link to
+**`docs/OPERATOR_REVERSE_PROXY.md`** (path as written from the repository root) inside **`## Troubleshooting`** **or**
+**`## Verifying webhook signatures`**. **Do not** paste full proxy configs into **`README.md`**—the guide file holds the
+snippet.
 
 ### `## Approval webhook flow`
 
@@ -142,3 +162,4 @@ See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.m
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — signing and verification procedure.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator error catalog.
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local signed POST command (**D1**–**D9**).
+- **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — reverse proxy guide contract (**OG1**–**OG8**).
