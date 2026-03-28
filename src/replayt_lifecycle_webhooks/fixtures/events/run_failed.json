@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "event_type": "replayt.lifecycle.run.failed",
+  "occurred_at": "2026-03-28T14:31:05Z",
+  "event_id": "9d4e6h0g-2f23-6c7d-1e5f-333333333333",
+  "correlation": {
+    "run_id": "run_01jqexamplefail1",
+    "workflow_id": "wf_invoice_automation_v3",
+    "deployment_id": "dep_staging_west"
+  },
+  "summary": "Run failed: Invoice automation v3 — upstream API timeout",
+  "detail": {
+    "workflow_name": "Invoice automation v3",
+    "error_code": "STEP_FAILED",
+    "error_message": "Upstream payment API did not respond within the configured timeout."
+  }
+}

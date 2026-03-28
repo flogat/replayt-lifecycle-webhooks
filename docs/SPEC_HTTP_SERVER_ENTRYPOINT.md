@@ -104,4 +104,6 @@ When this backlog is implemented:
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint; minimum coverage when **S** rows are active.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — declaring and justifying dependency changes.
 - **[README.md](../README.md)** — operator copy-paste for the canonical start command (once implemented).
+- **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local **signed** fixture POST; default URL **must** stay
+  aligned with this spec’s host, port, and **`/webhook`** defaults unless both docs change together (**D2**).
 - **[MISSION.md](MISSION.md)** — optional HTTP glue scope; no mandatory framework for library-only installs.

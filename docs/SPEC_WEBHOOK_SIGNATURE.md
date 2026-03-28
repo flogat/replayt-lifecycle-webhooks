@@ -119,6 +119,7 @@ If upstream prose is hard to find, capture the authoritative reference (URL, ver
 
 - **Module:** implementation lives under **`src/replayt_lifecycle_webhooks/`** (e.g. **`signature.py`**), with **stable names re-exported** from **`replayt_lifecycle_webhooks`** (`__init__.py`) and listed in **`__all__`**.
 - **Callable:** **`verify_lifecycle_webhook_signature`** — keyword-only parameters **`secret: str | bytes`**, **`body: bytes`**, **`signature: str | None`** (header value passed in by the caller after reading from HTTP).
+- **Callable (dev / tests):** **`compute_lifecycle_webhook_signature_header`** — returns the **`sha256=<hex>`** header value for **`body`** using the same **v1** HMAC as verification; used by the local demo (**[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**) and is **not** a substitute for upstream replayt delivery semantics.
 - **Constants:** at minimum **`LIFECYCLE_WEBHOOK_SIGNATURE_HEADER`** (`Final[str]`) for the wire name **`Replayt-Signature`**.
 - **Exceptions:** distinct types subclassing a small base (e.g. **`WebhookSignatureError`**) for **missing/empty signature**, **malformed format**, and **MAC mismatch** — stable names exported publicly.
 - **Type hints:** required on all **public** functions and constants above.
@@ -173,6 +174,7 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 - **[README.md](../README.md)** — integrator entry and quick example.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON field contract and **`parse_lifecycle_webhook_event`** after verification (see **README** overview).
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H8**.
+- **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — dev **sender** contract; signing **must** stay **v1**-compatible with this spec.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator-facing JSON error envelope, **`error`** codes, post-verify failures, replay/freshness notes for v1.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — **replayt** version floor and bump policy.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — small public surfaces and explicit contracts.

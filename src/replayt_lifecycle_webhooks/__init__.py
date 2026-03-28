@@ -28,6 +28,7 @@ from .signature import (
     WebhookSignatureFormatError,
     WebhookSignatureMismatchError,
     WebhookSignatureMissingError,
+    compute_lifecycle_webhook_signature_header,
     verify_lifecycle_webhook_signature,
 )
 
@@ -52,6 +53,7 @@ __all__ = [
     "WebhookSignatureFormatError",
     "WebhookSignatureMismatchError",
     "WebhookSignatureMissingError",
+    "compute_lifecycle_webhook_signature_header",
     "handle_lifecycle_webhook_post",
     "make_lifecycle_webhook_wsgi_app",
     "parse_lifecycle_webhook_event",

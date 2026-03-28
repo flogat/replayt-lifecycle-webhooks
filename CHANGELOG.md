@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_LOCAL_WEBHOOK_DEMO.md`** (phase **2**, backlog **Add a one-command local demo script for webhook delivery** /
+  `ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`): normative contract for a **local** signed **POST** demo — primary
+  **`python -m replayt_lifecycle_webhooks.demo_webhook`**, **v1** MAC alignment with **SPEC_WEBHOOK_SIGNATURE**, default
+  **`http://127.0.0.1:8000/webhook`**, **`tests/fixtures/events/`** fixtures, CLI **`--help`** / env expectations, and
+  acceptance **D1–D9**. Cross-links and **README** **Try it locally** subsection; **SPEC_AUTOMATED_TESTS** / **MISSION** /
+  **DESIGN_PRINCIPLES** / **SPEC_HTTP_SERVER_ENTRYPOINT** / **SPEC_WEBHOOK_SIGNATURE** pointers updated.
+
 ### Tests
 
 - **Golden-vector** **`Replayt-Signature`** case with committed expected MAC, and **explicit** imports of
@@ -21,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   comments that cite those rows match the spec.
 
 ### Added
+
+- **Local demo webhook POST** (phase **3**, backlog **Add a one-command local demo script for webhook delivery** /
+  `ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`): **`python -m replayt_lifecycle_webhooks.demo_webhook`** (primary) and
+  **`replayt-lifecycle-webhooks-demo-post`**; stdlib **`urllib.request`** client; **`compute_lifecycle_webhook_signature_header`**
+  (**v1** MAC aligned with **`verify_lifecycle_webhook_signature`**); packaged JSON under **`replayt_lifecycle_webhooks/fixtures/events/`**
+  (same bytes as **`tests/fixtures/events/`**); **`tests/test_demo_webhook.py`** for **SPEC_LOCAL_WEBHOOK_DEMO** **D3** / **D7** / **D8** / **D9**.
+  No new mandatory runtime dependencies.
 
 - **Reference HTTP server** (phase **3**, backlog **Expose a minimal HTTP receiver (ASGI/WSGI) behind one entrypoint** /
   `2cf0f4fb-ef9a-40d4-b306-8a46d30f409e`): **`python -m replayt_lifecycle_webhooks`** (primary) and console script

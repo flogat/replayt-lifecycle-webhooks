@@ -5,6 +5,7 @@
 - Replace smoke-only test with real package behavior assertions (`a91574f0-1e57-4b34-9922-763f92448a18`).
 - Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
 - Replace scaffold smoke tests with unit and boundary coverage (`2b4c6927-573a-463c-b59f-f2f91dfb6381`) — rows **A6–A10** under **Backlog `2b4c6927`** below.
+- Local demo webhook POST (`ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`) — checklist **D1–D9** in **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -22,6 +23,7 @@ behavioral coverage.
 | Signature verification behavior and **W** rows | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** |
 | Optional HTTP handler status codes (**H1–H8**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
 | Reference HTTP server entrypoint (**S1–S8**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
+| Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
@@ -62,20 +64,24 @@ The suite **must** include **network-free** **pytest** tests that fail when the 
    invalid or unknown shapes so validation regressions fail. Align with **EVENTS.md** rows **T3–T5** (fixtures, invalid
    **`detail`**, unknown **`event_type`**, missing required envelope fields). Existing coverage is expected under
    **`tests/test_lifecycle_events.py`** and **`tests/fixtures/events/`**.
-
-Other modules (**mission** doc anchors, **replayt** dependency doc checks, and so on) may coexist; they do **not** replace
-items **1** and **2**.
-
-When **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** is implemented, the suite **must** additionally
-include **network-free** tests that fail if the documented **POST** webhook path or **`GET /health`** (or the spec-chosen
-health path) regresses per checklist **S3**, **S4**, and **S6** in that document. Those tests **must not** replace items
-**1**–**3** above.
-
 3. **Replayt boundary (dependency seam)** — At least one module **imports `replayt`** and asserts **documented** public
    symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
    This is **in addition to** items **1** and **2**, not a substitute. Existing **`tests/test_replayt_dependency.py`** work
    counts toward the **version / pyproject** story only when combined with those **import** checks (same module or a
    dedicated **`tests/test_replayt_boundary.py`**).
+
+Other modules (**mission** doc anchors, **replayt** dependency doc checks, and so on) may coexist; they do **not** replace
+items **1**–**3**.
+
+When **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** is implemented, the suite **must** additionally
+include **network-free** tests that fail if the documented **POST** webhook path or **`GET /health`** (or the spec-chosen
+health path) regresses per checklist **S3**, **S4**, and **S6** in that document. Those tests **must not** replace items
+**1**–**3**.
+
+When **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** is implemented, the suite **must** additionally include
+**network-free** tests that satisfy checklist **D3**, **D7**, and **D8** in that document (signing agrees with
+**`verify_lifecycle_webhook_signature`**; non-success HTTP maps to non-zero exit or equivalent tested behavior). Those
+tests **must not** replace items **1**–**3**.
 
 ## Acceptance criteria (checklist)
 
