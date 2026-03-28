@@ -12,7 +12,9 @@ acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNA
 handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
 **Reference HTTP server** (stdlib **WSGI**, no extra install): primary command **`python -m replayt_lifecycle_webhooks`**,
 **POST** on **`/webhook`** by default, **`GET /health`**. Details and acceptance **S1–S8**:
-**[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Run / approval JSON envelope** (field
+**[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Local signed demo POST** (one command,
+dev fixtures, same **v1** signing as verification): **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)**
+(checklist **D1–D9**). **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. Informative **JSON Schema** mirror (**Draft-07**):
 **[docs/schemas/lifecycle_webhook_payload-1-0.schema.json](docs/schemas/lifecycle_webhook_payload-1-0.schema.json)**.
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
@@ -65,6 +67,15 @@ python -m venv .venv
 # Windows: .venv\\Scripts\\activate
 pip install -e ".[dev]"
 ```
+
+## Try it locally
+
+1. Start the **reference server** (see **Reference HTTP server** below) with **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** set.
+2. In a second terminal, send a **signed** sample lifecycle POST in **one command** using the demo entrypoint defined in
+   **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)** — same **v1** **`Replayt-Signature`** rules as
+   **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**, default URL aligned with the server
+   (**`http://127.0.0.1:8000/webhook`**). The spec lists the canonical **`python -m …`** command, CLI flags, fixture
+   layout under **`tests/fixtures/events/`**, and acceptance checklist **D1–D9** for Builder/Tester.
 
 ## Reference HTTP server
 
@@ -235,6 +246,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H8** |
 | `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S8** |
+| `docs/SPEC_LOCAL_WEBHOOK_DEMO.md` | Local demo: one command POSTs signed fixtures to default listener; acceptance **D1–D9** |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |

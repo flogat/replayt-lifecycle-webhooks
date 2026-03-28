@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_LOCAL_WEBHOOK_DEMO.md`** (phase **2**, backlog **Add a one-command local demo script for webhook delivery** /
+  `ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`): normative contract for a **local** signed **POST** demo — primary
+  **`python -m replayt_lifecycle_webhooks.demo_webhook`**, **v1** MAC alignment with **SPEC_WEBHOOK_SIGNATURE**, default
+  **`http://127.0.0.1:8000/webhook`**, **`tests/fixtures/events/`** fixtures, CLI **`--help`** / env expectations, and
+  acceptance **D1–D9**. Cross-links and **README** **Try it locally** subsection; **SPEC_AUTOMATED_TESTS** / **MISSION** /
+  **DESIGN_PRINCIPLES** / **SPEC_HTTP_SERVER_ENTRYPOINT** / **SPEC_WEBHOOK_SIGNATURE** pointers updated.
+
 ### Tests
 
 - **Golden-vector** **`Replayt-Signature`** case with committed expected MAC, and **explicit** imports of
