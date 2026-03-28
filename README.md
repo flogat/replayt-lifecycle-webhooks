@@ -71,11 +71,20 @@ pip install -e ".[dev]"
 ## Try it locally
 
 1. Start the **reference server** (see **Reference HTTP server** below) with **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** set.
-2. In a second terminal, send a **signed** sample lifecycle POST in **one command** using the demo entrypoint defined in
-   **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)** — same **v1** **`Replayt-Signature`** rules as
-   **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**, default URL aligned with the server
-   (**`http://127.0.0.1:8000/webhook`**). The spec lists the canonical **`python -m …`** command, CLI flags, fixture
-   layout under **`tests/fixtures/events/`**, and acceptance checklist **D1–D9** for Builder/Tester.
+2. In a second terminal, POST a **signed** sample lifecycle body (default **`run_completed`**) to the same secret and
+   default URL **`http://127.0.0.1:8000/webhook`**:
+
+```bash
+export REPLAYT_LIFECYCLE_WEBHOOK_SECRET='your-shared-secret'
+python -m replayt_lifecycle_webhooks.demo_webhook
+```
+
+Optional flags: **`--url`**, **`--fixture PATH_OR_PRESET`** (packaged presets match **`tests/fixtures/events/*.json`** in
+the repo; **`pip install`** users rely on the copies shipped under **`replayt_lifecycle_webhooks/fixtures/events/`**), or
+**`--secret`** for local debugging only (prefer the env var). Console script alias: **`replayt-lifecycle-webhooks-demo-post`**.
+
+Full contract, exit codes, and checklist **D1–D9**: **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)**.
+Signing rules match **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)** (**v1** **`Replayt-Signature`**).
 
 ## Reference HTTP server
 
@@ -95,7 +104,8 @@ The **library** still does not read the environment for **`verify_lifecycle_webh
 **`handle_lifecycle_webhook_post`**; only this **process** entrypoint loads **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** by
 default (**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**).
 
-Secondary console script (equivalent): **`replayt-lifecycle-webhooks-serve`**.
+Secondary console scripts (equivalent): **`replayt-lifecycle-webhooks-serve`** (reference server),
+**`replayt-lifecycle-webhooks-demo-post`** (signed demo POST).
 
 ## Running tests
 
@@ -247,6 +257,8 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H8** |
 | `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S8** |
 | `docs/SPEC_LOCAL_WEBHOOK_DEMO.md` | Local demo: one command POSTs signed fixtures to default listener; acceptance **D1–D9** |
+| `replayt_lifecycle_webhooks.demo_webhook` | **`python -m replayt_lifecycle_webhooks.demo_webhook`**: signed POST to default **`/webhook`** URL |
+| `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |

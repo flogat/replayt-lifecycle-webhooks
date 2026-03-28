@@ -82,3 +82,14 @@ def verify_lifecycle_webhook_signature(
     expected = hmac.new(_secret_key(secret), body, hashlib.sha256).digest()
     if not hmac.compare_digest(expected, provided):
         raise WebhookSignatureMismatchError("webhook signature does not match body and secret")
+
+
+def compute_lifecycle_webhook_signature_header(*, secret: str | bytes, body: bytes) -> str:
+    """Return a ``Replayt-Signature`` header value (``sha256=<hex>``) for ``body`` octets.
+
+    Uses the same HMAC-SHA256 keying and digest as :func:`verify_lifecycle_webhook_signature`.
+    Intended for local demos, tests, and compatible senders — not a substitute for upstream
+    replayt delivery semantics.
+    """
+    digest = hmac.new(_secret_key(secret), body, hashlib.sha256).hexdigest()
+    return f"sha256={digest}"

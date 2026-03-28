@@ -31,6 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Local demo webhook POST** (phase **3**, backlog **Add a one-command local demo script for webhook delivery** /
+  `ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`): **`python -m replayt_lifecycle_webhooks.demo_webhook`** (primary) and
+  **`replayt-lifecycle-webhooks-demo-post`**; stdlib **`urllib.request`** client; **`compute_lifecycle_webhook_signature_header`**
+  (**v1** MAC aligned with **`verify_lifecycle_webhook_signature`**); packaged JSON under **`replayt_lifecycle_webhooks/fixtures/events/`**
+  (same bytes as **`tests/fixtures/events/`**); **`tests/test_demo_webhook.py`** for **SPEC_LOCAL_WEBHOOK_DEMO** **D3** / **D7** / **D8** / **D9**.
+  No new mandatory runtime dependencies.
+
 - **Reference HTTP server** (phase **3**, backlog **Expose a minimal HTTP receiver (ASGI/WSGI) behind one entrypoint** /
   `2cf0f4fb-ef9a-40d4-b306-8a46d30f409e`): **`python -m replayt_lifecycle_webhooks`** (primary) and console script
   **`replayt-lifecycle-webhooks-serve`**; stdlib **WSGI** with **`GET /health`**, **`POST /webhook`** (default path;
