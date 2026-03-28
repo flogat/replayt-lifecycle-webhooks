@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`README.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **3**, backlog **Declare replayt dependency range and compatibility matrix** /
+  `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`): **compatibility matrix**, upper-bound policy, dual-backlog traceability, reporting breakage (**both** package versions), acceptance **A5–A7**; README **Compatibility matrix** pointer and layout row; design principles name matrix and optional upper bound.
 - **`docs/MISSION.md`** (phase **2**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
   `3f27ad86-ef1f-4883-8cc2-cee94ba301cb`): **Ecosystem positioning** — primary pattern **Core-gap**; skim links to
   **README**; success metrics add **releases and versioning** (SemVer, `pyproject.toml`, changelog
