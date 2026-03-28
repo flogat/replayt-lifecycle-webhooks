@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Minimal HTTP POST handler (phase 3, backlog `6e1255ce`):** **`handle_lifecycle_webhook_post`** (framework-agnostic
+  request view → **405** / **401** / **403** / **400** / **204**), **`LifecycleWebhookHttpResult`**, and
+  **`make_lifecycle_webhook_wsgi_app`** (stdlib WSGI). **401** for missing or malformed **`Replayt-Signature`**;
+  **403** for well-formed MAC mismatch; verify-before-JSON ordering per **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**.
+  Tests cover **H1–H7** (including invalid signature with invalid JSON → **401/403**, not **400**).
+
 ### Documentation
 
 - **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** explicit **signing scheme v1**, normative **consumer contract** (headers, raw
