@@ -27,7 +27,8 @@ on **`occurred_at`**, clock skew, optional wire headers, pluggable dedupe store 
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
 entrypoint:** **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**. **Public Python API** (`__all__`, supported
 vs internal import paths, **`python -m`** entrypoints, deprecation / **pre-1.0** policy):
-**[docs/SPEC_PUBLIC_API.md](docs/SPEC_PUBLIC_API.md)**.
+**[docs/SPEC_PUBLIC_API.md](docs/SPEC_PUBLIC_API.md)**. **Optional contributor reference snapshots**
+(**`docs/reference-documentation/`**): **[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)**.
 
 **Lifecycle semantics (upstream) vs wire JSON (this repo):** Replayt’s product and library semantics are described on
 **[replayt (PyPI)](https://pypi.org/project/replayt/)** (project description, release history, and links from that
@@ -66,10 +67,25 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 ## Reference documentation (optional)
 
-[`docs/reference-documentation/`](docs/reference-documentation/) holds short excerpts or consumer contracts when
-upstream prose is not in this tree. See
-[`REPLAYT_WEBHOOK_SIGNING.md`](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md) for the HMAC header and body
-rules this package implements.
+[`docs/reference-documentation/`](docs/reference-documentation/) holds **optional** short markdown excerpts or consumer
+contracts when upstream prose is not in this tree. You **do not** need to populate it to build or test this package;
+**CI** does not download upstream documentation trees. See
+[`REPLAYT_WEBHOOK_SIGNING.md`](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md) for the HMAC header and body rules
+this package implements, and [`docs/reference-documentation/README.md`](docs/reference-documentation/README.md) for what
+belongs in git vs a **local-only** tree.
+
+**How to refresh**
+
+- **Committed excerpts:** edit the relevant file(s) under [`docs/reference-documentation/`](docs/reference-documentation/)
+  in a PR when the consumer contract changes.
+- **Bulk / offline copies:** use a **gitignored** directory
+  [`docs/reference-documentation/_upstream_snapshot/`](docs/reference-documentation/_upstream_snapshot/) (create it
+  locally) and copy markdown from your local **replayt** checkout or docs export **manually**. Do not `git add` that
+  path. An optional maintainer script under `scripts/` may be added later to automate copying from a path you
+  configure; it will never be required for **CI** or `pytest`.
+
+Normative layout and acceptance checklist **RD1**–**RD5**:
+**[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)**.
 
 ## Quick start
 
@@ -385,8 +401,10 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |
-| `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
+| `docs/SPEC_REFERENCE_DOCUMENTATION.md` | Optional **`docs/reference-documentation/`** workflow: what to commit, local `_upstream_snapshot/`, CI hygiene; **RD1**–**RD5** |
+| `docs/reference-documentation/README.md` | Folder stub: optional use, refresh hints, link to spec |
+| `docs/reference-documentation/` | Optional markdown for contributors; committed excerpts (e.g. `REPLAYT_WEBHOOK_SIGNING.md`); bulk copies local-only under `_upstream_snapshot/` (gitignored) |
 | `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events`, `redaction`, `serve`; **`__main__`** for **`python -m`** |
 | `pyproject.toml` | Package metadata |
 | `CHANGELOG.md` | Release notes (Keep a Changelog); keep **Unreleased** updated |
-| `.gitignore` | Ignores `path/` (doc placeholders), `.orchestrator/`, `.cursor/skills/`, and `AGENTS.md` (local tooling) |
+| `.gitignore` | Ignores `path/` (doc placeholders), `docs/reference-documentation/_upstream_snapshot/`, `.orchestrator/`, `.cursor/skills/`, and `AGENTS.md` (local tooling) |

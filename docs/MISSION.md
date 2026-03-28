@@ -54,7 +54,8 @@ optional HTTP glue, and keep **CI** and tests aligned so adopters can copy a **k
   bump policy and checklists: **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**.
 - **Lifecycle delivery contract** — Run and approval events are delivered over HTTP with signing as upstream documents;
   this repo implements **verification** and documents headers/body rules for Python handlers. Algorithm or header changes
-  upstream are **tracked** here via tests, **CHANGELOG.md**, and optional material under **`docs/reference-documentation/`**.
+  upstream are **tracked** here via tests, **CHANGELOG.md**, and optional material under **`docs/reference-documentation/`**
+  (layout and contributor workflow: **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**).
 - **Standard-library crypto** — Verification uses **stdlib** **`hmac` / `hashlib`** where the published contract allows;
   no requirement to patch **replayt** core from this repository.
 - This repository does **not** exist to steer replayt core; propose upstream changes through normal channels (see

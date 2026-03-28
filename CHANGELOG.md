@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/reference-documentation/README.md`**, **`README.md`** (project layout,
+  **Reference documentation**), **`.gitignore`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**,
+  **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add optional reference-documentation snapshot workflow** /
+  `eb884da9-5273-4ce0-b105-5130c6b1ac79`): normative optional **`docs/reference-documentation/`** workflow—committed
+  excerpts vs gitignored **`_upstream_snapshot/`**, **how to refresh** (manual copy and optional future **`scripts/`**
+  helper), **CI** must not require upstream doc mirroring; acceptance **RD1**–**RD5**.
+
 - **`README.md`** (phase **3**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
   `23e2da29-8042-4721-a1eb-e44a2076273f`): operator block uses **`## Troubleshooting`**, **`## Approval webhook flow`**, and
   **`## Verifying webhook signatures`** (misconfiguration checklist, log pointers, **`event_type`** names and optional

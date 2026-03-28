@@ -21,6 +21,8 @@
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
   checklist **OP1**–**OP8** under **Backlog `23e2da29`** below; normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
+- Optional reference-documentation snapshot workflow (`eb884da9-5273-4ce0-b105-5130c6b1ac79`) — checklist **RD1**–**RD5**
+  under **Backlog `eb884da9`** below; normative contract **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -49,6 +51,7 @@ behavioral coverage.
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
+| Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD5**) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`** |
 
 ## CI entrypoint (invariant)
 
@@ -286,6 +289,21 @@ between consecutive **`## `** headings so each row scopes content to the right s
 | **OP7** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** with fragment **`#verification-procedure-integrators`** (substring match). | **`pytest`** |
 | **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
 
+## Backlog `eb884da9`: optional reference-documentation snapshot workflow
+
+Checklist rows for **Add optional reference-documentation snapshot workflow**
+(`eb884da9-5273-4ce0-b105-5130c6b1ac79`). Normative contract:
+**[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**. These rows are **documentation / workflow**
+acceptance (not a substitute for signature, parsing, boundary, or **pytest** minima in **§ Minimum behavioral coverage**).
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **RD1** | **`docs/reference-documentation/README.md`** explains optional use, committed vs **`_upstream_snapshot/`** content, and links **SPEC_REFERENCE_DOCUMENTATION**. | Doc review |
+| **RD2** | Root **`README.md`** **Reference documentation (optional)** links the folder **README**, **SPEC_REFERENCE_DOCUMENTATION**, and describes refresh (manual **and/or** optional **`scripts/`**). | Doc review |
+| **RD3** | **`.gitignore`** contains **`docs/reference-documentation/_upstream_snapshot/`**. | Doc review |
+| **RD4** | **CI** does not require downloading or mirroring a large upstream documentation tree into **`docs/reference-documentation/`**. | Review **`.github/workflows/ci.yml`** |
+| **RD5** | This file (**SPEC_AUTOMATED_TESTS**) traces backlog **`eb884da9`** and **RD1**–**RD5** (this table). | Doc review |
+
 ## Related docs
 
 - **[README.md](../README.md)** — quick start; see **Running tests** for the canonical command.
@@ -297,3 +315,4 @@ between consecutive **`## `** headings so each row scopes content to the right s
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**.
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.
 - **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP8**.
+- **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)** — optional **`docs/reference-documentation/`** workflow, **RD1**–**RD5**.
