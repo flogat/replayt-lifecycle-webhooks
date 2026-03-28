@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/MISSION.md`** (phase **2**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
+  `3f27ad86-ef1f-4883-8cc2-cee94ba301cb`): **Ecosystem positioning** — primary pattern **Core-gap**; skim links to
+  **README**; success metrics add **releases and versioning** (SemVer, `pyproject.toml`, changelog
+  sections, PyPI); **DESIGN_PRINCIPLES** cross-reference uses a proper in-tree link.
+- **`docs/REPLAYT_ECOSYSTEM_IDEA.md`:** completed **Your choice** (core-gap pitch; pointers to **MISSION** and key specs).
+- **`README.md`:** **Overview** reflects the **MISSION** ecosystem framing (consumer-side gap-fill) and points there for
+  scope, success, and release expectations; project layout row updated.
+
 ### Added
 
 - **Lifecycle JSON validation** (phase 3, backlog **Map replayt run and approval events to webhook payload shapes** /

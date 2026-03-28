@@ -5,7 +5,15 @@ POST matches **`Replayt-Signature`** (HMAC over the **raw body**) before you par
 **not** a fork of [replayt](https://pypi.org/project/replayt/); the supported **replayt** floor and verification rules
 live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**,
 **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**, and the optional HTTP helper spec
-**[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**.
+**[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**. Repository map and quick links:
+**[README.md](../README.md)**.
+
+## Ecosystem positioning
+
+**Primary pattern:** **Core-gap** (see taxonomy in **[REPLAYT_ECOSYSTEM_IDEA.md](REPLAYT_ECOSYSTEM_IDEA.md)**). Replayt
+upstream defines lifecycle **semantics** and **signing** on the wire; it does not ship this repository’s **Python**
+verification surface, tests, and copy-paste handler contracts. This package fills that gap **on the consumer side**
+without forking or steering core.
 
 ## Users and problem
 
@@ -37,7 +45,7 @@ optional HTTP glue, and keep **CI** and tests aligned so adopters can copy a **k
 - **Standard-library crypto** — Verification uses **stdlib** **`hmac` / `hashlib`** where the published contract allows;
   no requirement to patch **replayt** core from this repository.
 - This repository does **not** exist to steer replayt core; propose upstream changes through normal channels (see
-  **DESIGN_PRINCIPLES**).
+  **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)**).
 
 ## Lifecycle moments: run vs approval
 
@@ -61,7 +69,7 @@ normal incident or retry paths; do not act on the JSON as if it were authentic.
 Integrators and operators are responsible for:
 
 - **Shared secret** — Configure one secret out of band and pass it into **`verify_lifecycle_webhook_signature`** (or
-  equivalent). This library does **not** read the environment for you; see **README** and **SPEC_WEBHOOK_SIGNATURE** for
+  equivalent). This library does **not** read the environment for you; see **[README.md](../README.md)** and **SPEC_WEBHOOK_SIGNATURE** for
   the recommended env var name and hygiene.
 - **Raw body discipline** — Provide the **exact** request body **bytes** from the HTTP layer **before** JSON parsing or
   mutation; otherwise the MAC will not match.
@@ -77,7 +85,7 @@ Integrators and operators are responsible for:
 
 - Documented **replayt** minimum version in `pyproject.toml` and **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**.
 - **Public** verification helper(s) with **unit tests** that do **not** require the network.
-- **README** and spec docs integrators can copy from; **CHANGELOG.md** for user-visible changes.
+- **[README.md](../README.md)** and spec docs integrators can copy from; **CHANGELOG.md** for user-visible changes.
 - **CI** that installs the package and runs the **automated test suite** (see **Success metrics (v0.x)**).
 
 ### Out of scope
@@ -98,14 +106,15 @@ Integrators and operators are responsible for:
 - **Automated tests** (e.g. **pytest**) run in **CI** on every change workflow the project uses; they cover claimed
   verification behavior, dependency contract checks, and spec-driven acceptance where implemented—**green CI** is part
   of “done.”
+- **Releases and versioning** — Public API and dependency contract changes are tracked under **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)** as declared in **`CHANGELOG.md`**; cutting a release means updating the version in **`pyproject.toml`**, grouping **Unreleased** notes into a dated section, and publishing to PyPI (or the project’s canonical index) per maintainer practice. Integrators rely on the **replayt** lower bound and changelog for upgrade safety (**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**).
 - **CHANGELOG.md** records user-visible API and dependency changes under **Unreleased** (or the releasing section) per
   project convention.
-- Operators can adopt verification using **README** + **SPEC_WEBHOOK_SIGNATURE.md** without reading the whole tree.
+- Operators can adopt verification using **[README.md](../README.md)** + **SPEC_WEBHOOK_SIGNATURE.md** without reading the whole tree.
 
 ## Doc hygiene (checklist)
 
 When you change behavior or contracts:
 
-- [ ] Update the relevant **spec** and **README** if integrator-facing text changes.
+- [ ] Update the relevant **spec** and **[README.md](../README.md)** if integrator-facing text changes.
 - [ ] Add **CHANGELOG.md** **Unreleased** notes for user-visible API, dependency, or notable doc contract changes.
 - [ ] Keep **MISSION** scope/success consistent with **DESIGN_PRINCIPLES** and what **CI** actually runs.
