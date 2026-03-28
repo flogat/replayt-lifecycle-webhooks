@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`**, **`README.md`**, **`docs/MISSION.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**,
+  **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **2**, backlog **Document webhook
+  failure responses operators can act on** / `5ec1325a-5b45-440f-b93f-28b711fa5482`): normative JSON error envelope
+  (**`error`** + **`message`**), stable codes (**`signature_required`**, **`signature_mismatch`**, **`invalid_json`**,
+  **`unknown_event_type`**, **`replay_rejected`**, etc.), typical HTTP statuses, redacted examples, **v1** replay/timestamp
+  scope, **what not to log or return**; README runbook table; cross-links from signature / minimal-handler / design
+  principles; acceptance **F1–F5**; notes reference **`handle_lifecycle_webhook_post`** empty 4xx bodies until optional
+  Builder alignment.
 - **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**,
   **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/EVENTS.md`** (phase **2**,
   backlog **Replace smoke-only test with real

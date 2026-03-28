@@ -30,6 +30,11 @@ Handled in order: method check → signature verification → UTF-8 decode → J
 
 **H5 (ordering):** If verification fails, the implementation must **not** return **400** for JSON errors. Garbage bodies with missing or wrong MAC must yield **401** or **403**, not **400**.
 
+**Response bodies (4xx / 405):** **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** defines the
+recommended **`application/json`** envelope (**`error`** + **`message`**) for operator runbooks. The reference
+**`handle_lifecycle_webhook_post`** implementation may return **empty** bodies for client errors while still using the
+status codes above; integrators may wrap or extend responses to match the failure-response spec.
+
 ## Public API (Python)
 
 Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in **`__all__`**.
@@ -71,3 +76,4 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification procedure, **401/403** guidance, v1 header format.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON contract and typed parsing after a successful parse (see **README**).
 - **[README.md](../README.md)** — copy-paste examples for **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`**.
+- **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable JSON **`error`** codes, HTTP mapping, and logging boundaries for operators.

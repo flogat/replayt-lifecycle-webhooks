@@ -169,5 +169,6 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 - **[README.md](../README.md)** — integrator entry and quick example.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON field contract and **`parse_lifecycle_webhook_event`** after verification (see **README** overview).
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H7**.
+- **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator-facing JSON error envelope, **`error`** codes, post-verify failures, replay/freshness notes for v1.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — **replayt** version floor and bump policy.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — small public surfaces and explicit contracts.
