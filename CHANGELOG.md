@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`CHANGELOG.md`** (phase **6**, security review, Mission Control backlog **Add optional docs/reference-documentation
+  snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): Reviewed `git diff master -- . ':!.orchestrator'` — docs,
+  **`CONTRIBUTING.md`**, **`tests/test_reference_documentation_workflow.py`**, **`docs/DESIGN_PRINCIPLES.md`**; no **`src/`**,
+  **`pyproject.toml`**, or **`.github/workflows/ci.yml`** changes. Tests use fixed-argument **`git check-ignore`** only (no
+  shell, no network). No secrets or credentials in prose; **curl** examples use **`example.invalid`**; **RD4** unchanged
+  (**`reference-documentation`** absent from **`ci.yml`**).
+
 - **`CHANGELOG.md`** (phase **5**, architect review, Mission Control backlog **Add optional docs/reference-documentation
   snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): **Unreleased** notes for backlog **`eb884da9`** now describe
   **RD1**–**RD8** enforcement and the **`2db687f4`** refinement (older bullets had drifted to **RD1**–**RD5** only).
