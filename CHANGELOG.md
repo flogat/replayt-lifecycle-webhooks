@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`README.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add replayt dependency declaration and compatibility matrix stub** /
+  `8b16060d-f6e6-4111-bed2-4978b965ff52`): **compatibility matrix** now lists **`requires-python`**, **CI-tested Python** (**3.12**, `.github/workflows/ci.yml`), and how **replayt** is resolved in CI vs the declared lower bound; **stub / pre-coupling** checklist when **`replayt`** is not yet in **`[project.dependencies]`**; acceptance **A8**; **A1**/**A2** cover the stub path. README states **Python** / **CI** expectations; **SPEC_AUTOMATED_TESTS** traceability points at **A1**–**A8**.
+- **`docs/DESIGN_PRINCIPLES.md`**, **README** project layout table (phase **5**, architecture review, same backlog): **explicit contracts** bullet and **SPEC_REPLAYT_DEPENDENCY** row now name **Python** / **CI-tested** columns in the **compatibility matrix**, not only **replayt** ↔ package wording.
+- **`CHANGELOG.md`** (phase **6**, security review, same backlog): recorded security pass — `git diff master` is documentation and **`tests/test_replayt_dependency.py`** only (no **`src/`** or **`pyproject.toml`** changes in this diff); new tests read **`pyproject.toml`**, **`.github/workflows/ci.yml`**, and specs from disk only (no network/subprocess); no secrets or live credentials in added prose; runtime pins remain **`pydantic>=2.6.0`** and **`replayt>=0.4.25`** per existing policy; **CI** still runs **pytest** and the **supply-chain** **`pip-audit`** job (workflow unchanged here).
+
 ### Added
 
 - **Lifecycle event digests** (phase **3**, backlog **Publish PM- and support-friendly event digest format** /
@@ -20,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `30e133a5-78fa-4eee-ae56-56a1af4c9f73`): **`tests/test_public_api.py`** asserts package root and **`events`** **`__all__`**
   match **`docs/SPEC_PUBLIC_API.md`**, documented internal modules import, and deprecation policy anchors in the spec.
   Package root **`__all__`** order aligned with that spec table.
+
+- **SPEC_REPLAYT_DEPENDENCY acceptance A8** (phase **3**, backlog **Add replayt dependency declaration and compatibility matrix stub** /
+  `8b16060d-f6e6-4111-bed2-4978b965ff52`): **`tests/test_replayt_dependency.py`** now checks **README**, the spec **compatibility matrix**,
+  **`pyproject.toml`** **`requires-python`**, **`.github/workflows/ci.yml`** **`python-version`**, and the **CI note on replayt versions**
+  stay aligned (single CI Python; matrix echoes declared and tested interpreters).
 
 ### Documentation
 

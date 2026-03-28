@@ -54,7 +54,9 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 **Report breakage:** Open an issue on [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues). Include both the installed **replayt** version and **replayt-lifecycle-webhooks** version.
 
-**Compatibility matrix** (**replayt** ↔ this package version line, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
+**Compatibility matrix** (**replayt** and **Python** support, CI-tested interpreter, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
+
+**Python:** `pyproject.toml` sets **`requires-python`** (minimum installers must satisfy). GitHub Actions runs the full **`pytest`** suite on **Python 3.12** (see `.github/workflows/ci.yml`). A broader `requires-python` means other minors may work but are not necessarily exercised in CI until you add matrix jobs.
 
 ## Design principles
 
@@ -311,7 +313,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/MISSION.md` | Mission and scope |
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
 | `docs/SPEC_PUBLIC_API.md` | Supported public imports (`__all__`), internal modules until 1.0, semver + deprecation + **CHANGELOG** rules |
-| `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** range: contract, **compatibility matrix**, upper-bound policy, checklist, CI expectations |
+| `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** range: contract, **compatibility matrix** (**replayt**, **`requires-python`**, CI-tested Python), upper-bound policy, checklist, CI expectations |
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H12** |

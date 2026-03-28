@@ -2,6 +2,7 @@
 
 **Backlogs (normative traceability):**
 
+- **Add replayt dependency declaration and compatibility matrix stub** — `8b16060d-f6e6-4111-bed2-4978b965ff52` (matrix includes **Python** / **CI-tested** columns; **CHANGELOG** rule for dependency adds; optional **no runtime coupling yet** checklist).
 - **Declare replayt dependency range and compatibility matrix** — `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4` (range, matrix, upper-bound policy, justified floor, integrator reporting).
 - **Pin replayt and document a minimum supported version** — `e65371ff-be0f-4dfb-ad57-9cdef4ecc8fc` (original pin / floor contract).
 
@@ -40,16 +41,34 @@ Without a declared, **justified** **replayt** dependency range and a **published
 
 - **`pip install -e .`** must succeed in CI (same standard as local editable install).
 - Supply-chain / dev workflows that use **`pip install -e ".[dev]"`** remain valid; they must still resolve **replayt** from the declared dependency range.
+- **Python version:** The canonical automated test job uses the interpreter pinned in **`.github/workflows/ci.yml`** (currently **3.12**). That version is the **tested** Python for the full **`pytest tests`** collection; it must appear in the **compatibility matrix** below. **`requires-python`** in `pyproject.toml` may be broader (e.g. `>=3.11`); document both so integrators do not assume every supported Python minor is exercised in CI unless you add matrix jobs.
+
+## When `replayt` is not listed in `pyproject.toml` yet (stub / pre-coupling)
+
+Some trees may ship **documentation and tests** before the first **`import replayt`** or install-time coupling. If **`[project.dependencies]`** does **not** include **`replayt`**:
+
+1. State **explicitly** in this spec (short **Status** paragraph under **Dependency declaration**) or in **`README.md`** that there is **no runtime dependency on replayt yet** and that the floor will appear in `pyproject.toml` when integration lands.
+2. Keep the **compatibility matrix** with a **stub row** or a clear “N/A — dependency pending” note that links to this checklist.
+3. Before merging the first change that adds **`replayt`** to **`[project.dependencies]`**, complete the **Builder checklist**:
+   - Add **`replayt>=M.m.p`** with a justified floor (see **Justifying the floor** above).
+   - Update the matrix row for the current package version line (replayt + Python columns).
+   - Add **`CHANGELOG.md`** **Unreleased** **Added** (or **Changed**) text for the new dependency with rationale.
+   - Align **`README.md`** compatibility lines with the new floor.
+   - Ensure **replayt** boundary tests (**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**) match any new import surface.
+
+Once **`replayt`** is declared, remove or rewrite the **no runtime coupling** wording so docs do not contradict the manifest.
 
 ## Compatibility matrix
 
-**Purpose:** Give integrators a single table mapping **released `replayt-lifecycle-webhooks` versions** to **supported `replayt` install ranges** and short notes. Extend the table on every release that changes declared bounds or compatibility story.
+**Purpose:** Give integrators a single table mapping **released `replayt-lifecycle-webhooks` versions** to **supported `replayt` install ranges**, **declared Python support**, and **what CI actually runs**. Extend the table on every release that changes declared bounds, Python support, or the CI interpreter.
 
 **Maintainer rule:** When you cut a version or change `[project.dependencies]` for **replayt**, add or update the row for that package version and align **`CHANGELOG.md`**.
 
-| replayt-lifecycle-webhooks | Supported replayt (declared in `pyproject.toml` for that release) | Notes |
-| -------------------------- | ----------------------------------------------------------------- | ----- |
-| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
+**CI note on replayt versions:** The test job does not pin a single **replayt** patch beyond the declared lower bound; **`pip`** resolves a version satisfying **`replayt>=M.m.p`**. The **matrix** documents the **declared range**; **`tests/test_replayt_dependency.py`** asserts the installed release is **≥** the canonical floor from `pyproject.toml`.
+
+| replayt-lifecycle-webhooks | Supported replayt (declared in `pyproject.toml` for that release) | Python (`requires-python`) | CI-tested Python | Notes |
+| -------------------------- | ----------------------------------------------------------------- | -------------------------- | ---------------- | ----- |
+| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.12** (`.github/workflows/ci.yml`, `test` and `supply-chain` jobs) | Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
 
 **Integrator expectation:** Install this package from PyPI (or a fork) and let the resolver pick **replayt** consistent with the row for your **replayt-lifecycle-webhooks** version. If you pin **replayt** independently, ensure it still satisfies the declared range; otherwise signature or payload assumptions may not match what this repo tests.
 
@@ -60,17 +79,18 @@ Without a declared, **justified** **replayt** dependency range and a **published
 
 ## Acceptance criteria (checklist)
 
-Use this list for Spec gate and Builder sign-off. Rows **A5–A7** map to backlog **Declare replayt dependency range and compatibility matrix** (`1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`).
+Use this list for Spec gate and Builder sign-off. Rows **A5–A7** map to backlog **Declare replayt dependency range and compatibility matrix** (`1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`). Row **A8** maps to backlog **Add replayt dependency declaration and compatibility matrix stub** (`8b16060d-f6e6-4111-bed2-4978b965ff52`).
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
-| A1 | `replayt` appears in `[project.dependencies]` with a documented minimum (lower bound or exact pin). | Inspect `pyproject.toml`; matches contract above. |
-| A2 | README gives integrators a clear **compatibility** story: declared floor, how to check installed version, PyPI/release-history link, where to report breakage, and pointer to this spec’s **compatibility matrix**. | Manual review of `README.md`. |
+| A1 | `replayt` appears in `[project.dependencies]` with a documented minimum (lower bound or exact pin), **or** the **stub / pre-coupling** section above is satisfied until integration lands. | Inspect `pyproject.toml` and this spec / README for the active branch. |
+| A2 | README gives integrators a clear **compatibility** story: declared floor (when present), how to check installed version, PyPI/release-history link, where to report breakage, pointer to this spec’s **compatibility matrix**, and **CI-tested Python** (see **A8**). | Manual review of `README.md`. |
 | A3 | Editable install works in CI. | CI job that runs `pip install -e .` (or equivalent) exits 0. |
 | A4 | User-visible dependency/documentation changes are reflected in **`CHANGELOG.md`** under **Unreleased** (or release section), per project convention — including **dependency adds/changes** and **floor/upper-bound** moves with brief rationale. | Review `CHANGELOG.md`. |
-| A5 | **Compatibility matrix** in this spec includes a row for the current package version line and matches `pyproject.toml`. | Diff `pyproject.toml` vs matrix; README links here. |
+| A5 | **Compatibility matrix** in this spec includes a row for the current package version line and matches `pyproject.toml` **replayt** bound when declared. | Diff `pyproject.toml` vs matrix; README links here. |
 | A6 | **Floor justification** is present in **CHANGELOG** whenever the **replayt** minimum is introduced or raised (not required for doc-only matrix wording if bounds unchanged). | Review **CHANGELOG** history for bound changes. |
 | A7 | **Upper bound policy** is explicit: either no cap (default) or cap documented in spec + README (if integrator-visible) + **CHANGELOG** with rationale. | This section + matrix + `pyproject.toml`. |
+| A8 | **Compatibility matrix** lists **declared Python** (`requires-python`) and **CI-tested Python** (workflow file), and the Notes (or CI note) explain **replayt** resolution vs the lower bound. | Matrix + `.github/workflows/ci.yml` + `pyproject.toml`. |
 
 ## Non-goals (this backlog)
 
