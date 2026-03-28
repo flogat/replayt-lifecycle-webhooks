@@ -78,7 +78,7 @@ Integrators and operators are responsible for:
 - Documented **replayt** minimum version in `pyproject.toml` and **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**.
 - **Public** verification helper(s) with **unit tests** that do **not** require the network.
 - **README** and spec docs integrators can copy from; **CHANGELOG.md** for user-visible changes.
-- **CI** that installs the package and runs the **automated test suite** (see Success).
+- **CI** that installs the package and runs the **automated test suite** (see **Success metrics (v0.x)**).
 
 ### Out of scope
 
