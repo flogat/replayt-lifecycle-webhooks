@@ -171,12 +171,33 @@ See the spec for full tables and examples. **`handle_lifecycle_webhook_post`** r
 
 **Production logging and redaction:** use stdlib **`logging`** (or your stack’s structured wrapper) with **stable**
 **`error`** codes, HTTP status, and correlation ids—**not** raw secrets. When you log **HTTP headers** or **dict-like**
-metadata (for example **`Logger.info(..., extra={...})`**), run them through this package’s **redaction** helpers once
-implemented (**[docs/SPEC_STRUCTURED_LOGGING_REDACTION.md](docs/SPEC_STRUCTURED_LOGGING_REDACTION.md)**): defaults mask
+metadata, pass them through **`replayt_lifecycle_webhooks.redaction`** first
+(**[docs/SPEC_STRUCTURED_LOGGING_REDACTION.md](docs/SPEC_STRUCTURED_LOGGING_REDACTION.md)**): defaults mask
 **`Authorization`**, **`Replayt-Signature`**, **`X-Signature*`**-family headers, cookies, and common token-like mapping
-keys; you can extend the sensitive-name lists for deployment-specific headers. **Do not** log the **raw body**, **full**
-signature header, **computed MAC**, or **HMAC secret** (same boundaries as
+keys; use **`extra_sensitive_names`** / **`extra_sensitive_keys`** for deployment-specific names. **Do not** log the
+**raw body**, **full** signature header, **computed MAC**, or **HMAC secret** (same boundaries as
 **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**).
+
+```python
+import logging
+
+from replayt_lifecycle_webhooks.redaction import format_safe_webhook_log_extra, redact_headers
+
+log = logging.getLogger(__name__)
+
+# Structured fields for LogRecord.extra (keys avoid stdlib attribute clashes):
+extra = format_safe_webhook_log_extra(
+    method="POST",
+    path="/webhook",
+    status_code=403,
+    error_code="signature_mismatch",
+    headers=request_headers,  # mapping or (name, value) pairs
+)
+log.info("handled webhook", extra=extra)
+
+# Or redact a header map before formatting your own message:
+log.debug("headers=%s", redact_headers(request_headers))
+```
 
 **Drop-in HTTP handler:** **`handle_lifecycle_webhook_post`** maps a POST, raw body, and header map to status **405** /
 **401** / **403** / **400** / **204** as in **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
@@ -273,7 +294,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
-| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events`, `serve`; **`__main__`** for **`python -m`** |
+| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events`, `redaction`, `serve`; **`__main__`** for **`python -m`** |
 | `pyproject.toml` | Package metadata |
 | `CHANGELOG.md` | Release notes (Keep a Changelog); keep **Unreleased** updated |
 | `.gitignore` | Ignores `path/` (doc placeholders), `.orchestrator/`, `.cursor/skills/`, and `AGENTS.md` (local tooling) |

@@ -22,6 +22,14 @@ from .handler import (
     handle_lifecycle_webhook_post,
     make_lifecycle_webhook_wsgi_app,
 )
+from .redaction import (
+    DEFAULT_SENSITIVE_HEADER_NAMES,
+    DEFAULT_SENSITIVE_MAPPING_KEYS,
+    REDACTED_PLACEHOLDER,
+    format_safe_webhook_log_extra,
+    redact_headers,
+    redact_mapping,
+)
 from .signature import (
     LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
     WebhookSignatureError,
@@ -33,6 +41,9 @@ from .signature import (
 )
 
 __all__ = [
+    "DEFAULT_SENSITIVE_HEADER_NAMES",
+    "DEFAULT_SENSITIVE_MAPPING_KEYS",
+    "REDACTED_PLACEHOLDER",
     "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
     "LIFECYCLE_WEBHOOK_EVENT_TYPES",
     "ApprovalPendingDetail",
@@ -54,9 +65,12 @@ __all__ = [
     "WebhookSignatureMismatchError",
     "WebhookSignatureMissingError",
     "compute_lifecycle_webhook_signature_header",
+    "format_safe_webhook_log_extra",
     "handle_lifecycle_webhook_post",
     "make_lifecycle_webhook_wsgi_app",
     "parse_lifecycle_webhook_event",
+    "redact_headers",
+    "redact_mapping",
     "verify_lifecycle_webhook_signature",
     "__version__",
 ]

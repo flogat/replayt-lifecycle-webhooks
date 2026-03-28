@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Structured logging redaction** (phase **3**, backlog **Add structured logging helper that redacts sensitive keys by default** /
+  `fa75ecf3-a113-418e-99cc-aa0c31237eba`): **`replayt_lifecycle_webhooks.redaction`** with **`REDACTED_PLACEHOLDER`**,
+  **`redact_headers`** (case-insensitive defaults, **`X-Signature*`** prefix rule, **`extra_sensitive_names`**),
+  **`redact_mapping`** (shallow defaults, **`extra_sensitive_keys`**), **`format_safe_webhook_log_extra`**, and documented
+  **`DEFAULT_SENSITIVE_HEADER_NAMES`** / **`DEFAULT_SENSITIVE_MAPPING_KEYS`**. Re-exported from the package root **`__init__`**.
+  **`tests/test_redaction.py`** covers **SPEC_AUTOMATED_TESTS** **L1–L8**. No new mandatory runtime dependencies.
+
 ### Documentation
 
 - **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** (phase **2**, backlog **Add structured logging helper that redacts sensitive keys by default** /
