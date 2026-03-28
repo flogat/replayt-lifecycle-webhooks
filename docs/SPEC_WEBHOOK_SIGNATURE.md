@@ -59,6 +59,9 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
 **Body “format”**
 
 - Payload **may** be JSON or any other bytes; the verifier treats the body as **opaque octets**. Content-Type is **not** part of the MAC for v1.
+- When the body is JSON consumed via **`replayt_lifecycle_webhooks.events`**, the **field contract** (envelope,
+  **`schema_version`**, **`event_type`**, **`detail`**) is defined in **[EVENTS.md](EVENTS.md)**. That contract evolves
+  independently of signing scheme **v1** (payload **SemVer-style** rules vs **HMAC v1** in this spec).
 
 ### Clock skew, timestamps, and replay
 

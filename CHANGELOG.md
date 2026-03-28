@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/EVENTS.md`**, **`docs/schemas/lifecycle_webhook_payload-1-0.schema.json`**, **`README.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**
+  (phase **2**, backlog **Define canonical webhook payload and event envelope schema**): canonical **envelope** definition;
+  **`schema_version`** **`MAJOR.MINOR`** rules; **breaking vs additive** maintainer table; package SemVer alignment; informative
+  JSON Schema for **`1.0`**-family payloads; cross-link from signing spec (payload contract orthogonal to HMAC **v1**).
+
 ### Added
 
 - **`tests/test_replayt_boundary.py`**, **`replayt_boundary`** pytest marker in **`pyproject.toml`** (phase **3**, backlog **Ship
