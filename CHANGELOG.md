@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Cross-links from **README**, **MISSION**, **DESIGN_PRINCIPLES**, **SPEC_DELIVERY_IDEMPOTENCY**, **SPEC_WEBHOOK_SIGNATURE**,
   **SPEC_MINIMAL_HTTP_HANDLER**, **SPEC_WEBHOOK_FAILURE_RESPONSES**, **SPEC_AUTOMATED_TESTS** (new **Backlog `f9677140`** table).
 
+- **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **README** (spec index), **`docs/SPEC_AUTOMATED_TESTS.md`**, and **`tests/test_http_handler.py`**
+  module docstring (phase **5** architecture review, backlog **`f9677140`**): acceptance rows **H9**–**H12** and **H1**–**H12**
+  traceability; **`on_success`** / JSON rules when **`dedup_store`** or **`replay_policy`** is set; removed the obsolete
+  “until implemented” note from **SPEC_MINIMAL_HTTP_HANDLER**.
+
 ### Added
 
 - **Replay protection hooks** (phase **3**, backlog **Add replay protection and idempotency hooks for deliveries** /

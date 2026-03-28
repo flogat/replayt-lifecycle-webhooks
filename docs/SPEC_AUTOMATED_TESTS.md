@@ -27,7 +27,7 @@ behavioral coverage.
 | Topic | Where it lives |
 | ----- | -------------- |
 | Signature verification behavior and **W** rows | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** |
-| Optional HTTP handler status codes (**H1–H8**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
+| Optional HTTP handler status codes (**H1–H12**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
 | Reference HTTP server entrypoint (**S1–S8**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
@@ -143,7 +143,7 @@ These extend **A1–A5** and lifecycle coverage in **§ Minimum behavioral cover
 
 Checklist rows for **Add replay protection and idempotency hooks for deliveries**
 (`f9677140-0803-41c7-9d1c-82fc85f25f8d`). Normative contract: **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.
-These extend **A1–A5** and **§ Minimum behavioral coverage** item **2**; they do not replace **W** rows, **H1–H8**, or
+These extend **A1–A5** and **§ Minimum behavioral coverage** item **2**; they do not replace **W** rows, **H1–H12**, or
 **R1–R5**. **RP5** is satisfied by **I4** while that test remains the duplicate-delivery proof; **RP4** requires a
 **distinct** stale-**`occurred_at`** / replay scenario once implemented.
 
