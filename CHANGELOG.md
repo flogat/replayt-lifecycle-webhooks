@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`scripts/sync_upstream_reference_docs.sh`**, **`tests/test_reference_documentation_workflow.py`**, **`README.md`**,
+  **`docs/reference-documentation/README.md`**, **`docs/SPEC_REFERENCE_DOCUMENTATION.md`** (phase **3**, builder, Mission Control backlog
+  **Add optional docs/reference-documentation snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): optional **bash**
+  helper copies a local upstream **`docs/`** tree into **`docs/reference-documentation/_upstream_snapshot/replayt-docs/`** only;
+  **pytest** checks script presence, **`bash -n`**, and that the script does not target alternate vendor paths.
+
 - **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, spec lead, Mission Control backlog
   **Add optional docs/reference-documentation snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): **Backlog acceptance mapping**
   links the three Mission Control acceptance bullets to **RD1**–**RD8**; **Optional maintainer automation (`scripts/`)** states

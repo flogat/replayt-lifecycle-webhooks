@@ -108,7 +108,9 @@ def test_rd7_spec_documents_repeatable_git_curl_rsync_snapshot_commands() -> Non
     assert "_upstream_snapshot" in section
 
 
-def test_rd8_readme_or_contributing_states_refresh_small_clone_gitignored_bulk() -> None:
+def test_rd8_readme_or_contributing_states_refresh_small_clone_gitignored_bulk() -> (
+    None
+):
     root_readme = _read("README.md")
     ref_body = _h2_section(root_readme, "Reference documentation (optional)")
     readme_ok = (
@@ -125,6 +127,31 @@ def test_rd8_readme_or_contributing_states_refresh_small_clone_gitignored_bulk()
         "when" in contrib_body.lower()
         and "small" in contrib_body.lower()
         and "_upstream_snapshot" in contrib_body
-        and ("gitignore" in contrib_body.lower() or "gitignored" in contrib_body.lower())
+        and (
+            "gitignore" in contrib_body.lower() or "gitignored" in contrib_body.lower()
+        )
     )
     assert readme_ok or contributing_ok
+
+
+def test_optional_sync_script_exists_and_passes_bash_syntax_check() -> None:
+    root = _repo_root()
+    script = root / "scripts" / "sync_upstream_reference_docs.sh"
+    assert script.is_file()
+    proc = subprocess.run(
+        ["bash", "-n", str(script)],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_optional_sync_script_writes_only_under_upstream_snapshot() -> None:
+    text = _read("scripts/sync_upstream_reference_docs.sh")
+    assert "docs/reference-documentation/_upstream_snapshot" in text
+    assert "replayt-docs" in text
+    lowered = text.lower()
+    assert "vendor/" not in lowered
+    assert "third_party" not in lowered

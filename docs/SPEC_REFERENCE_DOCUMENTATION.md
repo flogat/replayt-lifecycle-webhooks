@@ -68,8 +68,8 @@ licensing, and **RD6** conventions defined here.
 ## Optional maintainer automation (`scripts/`)
 
 A maintainer **may** add an **optional** helper under **`scripts/`** (for example a shell or Python script that copies from
-a local **replayt** checkout into **`_upstream_snapshot/`**). Closing the backlog **does not** require shipping this
-script; **§ Repeatable snapshot commands** alone meets the “documented steps” bar.
+a local **replayt** checkout into **`_upstream_snapshot/`**). This repository ships **`scripts/sync_upstream_reference_docs.sh`**
+as that optional helper; **§ Repeatable snapshot commands** remains sufficient on its own if you prefer not to use it.
 
 If a script **is** added, it **must**:
 

@@ -97,11 +97,12 @@ package.
   in a PR when the consumer contract changes.
 - **Bulk / offline copies:** use a **gitignored** directory
   [`docs/reference-documentation/_upstream_snapshot/`](docs/reference-documentation/_upstream_snapshot/) (create it
-  locally) and copy markdown from your local **replayt** checkout or docs export **manually**, or follow the **git** /
+  locally) and copy markdown from your local **replayt** checkout or docs export **manually**, follow the **git** /
   **curl** / **rsync** examples in
-  [`docs/SPEC_REFERENCE_DOCUMENTATION.md`](docs/SPEC_REFERENCE_DOCUMENTATION.md). Do not `git add` that path. An
-  optional maintainer script under `scripts/` may be added later to automate copying from a path you configure; it will
-  never be required for **CI** or `pytest`.
+  [`docs/SPEC_REFERENCE_DOCUMENTATION.md`](docs/SPEC_REFERENCE_DOCUMENTATION.md), or run the optional helper
+  **`scripts/sync_upstream_reference_docs.sh`** with the path to upstream’s **`docs/`** directory (writes under
+  **`_upstream_snapshot/replayt-docs/`** only). Do not `git add` **`_upstream_snapshot/`**. The script is optional and
+  never required for **CI** or `pytest`.
 
 Normative layout and acceptance checklist **RD1**–**RD8** (pytest enforces the full set via **`tests/test_reference_documentation_workflow.py`**):
 **[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)**.
