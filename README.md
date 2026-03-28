@@ -13,6 +13,13 @@ handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**.
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**.
 
+**Lifecycle semantics (upstream) vs wire JSON (this repo):** Replayt’s product and library semantics are described on
+**[replayt (PyPI)](https://pypi.org/project/replayt/)** (project description, release history, and links from that
+page). The **replayt** distribution does not currently ship a single canonical HTTP webhook JSON schema; after you
+verify **`Replayt-Signature`**, treat **`docs/EVENTS.md`** and **`replayt_lifecycle_webhooks.events`** (**`parse_lifecycle_webhook_event`**
+and model types) as the **normative wire contract** for lifecycle POST bodies in this package. When replayt publishes an
+authoritative schema, align **EVENTS.md**, models, fixtures, and **CHANGELOG.md** with it.
+
 **Compatibility:** After `pip install -e .` (or `pip install -e ".[dev]"` when you work in this repo), check the installed **replayt** with either:
 
 ```bash
