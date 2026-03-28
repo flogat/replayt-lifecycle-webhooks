@@ -268,8 +268,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`tests/test_mission_docs.py`** (phase **3**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
   `3f27ad86-ef1f-4883-8cc2-cee94ba301cb`): regression tests for **MISSION** / **REPLAYT_ECOSYSTEM_IDEA** / **README**
-  acceptance (ecosystem section, **Core-gap** named once in **MISSION**, link targets, success metrics, README avoids
-  repeating the taxonomy token).
+  acceptance (ecosystem section, **Core-gap** named once in **MISSION**, link targets, success metrics). Phase **3** /
+  backlog **`c70b89c2-7fd4-4733-b72d-23fd20279617`**: **Overview** asserts **Primary ecosystem pattern**, **Core-gap** token,
+  **REPLAYT_ECOSYSTEM_IDEA** link before **## Design principles**, plus release-tracking anchors in **REPLAYT_ECOSYSTEM_IDEA**.
 - **Lifecycle JSON validation** (phase 3, backlog **Map replayt run and approval events to webhook payload shapes** /
   `076a56b7-afd9-4778-b46a-4dc8875a431f`): **`parse_lifecycle_webhook_event`**, **`LIFECYCLE_WEBHOOK_EVENT_TYPES`**,
   and Pydantic models for the envelope and each **`event_type`** in **`docs/EVENTS.md`**. Golden fixtures live under
@@ -342,8 +343,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   paragraph, **replayt** capabilities consumed, explicit in/out scope bullets, success including **CI** and **automated
   tests** (**pytest**), short doc hygiene checklist; v0.x defers enterprise / extended LLM narrative to
   **DESIGN_PRINCIPLES.md**.
-- **`README.md`:** **Overview** lists **MISSION** before **REPLAYT_ECOSYSTEM_IDEA** so scope and success are easy to find
-  (phase **5**); link to the webhook signature spec, project layout row, reference-documentation note, and a
+- **`README.md`:** **Overview** links **docs/REPLAYT_ECOSYSTEM_IDEA.md** and **docs/MISSION.md** (ecosystem taxonomy and scope
+  / success); link to the webhook signature spec, project layout row, reference-documentation note, and a
   copy-paste verification example using the public API; compatibility one-liner, how to check the installed **replayt**
   version, PyPI and release-history links, and [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues)
   for breakage reports.
