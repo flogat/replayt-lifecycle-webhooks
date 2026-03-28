@@ -69,10 +69,27 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 [`docs/reference-documentation/`](docs/reference-documentation/) holds **optional** short markdown excerpts or consumer
 contracts when upstream prose is not in this tree. You **do not** need to populate it to build or test this package;
-**CI** does not download upstream documentation trees. See
+**CI** does not download upstream documentation trees. **Default clone stays small:** only reviewed excerpts are
+committed; large mirrors belong under a **local-only**, **gitignored** tree (see below). Maintainer-oriented **when to
+refresh**, **licensing/attribution** rules for committed prose, and **git** / **curl** / **rsync** patterns for snapshots:
+**[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)**. Contributor entry point:
+**[CONTRIBUTING.md](CONTRIBUTING.md)** (**Reference documentation snapshots**).
+
+See
 [`REPLAYT_WEBHOOK_SIGNING.md`](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md) for the HMAC header and body rules
 this package implements, and [`docs/reference-documentation/README.md`](docs/reference-documentation/README.md) for what
 belongs in git vs a **local-only** tree.
+
+**When to refresh (summary)**
+
+- Upstream **signing** or **delivery** docs change in a way that affects this repo’s contract — update committed
+  excerpts and follow **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)** / **CHANGELOG.md** hygiene.
+- You need a **stable in-tree citation** for review, or you are working **offline** — use a **local** snapshot under
+  [`docs/reference-documentation/_upstream_snapshot/`](docs/reference-documentation/_upstream_snapshot/) (do not commit).
+
+**Licensing:** Committed excerpts must carry clear **provenance** and **license/attribution** (see the spec). Local
+**`_upstream_snapshot/`** copies are your responsibility to keep license-compliant; they are **not** shipped with the
+package.
 
 **How to refresh**
 
@@ -80,11 +97,13 @@ belongs in git vs a **local-only** tree.
   in a PR when the consumer contract changes.
 - **Bulk / offline copies:** use a **gitignored** directory
   [`docs/reference-documentation/_upstream_snapshot/`](docs/reference-documentation/_upstream_snapshot/) (create it
-  locally) and copy markdown from your local **replayt** checkout or docs export **manually**. Do not `git add` that
-  path. An optional maintainer script under `scripts/` may be added later to automate copying from a path you
-  configure; it will never be required for **CI** or `pytest`.
+  locally) and copy markdown from your local **replayt** checkout or docs export **manually**, or follow the **git** /
+  **curl** / **rsync** examples in
+  [`docs/SPEC_REFERENCE_DOCUMENTATION.md`](docs/SPEC_REFERENCE_DOCUMENTATION.md). Do not `git add` that path. An
+  optional maintainer script under `scripts/` may be added later to automate copying from a path you configure; it will
+  never be required for **CI** or `pytest`.
 
-Normative layout and acceptance checklist **RD1**–**RD5**:
+Normative layout and acceptance checklist **RD1**–**RD8** (pytest enforces **RD1**–**RD5** today):
 **[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)**.
 
 ## Quick start
@@ -401,8 +420,9 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |
-| `docs/SPEC_REFERENCE_DOCUMENTATION.md` | Optional **`docs/reference-documentation/`** workflow: what to commit, local `_upstream_snapshot/`, CI hygiene; **RD1**–**RD5** |
-| `docs/reference-documentation/README.md` | Folder stub: optional use, refresh hints, link to spec |
+| `docs/SPEC_REFERENCE_DOCUMENTATION.md` | Optional **`docs/reference-documentation/`** workflow: what to commit, local `_upstream_snapshot/`, CI hygiene, licensing, snapshot commands; **RD1**–**RD8** |
+| `CONTRIBUTING.md` | Contributor entry; optional reference-documentation snapshot task (links **SPEC_REFERENCE_DOCUMENTATION**) |
+| `docs/reference-documentation/README.md` | Folder guide: optional use, refresh hints, link to spec |
 | `docs/reference-documentation/` | Optional markdown for contributors; committed excerpts (e.g. `REPLAYT_WEBHOOK_SIGNING.md`); bulk copies local-only under `_upstream_snapshot/` (gitignored) |
 | `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events`, `redaction`, `serve`; **`__main__`** for **`python -m`** |
 | `pyproject.toml` | Package metadata |
