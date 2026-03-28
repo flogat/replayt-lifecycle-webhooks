@@ -1,6 +1,9 @@
 # Never commit generic documentation placeholder trees (AI agents sometimes create these literally)
 path/
 
+# Optional bulk copies of upstream replayt docs (local only; see docs/SPEC_REFERENCE_DOCUMENTATION.md)
+docs/reference-documentation/_upstream_snapshot/
+
 # Local / tooling (not for publication)
 .orchestrator/
 

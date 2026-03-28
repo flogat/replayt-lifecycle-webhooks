@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`CHANGELOG.md`** (phase **6**, security review, backlog **Add optional reference-documentation snapshot workflow** /
+  `eb884da9-5273-4ce0-b105-5130c6b1ac79`): reviewed `git diff master -- . ':!.orchestrator'` (**docs**, **`.gitignore`**,
+  **`tests/test_reference_documentation_workflow.py`** only; no **`src/`**, **`pyproject.toml`**, or
+  **`.github/workflows/ci.yml`** changes). New tests read repo files from disk and run **`git check-ignore`** with fixed
+  arguments (no shell, no network). No secrets or live credentials in added prose; dependency pins unchanged; **CI** still
+  runs **ruff**, **`pytest tests`**, and **`supply-chain`** **`pip-audit`**. **RD4** keeps **`ci.yml`** free of the
+  **`reference-documentation`** substring so merge gating cannot depend on that tree.
+
+- **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **3**, backlog **Add optional
+  reference-documentation snapshot workflow** / `eb884da9-5273-4ce0-b105-5130c6b1ac79`): acceptance **RD1**–**RD5** are
+  enforced by **`tests/test_reference_documentation_workflow.py`** (folder **README**, root **README** refresh notes,
+  **`.gitignore`** / **`git check-ignore`**, **CI** workflow must not reference **`docs/reference-documentation/`**, trace
+  table in **SPEC_AUTOMATED_TESTS**).
+
+- **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/reference-documentation/README.md`**, **`README.md`** (project layout,
+  **Reference documentation**), **`.gitignore`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**,
+  **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add optional reference-documentation snapshot workflow** /
+  `eb884da9-5273-4ce0-b105-5130c6b1ac79`): normative optional **`docs/reference-documentation/`** workflow—committed
+  excerpts vs gitignored **`_upstream_snapshot/`**, **how to refresh** (manual copy and optional future **`scripts/`**
+  helper), **CI** must not require upstream doc mirroring; acceptance **RD1**–**RD5**.
+
 - **`README.md`** (phase **3**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
   `23e2da29-8042-4721-a1eb-e44a2076273f`): operator block uses **`## Troubleshooting`**, **`## Approval webhook flow`**, and
   **`## Verifying webhook signatures`** (misconfiguration checklist, log pointers, **`event_type`** names and optional
