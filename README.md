@@ -4,9 +4,10 @@
 
 This project builds on **[replayt](https://pypi.org/project/replayt/)**. It declares a runtime dependency on
 **replayt `>=0.4.25`** (see `pyproject.toml`). Formal contract, bump policy, and acceptance criteria:
-**[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Read
+**[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Webhook signature verification contract and
+acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. Read
 **[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)** for positioning prompts, then
-**[docs/MISSION.md](docs/MISSION.md)** for scope and goals (stubs until you flesh them out).
+**[docs/MISSION.md](docs/MISSION.md)** for scope and goals.
 
 **Compatibility:** After `pip install -e .` (or `pip install -e ".[dev]"` when you work in this repo), check the installed **replayt** with either:
 
@@ -34,8 +35,10 @@ that history (and upstreamâ€™s own changelog or GitHub Releases when you need pr
 
 ## Reference documentation (optional)
 
-This checkout does not yet include [`docs/reference-documentation/`](docs/reference-documentation/). You can add markdown
-copies of upstream replayt documentation there for offline review or agent context.
+[`docs/reference-documentation/`](docs/reference-documentation/) holds short excerpts or consumer contracts when
+upstream prose is not in this tree. See
+[`REPLAYT_WEBHOOK_SIGNING.md`](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md) for the HMAC header and body
+rules this package implements.
 
 ## Quick start
 
@@ -43,6 +46,28 @@ copies of upstream replayt documentation there for offline review or agent conte
 python -m venv .venv
 # Windows: .venv\\Scripts\\activate
 pip install -e ".[dev]"
+```
+
+## Verifying webhook signatures
+
+Verify the **raw request body** with your shared secret and the **`Replayt-Signature`** header before parsing JSON or
+running automation. Full contract:
+**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)** and
+**[docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)**.
+
+```python
+from replayt_lifecycle_webhooks import (
+    LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
+    verify_lifecycle_webhook_signature,
+)
+
+# raw_body: bytes exactly as received from the HTTP layer
+# header_value: request header LIFECYCLE_WEBHOOK_SIGNATURE_HEADER (e.g. "sha256=<hex>")
+verify_lifecycle_webhook_signature(
+    secret=your_secret,
+    body=raw_body,
+    signature=header_value,
+)
 ```
 
 ## Optional agent workflows
@@ -59,7 +84,8 @@ local tooling entries. Adapt or remove optional directories to match your teamâ€
 | `docs/MISSION.md` | Mission and scope |
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
 | `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** pin: contract, checklist, CI expectations |
-| `docs/reference-documentation/` | Optional markdown snapshot for contributors (when present) |
+| `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
+| `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
 | `src/replayt_lifecycle_webhooks/` | Python package (import `replayt_lifecycle_webhooks`) |
 | `pyproject.toml` | Package metadata |
 | `CHANGELOG.md` | Release notes (Keep a Changelog); keep **Unreleased** updated |
