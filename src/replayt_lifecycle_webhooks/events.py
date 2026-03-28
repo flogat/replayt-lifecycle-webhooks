@@ -163,7 +163,7 @@ def parse_lifecycle_webhook_event(data: Any) -> RunStartedEvent | RunCompletedEv
 
     Raises:
         pydantic.ValidationError: payload is not a supported lifecycle object.
-        TypeError: ``data`` is not a ``Mapping``.
+        TypeError: ``data`` is not a ``dict`` (JSON object).
     """
     if not isinstance(data, dict):
         msg = f"lifecycle webhook payload must be a JSON object, got {type(data).__name__}"

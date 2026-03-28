@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Lifecycle JSON validation (phase **3**, backlog **Map replayt run and approval events to webhook payload shapes** /
-  `076a56b7-afd9-4778-b46a-4dc8875a431f`):** **`parse_lifecycle_webhook_event`**, **`LIFECYCLE_WEBHOOK_EVENT_TYPES`**,
+- **Lifecycle JSON validation** (phase 3, backlog **Map replayt run and approval events to webhook payload shapes** /
+  `076a56b7-afd9-4778-b46a-4dc8875a431f`): **`parse_lifecycle_webhook_event`**, **`LIFECYCLE_WEBHOOK_EVENT_TYPES`**,
   and Pydantic models for the envelope and each **`event_type`** in **`docs/EVENTS.md`**. Golden fixtures live under
   **`tests/fixtures/events/`**; tests cover fixtures (**E2–E4**), invalid **`detail`** / unknown **`event_type`**, missing
   **`correlation.run_id`**, and verify-then-parse ordering with **`handle_lifecycle_webhook_post`**. Runtime dependency

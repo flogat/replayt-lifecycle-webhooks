@@ -151,7 +151,7 @@ local tooling entries. Adapt or remove optional directories to match your teamâ€
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1â€“H7** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, synthetic examples |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
-| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler` (`handle_lifecycle_webhook_post`, WSGI factory) |
+| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events` (`parse_lifecycle_webhook_event`, models) |
 | `pyproject.toml` | Package metadata |
 | `CHANGELOG.md` | Release notes (Keep a Changelog); keep **Unreleased** updated |
 | `.gitignore` | Ignores `path/` (doc placeholders), `.orchestrator/`, `.cursor/skills/`, and `AGENTS.md` (local tooling) |
