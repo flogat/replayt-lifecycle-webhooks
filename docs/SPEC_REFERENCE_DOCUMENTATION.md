@@ -19,6 +19,22 @@ upstream tree, or **CI** steps that download upstream documentation.
 **Optional task:** Refreshing snapshots or excerpts is **never** required to run **`pytest`**, install the package, or pass
 merge gating.
 
+## Backlog acceptance mapping (Mission Control `2db687f4`)
+
+The Mission Control item **Add optional docs/reference-documentation snapshot workflow** had three product acceptance
+bullets. This table maps them to normative material and **pytest** rows **RD1**–**RD8** so Spec gate, Builder, and Tester
+share one definition of **done**.
+
+| Original acceptance criterion | Where it is specified | Automated check |
+| ----------------------------- | --------------------- | --------------- |
+| **CONTRIBUTING** or **README** explains **when** and **how** to refresh reference docs | Root **[README.md](../README.md)** (**Reference documentation (optional)**); **[CONTRIBUTING.md](../CONTRIBUTING.md)** (**Reference documentation snapshots**); **§ When to refresh**, **§ How to refresh (contributors)**, **§ Repeatable snapshot commands** here | **RD2**, **RD8** |
+| **Generated or copied** upstream docs, if **committed**, live **only** under **`docs/reference-documentation/`** (not alternate vendor trees) | **§ What belongs under `docs/reference-documentation/`**; **§ Committed path exclusivity** below | **RD1**, **RD3**, **RD6** (layout + licensing on committed `*.md`) |
+| **`.gitignore`** and **repo size** expectations stay acceptable | **§ Repository size expectations**; **§ CI and repository hygiene**; **`.gitignore`** entry for **`_upstream_snapshot/`** | **RD3**, **RD4** |
+
+**Script vs documented steps:** The backlog allows **either** a maintainer script **or** documented **curl**/**git** steps.
+**§ Repeatable snapshot commands** satisfies the latter without code. An optional **`scripts/`** helper is **extra**; see
+**§ Optional maintainer automation (`scripts/`)**.
+
 ## When to refresh
 
 Maintain **committed** excerpts when:
@@ -40,11 +56,32 @@ Maintain **committed** excerpts when:
 | **Folder README** — explains optional use, refresh hints, and points here | **`docs/reference-documentation/README.md`** | **Yes** |
 | **Bulk / full-tree copies** — large mirrors, scraped docs, or arbitrary upstream markdown trees for offline browsing | **`docs/reference-documentation/_upstream_snapshot/`** only | **No** — directory is listed in **`.gitignore`** |
 
-**Out of scope for this backlog:** automating upstream sync in **CI**, submodule pins, or mandatory scripts. A
-maintainer **may** add an **optional** helper under **`scripts/`** (for example a shell script that copies from a local
-**replayt** checkout into **`_upstream_snapshot/`**); if added, document the command in **`docs/reference-documentation/README.md`**
-and/or root **README.md** (**Reference documentation** section). The script **must not** be required for **`pytest`** or
-for publishing the package.
+### Committed path exclusivity
+
+If maintainers **commit** replayt (or compatible) **documentation excerpts** as part of this workflow, those files **must**
+live as **`docs/reference-documentation/*.md`** (plus the folder **`README.md`**). Do **not** commit the same material
+under ad-hoc paths such as **`vendor/`**, **`third_party/docs/`**, or a second docs root—those bypass the layout,
+licensing, and **RD6** conventions defined here.
+
+**Out of scope for this backlog:** automating upstream sync in **CI**, submodule pins, or mandatory scripts.
+
+## Optional maintainer automation (`scripts/`)
+
+A maintainer **may** add an **optional** helper under **`scripts/`** (for example a shell or Python script that copies from
+a local **replayt** checkout into **`_upstream_snapshot/`**). Closing the backlog **does not** require shipping this
+script; **§ Repeatable snapshot commands** alone meets the “documented steps” bar.
+
+If a script **is** added, it **must**:
+
+- **Stay optional** — **`pytest`**, **CI**, and **`pip install`** **must not** invoke it; no new **mandatory** runtime
+  dependencies for the distribution (stdlib-only or thin shell is preferred).
+- **Target bulk output correctly** — default or documented behavior writes **only** under
+  **`docs/reference-documentation/_upstream_snapshot/`** (or a subdirectory of it), never silently into committed
+  excerpt paths.
+- **Be documented** — copy-paste invocation appears in **`docs/reference-documentation/README.md`** and the root
+  **README.md** **Reference documentation (optional)** section (so **RD2** stays satisfied).
+- **Stay local** — designed for maintainer workstations; **CI** must not gain a required step that downloads or mirrors
+  upstream docs (**RD4**).
 
 ## Licensing and attribution
 
@@ -129,7 +166,10 @@ After any snapshot, **verify** `git status` does not list files under **`_upstre
 
 ## Acceptance (checklist)
 
-Use for Spec gate, Builder, and Tester sign-off. Rows **RD1**–**RD8** are enforced by **`pytest`** via **`tests/test_reference_documentation_workflow.py`**.
+Use for Spec gate, Builder, and Tester sign-off. Rows **RD1**–**RD8** are enforced by **`pytest`** via
+**`tests/test_reference_documentation_workflow.py`**. When that module is green, the Mission Control backlog acceptance
+criteria mapped in **§ Backlog acceptance mapping** are satisfied for the **documentation / workflow** slice (wire
+verification behavior remains covered by other specs and tests).
 
 | # | Criterion | Verification |
 |---|-----------|--------------|

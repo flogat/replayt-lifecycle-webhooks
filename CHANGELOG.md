@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, spec lead, Mission Control backlog
+  **Add optional docs/reference-documentation snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): **Backlog acceptance mapping**
+  links the three Mission Control acceptance bullets to **RD1**–**RD8**; **Optional maintainer automation (`scripts/`)** states
+  when a helper script is optional vs required and how it must behave if added; **Committed path exclusivity** forbids
+  committing vendor docs outside **`docs/reference-documentation/`**.
+
 - **`CHANGELOG.md`** (phase **6**, security review, Mission Control backlog **Add optional docs/reference-documentation
   snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): Reviewed `git diff master -- . ':!.orchestrator'` — docs,
   **`CONTRIBUTING.md`**, **`tests/test_reference_documentation_workflow.py`**, **`docs/DESIGN_PRINCIPLES.md`**; no **`src/`**,

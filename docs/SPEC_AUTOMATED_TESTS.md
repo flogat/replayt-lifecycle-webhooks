@@ -296,7 +296,8 @@ between consecutive **`## `** headings so each row scopes content to the right s
 Checklist rows for **Add optional reference-documentation snapshot workflow**
 (`eb884da9-5273-4ce0-b105-5130c6b1ac79`). The same workflow is refined under Mission Control backlog
 **`2db687f4-23d2-4aff-8827-c3da11cdf283`** (refinement: licensing, documented snapshot commands, repo-size prose in
-**SPEC_REFERENCE_DOCUMENTATION**). Normative contract:
+**SPEC_REFERENCE_DOCUMENTATION**; **§ Backlog acceptance mapping** maps Mission Control acceptance bullets to **RD1**–**RD8**).
+Normative contract:
 **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**. Rows **RD1**–**RD8** below are **documentation /
 workflow** acceptance enforced by **`pytest`** (not a substitute for signature, parsing, boundary, or **pytest** minima in
 **§ Minimum behavioral coverage**).

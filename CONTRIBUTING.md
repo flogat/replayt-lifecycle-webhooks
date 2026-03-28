@@ -9,8 +9,8 @@ This repository may include **small, committed** markdown excerpts under **`docs
 **gitignored** directory **`docs/reference-documentation/_upstream_snapshot/`** for **local** bulk copies (offline or
 locked-down environments).
 
-- **When and how:** See **[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)** (**§ When to refresh**,
-  **§ Repeatable snapshot commands**, **§ Licensing and attribution**).
+- **When and how:** See **[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)** (sections **When to refresh**,
+  **Repeatable snapshot commands**, **Licensing and attribution**; optional **`scripts/`** helpers: **Optional maintainer automation (`scripts/`)**).
 - **Folder guide:** **[docs/reference-documentation/README.md](docs/reference-documentation/README.md)**.
 - **Repo size:** Default clones stay **small**; do **not** commit **`_upstream_snapshot/`** or large mirrors elsewhere.
   **CI** does not download upstream documentation trees (see acceptance **RD1**–**RD8** in the spec).
