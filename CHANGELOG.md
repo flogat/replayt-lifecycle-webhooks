@@ -37,6 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   success **`extra=`** example omits absent **`lifecycle_approval_request_id`**.
 - **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`README.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add replayt dependency declaration and compatibility matrix stub** /
   `8b16060d-f6e6-4111-bed2-4978b965ff52`): **compatibility matrix** now lists **`requires-python`**, **CI-tested Python** (**3.12**, `.github/workflows/ci.yml`), and how **replayt** is resolved in CI vs the declared lower bound; **stub / pre-coupling** checklist when **`replayt`** is not yet in **`[project.dependencies]`**; acceptance **A8**; **A1**/**A2** cover the stub path. README states **Python** / **CI** expectations; **SPEC_AUTOMATED_TESTS** traceability points at **A1**–**A8**.
+- **`docs/DESIGN_PRINCIPLES.md`**, **README** project layout table (phase **5**, architecture review, backlog **Add replayt dependency declaration and compatibility matrix stub** /
+  `8b16060d-f6e6-4111-bed2-4978b965ff52`): **explicit contracts** bullet and **SPEC_REPLAYT_DEPENDENCY** row now name **Python** / **CI-tested** columns in the **compatibility matrix**, not only **replayt** ↔ package wording.
+- **`CHANGELOG.md`** (phase **6**, security review, same backlog **`8b16060d`**): recorded security pass — `git diff master` is documentation and **`tests/test_replayt_dependency.py`** only (no **`src/`** or **`pyproject.toml`** changes in that diff); new tests read **`pyproject.toml`**, **`.github/workflows/ci.yml`**, and specs from disk only (no network/subprocess); no secrets or live credentials in added prose; runtime pins remain **`pydantic>=2.6.0`** and **`replayt>=0.4.25`** per existing policy; **CI** still runs **pytest** and the **supply-chain** **`pip-audit`** job (workflow unchanged there).
 
 ### Added
 
@@ -156,7 +159,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `fa75ecf3-a113-418e-99cc-aa0c31237eba`): normative contract for **stdlib** **`logging`**, **`[REDACTED]`** placeholder,
   default sensitive **HTTP header** names (incl. **`X-Signature*`** prefix rule) and **mapping** keys, public API surface
   (**`redact_headers`**, **`redact_mapping`**, structured **`extra`** helper), **package-owned** logging rules, and spec
-  checklists **G1–G4** / test rows **L1–L9** in **SPEC_AUTOMATED_TESTS**. Cross-links from **SPEC_WEBHOOK_FAILURE_RESPONSES**
+  checklists **G0–G5** / test rows **L1–L9** in **SPEC_AUTOMATED_TESTS**. Cross-links from **SPEC_WEBHOOK_FAILURE_RESPONSES**
   (**F6**), **DESIGN_PRINCIPLES**, **MISSION**, **README** (**Production logging and redaction**), **SPEC_MINIMAL_HTTP_HANDLER**,
   **SPEC_HTTP_SERVER_ENTRYPOINT**.
 
