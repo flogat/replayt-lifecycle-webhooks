@@ -14,6 +14,8 @@ Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEB
 **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**.
 **Replay protection** (freshness, optional wire headers, dedupe store hooks):
 **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.
+**Public Python import surface** and **deprecation** policy (**`__all__`**, internal modules, **CHANGELOG** alignment):
+**[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)**.
 Repository map and quick links:
 **[README.md](../README.md)**.
 

@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_PUBLIC_API.md`** (phase **2**, backlog **Define public API surface and deprecation policy before 1.0** /
+  `30e133a5-78fa-4eee-ae56-56a1af4c9f73`): normative **supported** imports (package root **`__all__`** and
+  **`replayt_lifecycle_webhooks.events`**); **internal** submodule paths until **1.0**; documented **`python -m`**
+  entrypoints; **semver**, **pre-1.0** stability, and **deprecation** rules (**CHANGELOG** **Deprecated**, minimum **one**
+  **0.x minor** after the deprecating release, **`DeprecationWarning`** when practical). Acceptance **API1**–**API3**.
+  Cross-links from **README**, **MISSION**, **DESIGN_PRINCIPLES** (new **Semantic versioning and deprecation** subsection),
+  **SPEC_AUTOMATED_TESTS**.
+
 - **`docs/SPEC_REPLAY_PROTECTION.md`** (phase **2**, backlog **Add replay protection and idempotency hooks for deliveries** /
   `f9677140-0803-41c7-9d1c-82fc85f25f8d`): normative contract for **stale capture** vs **benign duplicate** delivery;
   post-MAC processing order; **`occurred_at`** freshness with recommended **900s** max age and **300s** future skew;
