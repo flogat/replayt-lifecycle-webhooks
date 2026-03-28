@@ -46,17 +46,24 @@ def test_mission_has_no_ecosystem_draft_placeholder() -> None:
 
 
 def test_replayt_ecosystem_idea_your_choice_is_filled() -> None:
-    """REPLAYT_ECOSYSTEM_IDEA 'Your choice' records Core-gap with MISSION pointer."""
+    """REPLAYT_ECOSYSTEM_IDEA 'Your choice' records Core-gap, pitch, and release tracking."""
     text = _read("docs/REPLAYT_ECOSYSTEM_IDEA.md")
     assert "## Your choice" in text
     assert "**Primary pattern:** **Core-gap**" in text
     assert "[MISSION.md](MISSION.md)" in text
     assert "_(1–4 or short name)_" not in text
+    assert "**Replayt release tracking" in text
+    assert "SPEC_REPLAYT_BOUNDARY_TESTS.md" in text
+    assert "CHANGELOG.md" in text
 
 
-def test_readme_reflects_mission_without_repeating_core_gap_token() -> None:
-    """README overview points at MISSION/IDEA; taxonomy token stays in those docs per naming rule."""
+def test_readme_overview_cross_links_ecosystem_idea_and_core_gap() -> None:
+    """README Overview names Core-gap and links REPLAYT_ECOSYSTEM_IDEA before MISSION."""
     text = _read("README.md")
     assert "docs/MISSION.md" in text
     assert "docs/REPLAYT_ECOSYSTEM_IDEA.md" in text
-    assert not re.search(r"core[- ]?gap", text, re.IGNORECASE)
+    overview, _, _ = text.partition("## Design principles")
+    assert "## Overview" in overview
+    assert "docs/REPLAYT_ECOSYSTEM_IDEA.md" in overview
+    assert re.search(r"core[- ]?gap", overview, re.IGNORECASE)
+    assert "Primary ecosystem pattern" in overview
