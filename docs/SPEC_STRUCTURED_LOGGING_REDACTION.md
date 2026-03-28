@@ -8,6 +8,17 @@
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), operators, integrators.
 
+## Backlog acceptance mapping (`6ea52b2b`)
+
+Maps **Establish structured logging and redaction for webhook handling** to normative sections here and to **pytest**
+proof (backlog **`fa75ecf3`**, rows **L1–L9** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**).
+
+| Original backlog criterion | Normative location in this spec | Proof |
+| -------------------------- | ------------------------------- | ----- |
+| Logging **helper** or **convention** documented in **DESIGN_PRINCIPLES** or **MISSION** | **§ Public API** (symbols, **`format_safe_webhook_log_extra`**); **§ Recommended structured field names**; cross-links from **MISSION** (**Production logging**) and **DESIGN_PRINCIPLES** (**Observable automation**) | Doc review |
+| Request logging **redacts** **`Authorization`** / **signature** headers and **omits full raw bodies** by default | **§ Request logging and raw body**; **§ Default sensitive header names**; **§ Default sensitive mapping keys** | **L2**, **L3**, **L8**; **L9** (no raw body substring) |
+| At least one **test** or **doc example** for expected log shape on **successful** delivery | **§ Example: successful verified delivery** (normative documentation, always required) | **§ Example** (doc); **L9** in **pytest** (**`test_l9_success_verified_delivery_no_raw_body_in_logs`**) |
+
 ## Problem
 
 Operators need **structured** log fields (HTTP method, path, status, stable **`error`** codes, correlation ids) to triage
@@ -69,6 +80,19 @@ JSON as if they were correlation ids.
 
 **Integrators** who log header dicts without using **`format_safe_webhook_log_extra`** must still satisfy this section:
 **`redact_headers`** alone does **not** absolve omitting the raw body from **`extra=`** and message templates.
+
+### Never-log checklist (operators, default request logs)
+
+Treat the following as **out of bounds** for **default** inbound-webhook request diagnostics (before or after verify)
+unless a **separate**, privacy-reviewed logging path explicitly opts in:
+
+- Full **raw body** octets, decoded body **text**, or a **JSON string snapshot** of the payload.
+- **Unredacted** **`Authorization`**, **`Replayt-Signature`**, **`X-Signature*`** family, **`Cookie`** / **`Set-Cookie`**,
+  **`X-Api-Key`**, and values for keys listed in **§ Default sensitive mapping keys**.
+- **Shared HMAC secret**, **computed MAC**, full signature **digests** in free-form log messages, or anything that could
+  reconstruct signing material (see **SPEC_WEBHOOK_SIGNATURE** / **SPEC_WEBHOOK_FAILURE_RESPONSES**).
+- **Correlation identifiers** taken from **unverified** JSON; use **`event_id`** and **`correlation.*`** only **after**
+  verify + parse per **[EVENTS.md](EVENTS.md)**.
 
 ## Default sensitive header names
 
@@ -145,7 +169,7 @@ renamed in **CHANGELOG**). **No** new mandatory dependencies.
 **Structured logging helper (required):** At least one documented entry point that combines common operator fields, for
 example:
 
-- **`format_safe_webhook_log_extra(...)`** — accepts optional **`headers`**, **`method`**, **`path`** or **`uri`**, **`status_code`**, **`error_code`**, optional **`webhook_body_bytes_len`** (non-negative **`int`**, body length only), optional correlation kwargs **`lifecycle_event_id`**, **`lifecycle_run_id`**, **`lifecycle_workflow_id`**, **`lifecycle_approval_request_id`** (from verified JSON only), and returns a **`dict`** suitable for **`extra=`** after passing nested header-like data through **`redact_headers`** / **`redact_mapping`**. Keys whose values are **`None`** (**`lifecycle_approval_request_id`** when absent) **may** be omitted from the returned dict.
+- **`format_safe_webhook_log_extra(...)`** — accepts optional **`headers`**, **`method`**, **`path`** or **`uri`**, **`status_code`**, **`error_code`**, optional **`webhook_body_bytes_len`** (non-negative **`int`**, body length only), optional correlation kwargs **`lifecycle_event_id`**, **`lifecycle_run_id`**, **`lifecycle_workflow_id`**, **`lifecycle_approval_request_id`** (from verified JSON only), optional **`extra_sensitive_header_names`** for integrator-specific header names (passed through to **`redact_headers`**), and returns a **`dict`** suitable for **`extra=`**. Emitted keys use the **`webhook_*`** / **`lifecycle_*`** names in **§ Recommended structured field names** (call-site kwargs **`status_code`** / **`error_code`** map to **`webhook_status_code`** / **`webhook_error_code`** in the returned dict). Keys whose values are **`None`** (**`lifecycle_approval_request_id`** when absent) **may** be omitted from the returned dict.
 
 **Normative:** The returned mapping **must not** include raw body bytes, decoded body text, or JSON string snapshots of the
 payload **by default**. Optional **`webhook_body_bytes_len`** is the **only** body-related field the contract guarantees for
@@ -248,10 +272,12 @@ Summary:
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
-| G1 | This file defines **placeholder**, **default header names**, **default mapping keys**, **public symbols**, **package-owned logging**, **request body omission**, **recommended field names**, and the **success-path example**. | Review this file |
+| G0 | **§ Backlog acceptance mapping (`6ea52b2b`)** ties story criteria to sections and **L*** proof. | Review this file |
+| G1 | This file defines **placeholder**, **default header names**, **default mapping keys**, **public symbols**, **package-owned logging**, **request body omission**, **recommended field names**, **never-log checklist**, and the **success-path example**. | Review this file |
 | G2 | **SPEC_AUTOMATED_TESTS** includes backlog **`fa75ecf3`** rows **L1–L9** pointing here. | Review **SPEC_AUTOMATED_TESTS** |
 | G3 | **README** documents production logging expectations and links here. | Review **README.md** |
 | G4 | **SPEC_WEBHOOK_FAILURE_RESPONSES** cross-links here from logging guidance. | Review **SPEC_WEBHOOK_FAILURE_RESPONSES** |
+| G5 | **MISSION** and **DESIGN_PRINCIPLES** state the logging convention and link here (story AC: helper or convention in mission/design docs). | Review **MISSION.md**, **DESIGN_PRINCIPLES.md** |
 
 ## Related docs
 

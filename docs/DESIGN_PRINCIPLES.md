@@ -6,10 +6,12 @@ Revise as the project matures. Defaults below are minimal—expand with rules fo
 2. **Small public surfaces** — Prefer narrow APIs and documented extension points.
 3. **Observable automation** — Local scripts and CI produce clear logs and exit codes. The **pytest** suite and CI
    command are normative for regressions on public contracts; see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**
-   (no smoke-only **`assert True`** as substitute for verification / parsing coverage). **Webhook request logging** uses
-   **structured** **`logging`** fields per **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**:
-   redact **`Authorization`** / **`Replayt-Signature`** (and related defaults) and **omit full raw bodies** from default
-   **`extra=`** (length-only summaries allowed).
+   (no smoke-only **`assert True`** as substitute for verification / parsing coverage). **Webhook request logging**
+   convention: **structured** **`logging`** with **`snake_case`** **`extra=`** keys (**`webhook_*`**, **`lifecycle_*`**),
+   package **`redact_*`** helpers, and **no default raw POST body** in log records—see
+   **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Recommended structured field names**,
+   **§ Example: successful verified delivery**, **L1–L9**). Redact **`Authorization`** / **`Replayt-Signature`** (and
+   related defaults); length-only **`webhook_body_bytes_len`** is allowed.
 4. **Consumer-side maintenance** — Compatibility shims and pins live **here**; upstream changes are tracked with tests
    and changelog notes.
 5. **Not a lever on core** — This repo does not exist to steer replayt core; propose upstream changes through normal

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **2**, backlog **Establish structured logging and redaction for webhook handling** /
+  `6ea52b2b-ff96-4511-a9f8-d5d9ed6d3711`): backlog **acceptance mapping** (`6ea52b2b`), operator **never-log checklist**,
+  **G0**/**G5** spec acceptance rows, **`format_safe_webhook_log_extra`** / **`extra_sensitive_header_names`** clarity;
+  **MISSION**/**DESIGN_PRINCIPLES** now point at the spec as the **normative** logging contract (symbols, example **`extra=`**,
+  **L1–L9** traceability).
+
 ### Changed
 
 - **`replayt_lifecycle_webhooks.redaction`** (phase **3**, backlog **Establish structured logging and redaction for webhook handling** /

@@ -96,12 +96,14 @@ Integrators and operators are responsible for:
   full signature header, or computed MAC in responses or logs, per **SPEC_WEBHOOK_SIGNATURE**. For stable JSON **`error`**
   codes, example bodies, and post-verify failures (**unknown `event_type`**, replay windows), see
   **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
-- **Production logging** — Use **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** for
-  **stdlib** **`logging`** conventions: redact **`Authorization`**, **`Replayt-Signature`**, and related headers by default;
-  **do not** log full raw POST bodies in default request logs (length-only **`webhook_body_bytes_len`** is allowed). For
-  correlation, prefer **`event_id`** and **`correlation.run_id`**, **`correlation.workflow_id`**, and
-  **`correlation.approval_request_id`** from **verified** payloads per **[EVENTS.md](EVENTS.md)** — not unverified JSON
-  strings.
+- **Production logging** — Use **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** as the
+  **normative** contract for **stdlib** **`logging`**: default sensitive **header** and **`extra=`** key lists,
+  **`[REDACTED]`** placeholder, **`redact_headers`** / **`redact_mapping`** / **`format_safe_webhook_log_extra`**, the
+  **never-log** rules (no full raw body; redact **`Authorization`**, **`Replayt-Signature`**, and related defaults), and the
+  **§ Example: successful verified delivery** shape. **`pytest`** rows **L1–L9** (backlog **`fa75ecf3`**) prove the
+  behavior once implemented. For correlation, prefer **`event_id`** and **`correlation.run_id`**,
+  **`correlation.workflow_id`**, and **`correlation.approval_request_id`** from **verified** payloads per
+  **[EVENTS.md](EVENTS.md)** — not unverified JSON strings.
 - **Payload semantics and privacy** — After verification, **you** decide how to parse JSON, authorize actions, and handle
   **PII or business data** in the body. This package’s contract is **cryptographic integrity** of the octets, not
   redaction or validation of arbitrary JSON fields (unless a spec in this repo explicitly documents them).
