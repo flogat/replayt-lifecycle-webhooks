@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Lifecycle JSON validation** (phase 3, backlog **Map replayt run and approval events to webhook payload shapes** /
+  `076a56b7-afd9-4778-b46a-4dc8875a431f`): **`parse_lifecycle_webhook_event`**, **`LIFECYCLE_WEBHOOK_EVENT_TYPES`**,
+  and Pydantic models for the envelope and each **`event_type`** in **`docs/EVENTS.md`**. Golden fixtures live under
+  **`tests/fixtures/events/`**; tests cover fixtures (**E2–E4**), invalid **`detail`** / unknown **`event_type`**, missing
+  **`correlation.run_id`**, and verify-then-parse ordering with **`handle_lifecycle_webhook_post`**. Runtime dependency
+  **`pydantic>=2.6.0`** added (explicit; also required by **replayt**).
 - **Minimal HTTP POST handler (phase 3, backlog `6e1255ce`):** **`handle_lifecycle_webhook_post`** (framework-agnostic
   request view → **405** / **401** / **403** / **400** / **204**), **`LifecycleWebhookHttpResult`**, and
   **`make_lifecycle_webhook_wsgi_app`** (stdlib WSGI). **401** for missing or malformed **`Replayt-Signature`**;
@@ -17,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/EVENTS.md`:** lifecycle webhook JSON spec (phase **2**, backlog **Map replayt run and approval events to webhook payload shapes** / `076a56b7-afd9-4778-b46a-4dc8875a431f`) — common envelope (`event_type`, `occurred_at`, `event_id`, `correlation`, `summary`, `detail`), **run** and **approval** event registry, prohibited content, synthetic examples, acceptance rows **E1–E6**; cross-links **replayt** concepts without requiring core changes.
+- **README.md:** pointer to **`parse_lifecycle_webhook_event`** and **`docs/EVENTS.md`** after verification.
 - **`docs/MISSION.md`:** phase **2** / backlog **Complete MISSION.md with approval and run-boundary narrative**
   (`83e47fd6-14c7-4a13-9688-56a1b5bb2e06`)—finalized sections **Users and problem**, **Replayt’s role vs this repository**,
   **Lifecycle moments: run vs approval** (table + stakeholder paragraph for PM/support), **Consumer responsibilities**,

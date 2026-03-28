@@ -6,7 +6,8 @@ This project builds on **[replayt](https://pypi.org/project/replayt/)**. It decl
 **replayt `>=0.4.25`** (see `pyproject.toml`). Formal contract, bump policy, and acceptance criteria:
 **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Webhook signature verification contract and
 acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. **Optional minimal HTTP POST
-handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
+handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**. **Run / approval JSON envelope** (field
+definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**.
 **Scope and success:** **[docs/MISSION.md](docs/MISSION.md)**. Supplemental ecosystem framing:
 **[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)**.
 
@@ -109,6 +110,10 @@ if __name__ == "__main__":
 
 Optional **`on_success`** on both APIs runs only after verification and successful JSON parse.
 
+**Run / approval payload shape:** after verification, pass the parsed JSON object to
+**`parse_lifecycle_webhook_event`** to validate against **[docs/EVENTS.md](docs/EVENTS.md)** (discriminated by
+**`event_type`**). Combine with **`on_success`** when using **`handle_lifecycle_webhook_post`**.
+
 **Lower-level verification only:**
 
 ```python
@@ -144,8 +149,9 @@ local tooling entries. Adapt or remove optional directories to match your teamâ€
 | `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** pin: contract, checklist, CI expectations |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1â€“H7** |
+| `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, synthetic examples |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
-| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler` (`handle_lifecycle_webhook_post`, WSGI factory) |
+| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events` (`parse_lifecycle_webhook_event`, models) |
 | `pyproject.toml` | Package metadata |
 | `CHANGELOG.md` | Release notes (Keep a Changelog); keep **Unreleased** updated |
 | `.gitignore` | Ignores `path/` (doc placeholders), `.orchestrator/`, `.cursor/skills/`, and `AGENTS.md` (local tooling) |
