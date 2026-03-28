@@ -3,8 +3,9 @@
 **Skim (integrators).** This package is **consumer-side**: you get a **small, tested** primitive to confirm a webhook
 POST matches **`Replayt-Signature`** (HMAC over the **raw body**) before you parse JSON or drive automation. It is
 **not** a fork of [replayt](https://pypi.org/project/replayt/); the supported **replayt** floor and verification rules
-live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** and
-**[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**.
+live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**,
+**[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**, and the optional HTTP helper spec
+**[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**.
 
 ## Who benefits
 
