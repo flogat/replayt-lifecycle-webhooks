@@ -35,8 +35,10 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 ## Reference documentation (optional)
 
-This checkout does not yet include [`docs/reference-documentation/`](docs/reference-documentation/). You can add markdown
-copies of upstream replayt documentation there for offline review or agent context.
+[`docs/reference-documentation/`](docs/reference-documentation/) holds short excerpts or consumer contracts when
+upstream prose is not in this tree. See
+[`REPLAYT_WEBHOOK_SIGNING.md`](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md) for the HMAC header and body
+rules this package implements.
 
 ## Quick start
 
@@ -46,19 +48,26 @@ python -m venv .venv
 pip install -e ".[dev]"
 ```
 
-## Verifying webhook signatures (planned API)
+## Verifying webhook signatures
 
-Operators should verify the **raw request body** with the shared secret and the **signature headers replayt sends**
-before parsing JSON or running automation. Exact header names and MAC details are defined in
-**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**; the Builder phase will add the public helper and
-unit tests. Intended usage (illustrative—names may differ once implemented):
+Verify the **raw request body** with your shared secret and the **`Replayt-Signature`** header before parsing JSON or
+running automation. Full contract:
+**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)** and
+**[docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)**.
 
 ```python
-from replayt_lifecycle_webhooks import verify_lifecycle_webhook_signature  # name TBD
+from replayt_lifecycle_webhooks import (
+    LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
+    verify_lifecycle_webhook_signature,
+)
 
 # raw_body: bytes exactly as received from the HTTP layer
-# headers: signature (and any other required) values from the incoming request
-verify_lifecycle_webhook_signature(secret=..., body=raw_body, signature=..., ...)
+# header_value: request header LIFECYCLE_WEBHOOK_SIGNATURE_HEADER (e.g. "sha256=<hex>")
+verify_lifecycle_webhook_signature(
+    secret=your_secret,
+    body=raw_body,
+    signature=header_value,
+)
 ```
 
 ## Optional agent workflows
@@ -76,7 +85,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
 | `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** pin: contract, checklist, CI expectations |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
-| `docs/reference-documentation/` | Optional markdown snapshot for contributors (when present) |
+| `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
 | `src/replayt_lifecycle_webhooks/` | Python package (import `replayt_lifecycle_webhooks`) |
 | `pyproject.toml` | Package metadata |
 | `CHANGELOG.md` | Release notes (Keep a Changelog); keep **Unreleased** updated |

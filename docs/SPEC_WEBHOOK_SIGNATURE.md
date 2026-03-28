@@ -25,6 +25,8 @@ Exact **header names**, **signature encoding** (hex vs base64, with or without a
 
 If upstream prose is hard to find, capture the authoritative reference (URL, version, or a checked-in excerpt under **`docs/reference-documentation/`**) and cite it from this spec in a follow-up edit.
 
+**Authority in this repo (phase 3):** **[`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`](reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)** — HMAC-SHA256 over the raw body; header **`Replayt-Signature`** with value **`sha256=<hex>`** or bare hex. Upstream **replayt** `0.4.25` does not ship HTTP webhook signing docs in the installed package; treat that file as the consumer contract until upstream publishes a delivery spec.
+
 ## Contract (package behavior)
 
 ### Public API
