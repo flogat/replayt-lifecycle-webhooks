@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Runtime dependency on **replayt** `>=0.4.25` (lower bound only). The package does not import **replayt** yet; this
   floor matches the first integration surface and PyPI versions verified at pin time.
+- Tests that assert the canonical **replayt** `>=M.m.p` line in `pyproject.toml` and README compatibility anchors from
+  **SPEC_REPLAYT_DEPENDENCY.md**.
+
+### Changed
+
+- **CI:** the test job runs `pip install -e .` before `pip install -e ".[dev]"` so the minimal editable install is
+  verified every run.
 
 ### Documentation
 
