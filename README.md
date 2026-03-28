@@ -9,7 +9,11 @@ coverage integrators would otherwise reimplement (ecosystem pattern and scope: *
 **replayt `>=0.4.25`** (see `pyproject.toml`). Formal contract, bump policy, and acceptance criteria:
 **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Webhook signature verification contract and
 acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. **Optional minimal HTTP POST
-handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**. **Run / approval JSON envelope** (field
+handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
+**Reference HTTP server** (single documented **`python -m` / CLI** start command, **POST** path, **`GET /health`**,
+optional dependency extra): **[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)** — see that spec
+for acceptance **S1–S8**; until implemented, use the **WSGI** example below or mount **`make_lifecycle_webhook_wsgi_app`**
+yourself. **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. Informative **JSON Schema** mirror (**Draft-07**):
 **[docs/schemas/lifecycle_webhook_payload-1-0.schema.json](docs/schemas/lifecycle_webhook_payload-1-0.schema.json)**.
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
@@ -148,7 +152,9 @@ result = handle_lifecycle_webhook_post(
 ```
 
 **WSGI (stdlib server):** **`make_lifecycle_webhook_wsgi_app`** returns an app you can mount or run with
-**`wsgiref.simple_server`** (no extra install beyond this package):
+**`wsgiref.simple_server`** (no extra install beyond this package). For the **supported one-command server** contract
+(host, port, health probe, optional ASGI vs stdlib choice), track
+**[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**.
 
 ```python
 import os
@@ -208,6 +214,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H8** |
+| `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S8** |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |

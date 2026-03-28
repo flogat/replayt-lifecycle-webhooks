@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_HTTP_SERVER_ENTRYPOINT.md`**, **`README.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**,
+  **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/DEPENDENCY_AUDIT.md`**
+  (phase **2**, backlog **Expose a minimal HTTP receiver (ASGI/WSGI) behind one entrypoint** / `2cf0f4fb-ef9a-40d4-b306-8a46d30f409e`):
+  normative **reference server** contract — single canonical start command (**`python -m` and/or console script**), **POST**
+  webhook path, **`GET /health`** (or spec-aligned alternative), host/port defaults, optional **ASGI** vs **stdlib WSGI**
+  stack choice with **optional-dependencies** posture; **S1–S8** acceptance for Builder/Tester; **CHANGELOG** /
+  **`pyproject.toml`** justification rule for new deps; CI tests **S6** (in-process, no network) when implemented.
+
 ### Changed
 
 - **`parse_lifecycle_webhook_event`** (phase **3**, backlog **Define canonical webhook payload and event envelope schema** /

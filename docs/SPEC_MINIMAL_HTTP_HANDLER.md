@@ -71,6 +71,8 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 
 ## Related docs
 
+- **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — optional **reference server**: one documented
+  **`python -m` / CLI** command, **POST** route, **`GET /health`**, optional-deps posture, acceptance **S1–S8**.
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI **`pytest`** entrypoint; suite must cover verification (and
   parsing where handler tests apply), not placeholder smoke tests.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification procedure, **401/403** guidance, v1 header format.
