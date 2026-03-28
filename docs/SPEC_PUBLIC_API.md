@@ -30,7 +30,7 @@ The authoritative list of **public** names is the package **`__all__`** in **`sr
 | -------- | --------------------------- |
 | Version | `__version__` |
 | Signature | `LIFECYCLE_WEBHOOK_SIGNATURE_HEADER`, `WebhookSignatureError`, `WebhookSignatureFormatError`, `WebhookSignatureMismatchError`, `WebhookSignatureMissingError`, `compute_lifecycle_webhook_signature_header`, `verify_lifecycle_webhook_signature` |
-| Events / parsing | `SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`, `LIFECYCLE_WEBHOOK_EVENT_TYPES`, `LifecycleCorrelation`, `LifecycleWebhookEvent`, `ApprovalPendingDetail`, `ApprovalPendingEvent`, `ApprovalResolvedDetail`, `ApprovalResolvedEvent`, `RunCompletedDetail`, `RunCompletedEvent`, `RunFailedDetail`, `RunFailedEvent`, `RunStartedDetail`, `RunStartedEvent`, `parse_lifecycle_webhook_event` |
+| Events / parsing | `SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`, `LIFECYCLE_WEBHOOK_EVENT_TYPES`, `LifecycleCorrelation`, `LifecycleWebhookEvent`, `ApprovalPendingDetail`, `ApprovalPendingEvent`, `ApprovalResolvedDetail`, `ApprovalResolvedEvent`, `RunCompletedDetail`, `RunCompletedEvent`, `RunFailedDetail`, `RunFailedEvent`, `RunStartedDetail`, `RunStartedEvent`, `parse_lifecycle_webhook_event`, `lifecycle_event_to_digest_text`, `lifecycle_event_to_digest_record` |
 | HTTP handler (optional glue) | `LifecycleWebhookHttpResult`, `handle_lifecycle_webhook_post`, `make_lifecycle_webhook_wsgi_app` |
 | Replay protection | `LifecycleWebhookDedupStore`, `InMemoryLifecycleWebhookDedupStore`, `LifecycleWebhookReplayPolicy`, `ReplayFreshnessRejected`, `ensure_occurred_at_within_replay_window` |
 | Redaction / logging helpers | `DEFAULT_SENSITIVE_HEADER_NAMES`, `DEFAULT_SENSITIVE_MAPPING_KEYS`, `REDACTED_PLACEHOLDER`, `redact_headers`, `redact_mapping`, `format_safe_webhook_log_extra` |
@@ -56,6 +56,7 @@ The following **import paths** are **internal implementation** until **1.0.0** (
 | Module path | Status |
 | ----------- | ------ |
 | `replayt_lifecycle_webhooks.signature` | **Internal** — use package root. |
+| `replayt_lifecycle_webhooks.digest` | **Internal** — use package root (or `replayt_lifecycle_webhooks.events` re-exports). |
 | `replayt_lifecycle_webhooks.handler` | **Internal** — use package root. |
 | `replayt_lifecycle_webhooks.replay_protection` | **Internal** — use package root. |
 | `replayt_lifecycle_webhooks.redaction` | **Internal** — use package root. |

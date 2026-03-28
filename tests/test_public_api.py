@@ -35,6 +35,8 @@ _PACKAGE_ROOT_EXPORT_ORDER: tuple[str, ...] = (
     "RunStartedDetail",
     "RunStartedEvent",
     "parse_lifecycle_webhook_event",
+    "lifecycle_event_to_digest_text",
+    "lifecycle_event_to_digest_record",
     "LifecycleWebhookHttpResult",
     "handle_lifecycle_webhook_post",
     "make_lifecycle_webhook_wsgi_app",
@@ -69,6 +71,8 @@ _EVENTS_EXPORT_ORDER: tuple[str, ...] = (
     "RunStartedDetail",
     "RunStartedEvent",
     "parse_lifecycle_webhook_event",
+    "lifecycle_event_to_digest_text",
+    "lifecycle_event_to_digest_record",
 )
 _EXPECTED_EVENTS_EXPORTS: frozenset[str] = frozenset(_EVENTS_EXPORT_ORDER)
 
@@ -103,6 +107,7 @@ def test_spec_lists_documented_internal_modules_as_importable() -> None:
     """SPEC_PUBLIC_API § Unsupported imports: paths exist for maintainers; integrators should use the package root."""
     internal = (
         "replayt_lifecycle_webhooks.signature",
+        "replayt_lifecycle_webhooks.digest",
         "replayt_lifecycle_webhooks.handler",
         "replayt_lifecycle_webhooks.replay_protection",
         "replayt_lifecycle_webhooks.redaction",
