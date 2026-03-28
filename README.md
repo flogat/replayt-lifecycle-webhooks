@@ -70,9 +70,22 @@ From the repository root after a dev install:
 pytest tests -q
 ```
 
-CI runs the same **`tests/`** tree (see **`.github/workflows/ci.yml`**). Minimum behavioral coverage (signature
-verification and lifecycle JSON parsing), removal of placeholder smoke tests, and checklist rows **A1–A5**:
-**[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**.
+The **normative** full suite is defined in **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** and
+**[docs/SPEC_REPLAYT_BOUNDARY_TESTS.md](docs/SPEC_REPLAYT_BOUNDARY_TESTS.md)**: **unit / contract** tests (signature
+verification, lifecycle JSON parsing, handler behavior, doc guards) and **replayt boundary** tests that **`import replayt`**
+and lock **EVENTS.md**-listed symbols (**R1–R5**). **`pytest tests -q`** is the contributor and **CI** entrypoint (see
+**`.github/workflows/ci.yml`**). There is **no** separate network-backed “integration” job unless **CHANGELOG.md** and those
+specs add one.
+
+**Focused runs (optional):**
+
+```bash
+pytest tests/test_webhook_signature.py tests/test_lifecycle_events.py -q   # crypto + parsing only (example)
+pytest tests -m replayt_boundary -q                                         # replayt import + symbol checks only
+```
+
+Checklist rows **A1–A5** (minimum verification / parsing) and **R1–R5** (replayt boundary): **SPEC_AUTOMATED_TESTS** and
+**SPEC_REPLAYT_BOUNDARY_TESTS**.
 
 ## Verifying webhook signatures
 
