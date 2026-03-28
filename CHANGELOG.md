@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **2**, backlog **Run ruff in CI for fast style and lint feedback** /
+  `5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`): normative **ruff** CI acceptance (**RF1**–**RF5**)—workflow triggers (**`master`**, **`mc/**`**), **`ruff check`** required, optional **`ruff format --check`**, **`[tool.ruff]`** only when defaults are insufficient, **README.md** local command line, **CHANGELOG** when CI wires **ruff**; traceability bullet and **CI entrypoint** cross-links.
+
 - **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **2**, backlog **Establish structured logging and redaction for webhook handling** /
   `6ea52b2b-ff96-4511-a9f8-d5d9ed6d3711`): backlog **acceptance mapping** (`6ea52b2b`), operator **never-log checklist**,
   **G0**/**G5** spec acceptance rows, **`format_safe_webhook_log_extra`** / **`extra_sensitive_header_names`** clarity;
