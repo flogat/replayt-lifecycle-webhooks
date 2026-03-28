@@ -48,11 +48,11 @@ _Novel composition of replayt + other tools._
 - **Primary pattern:** **Core-gap** (taxonomy option 1 above) — normative statement and scope live in **[MISSION.md](MISSION.md)**.
 - **One-paragraph pitch:** Replayt defines run and approval lifecycle **semantics** and HTTP **signing**; integrators still
   need a **small, tested** way to verify **`Replayt-Signature`** over the **raw body** before acting on JSON. This
-  repository documents that consumer contract, ships verification (and optional minimal HTTP glue), and ties **CI** and
-  **pytest** to **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** and **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**—without vendoring or steering **replayt** core.
+  repository documents that consumer contract, ships verification (and optional minimal HTTP glue), and ties **CI** (**ruff**,
+  **pytest**) to **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** and **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**—without vendoring or steering **replayt** core.
 - **Replayt release tracking (v0.x):** Keep the declared **`replayt`** **lower bound** in **`pyproject.toml`** in sync with
   **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** (bump policy, compatibility matrix, checklists). **CI** runs
-  the **pytest** suite on every change workflow the repo uses, including **replayt** import-boundary coverage per
+  **ruff** checks and the **pytest** suite on every change workflow the repo uses, including **replayt** import-boundary coverage per
   **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**. Record user-visible dependency or verification
   contract shifts under **Unreleased** in **`CHANGELOG.md`**. For upstream cadence and prose per release, use
   **[PyPI release history](https://pypi.org/project/replayt/#history)** (and upstream changelog or GitHub Releases when you

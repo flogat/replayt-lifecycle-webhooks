@@ -41,7 +41,7 @@ Without a declared, **justified** **replayt** dependency range and a **published
 
 - **`pip install -e .`** must succeed in CI (same standard as local editable install).
 - Supply-chain / dev workflows that use **`pip install -e ".[dev]"`** remain valid; they must still resolve **replayt** from the declared dependency range.
-- **Python version:** The canonical automated test job uses the interpreter pinned in **`.github/workflows/ci.yml`** (currently **3.12**). That version is the **tested** Python for the full **`pytest tests`** collection; it must appear in the **compatibility matrix** below. **`requires-python`** in `pyproject.toml` may be broader (e.g. `>=3.11`); document both so integrators do not assume every supported Python minor is exercised in CI unless you add matrix jobs.
+- **Python version:** Jobs in **`.github/workflows/ci.yml`** that set **`python-version`** (**`lint`**, **`test`**, **`supply-chain`**) pin the same interpreter (currently **3.12**). That version is the **tested** Python for the full **`pytest tests`** collection and for **ruff**; it must appear in the **compatibility matrix** below. **`requires-python`** in `pyproject.toml` may be broader (e.g. `>=3.11`); document both so integrators do not assume every supported Python minor is exercised in CI unless you add matrix jobs.
 
 ## When `replayt` is not listed in `pyproject.toml` yet (stub / pre-coupling)
 
