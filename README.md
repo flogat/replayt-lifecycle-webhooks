@@ -227,6 +227,20 @@ extra = format_safe_webhook_log_extra(
 )
 log.info("handled webhook", extra=extra)
 
+# After verify: ``raw_body`` is the POST bytes; ``parsed`` is the verified JSON object.
+# Never pass raw body text into ``extra=`` — only ``webhook_body_bytes_len`` and safe fields.
+extra_ok = format_safe_webhook_log_extra(
+    method="POST",
+    path="/webhook",
+    status_code=204,
+    headers=request_headers,
+    webhook_body_bytes_len=len(raw_body),
+    lifecycle_event_id=parsed["event_id"],
+    lifecycle_run_id=parsed["correlation"]["run_id"],
+    lifecycle_workflow_id=parsed["correlation"]["workflow_id"],
+)
+log.info("webhook accepted", extra=extra_ok)
+
 # Or redact a header map before formatting your own message:
 log.debug("headers=%s", redact_headers(request_headers))
 ```

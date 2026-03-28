@@ -98,7 +98,7 @@ Integrators and operators are responsible for:
   **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
 - **Production logging** — Use **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** for
   **stdlib** **`logging`** conventions: redact **`Authorization`**, **`Replayt-Signature`**, and related headers by default;
-  **do not** log full raw POST bodies in default request logs (length-only **`body_bytes_len`** is allowed). For
+  **do not** log full raw POST bodies in default request logs (length-only **`webhook_body_bytes_len`** is allowed). For
   correlation, prefer **`event_id`** and **`correlation.run_id`**, **`correlation.workflow_id`**, and
   **`correlation.approval_request_id`** from **verified** payloads per **[EVENTS.md](EVENTS.md)** — not unverified JSON
   strings.

@@ -62,7 +62,7 @@ verification), **default** logging **must not** include:
 
 **Allowed without extra privacy review:** HTTP **method**, **path** (or a stable route template), response **`status_code`**,
 stable **`error_code`** from **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** on failure paths,
-**`body_bytes_len`** (integer octet count of the raw body the handler read from the wire), and **identifiers** copied **only**
+**`webhook_body_bytes_len`** (integer octet count of the raw body the handler read from the wire), and **identifiers** copied **only**
 from **verified** parsing (**`event_id`**, **`correlation.run_id`**, **`correlation.workflow_id`**, optional
 **`correlation.approval_request_id`**) per **[EVENTS.md](EVENTS.md)**. **Do not** log arbitrary strings from **unverified**
 JSON as if they were correlation ids.
@@ -145,10 +145,10 @@ renamed in **CHANGELOG**). **No** new mandatory dependencies.
 **Structured logging helper (required):** At least one documented entry point that combines common operator fields, for
 example:
 
-- **`format_safe_webhook_log_extra(...)`** — accepts optional **`headers`**, **`method`**, **`path`** or **`uri`**, **`status_code`**, **`error_code`**, optional **`body_bytes_len`** (non-negative **`int`**, body length only), optional parsed correlation fields (**`event_id`**, **`run_id`**, **`workflow_id`**, **`approval_request_id`**) **after verify**, and returns a **`dict`** suitable for **`extra=`** after passing nested header-like data through **`redact_headers`** / **`redact_mapping`**.
+- **`format_safe_webhook_log_extra(...)`** — accepts optional **`headers`**, **`method`**, **`path`** or **`uri`**, **`status_code`**, **`error_code`**, optional **`webhook_body_bytes_len`** (non-negative **`int`**, body length only), optional correlation kwargs **`lifecycle_event_id`**, **`lifecycle_run_id`**, **`lifecycle_workflow_id`**, **`lifecycle_approval_request_id`** (from verified JSON only), and returns a **`dict`** suitable for **`extra=`** after passing nested header-like data through **`redact_headers`** / **`redact_mapping`**. Keys whose values are **`None`** (**`lifecycle_approval_request_id`** when absent) **may** be omitted from the returned dict.
 
 **Normative:** The returned mapping **must not** include raw body bytes, decoded body text, or JSON string snapshots of the
-payload **by default**. Optional **`body_bytes_len`** is the **only** body-related field the contract guarantees for
+payload **by default**. Optional **`webhook_body_bytes_len`** is the **only** body-related field the contract guarantees for
 request summaries; integrators who need more must **opt in** explicitly in their own code (out of this helper’s defaults)
 and accept privacy review.
 
@@ -199,9 +199,9 @@ Correlation fields **must** come **only** from **verified** JSON (see **§ Reque
 ## Example: successful verified delivery (normative documentation)
 
 Expected **`extra=`** shape after a **successful** path (**HTTP 204**, signature verified, application hook completed).
-**`webhook_method`**, **`webhook_path`**, **`webhook_status_code`**, and **`webhook_headers`** match **shipped**
-**`format_safe_webhook_log_extra`**; **`webhook_body_bytes_len`** and **`lifecycle_*`** are **required in `extra` once
-the helper accepts them** (same backlog — **Builder**). Until then, omit those keys rather than logging body content.
+**`webhook_method`**, **`webhook_path`**, **`webhook_status_code`**, **`webhook_body_bytes_len`**, **`webhook_headers`**, and
+present **`lifecycle_*`** fields match **`format_safe_webhook_log_extra`** (omit **`lifecycle_approval_request_id`** when
+there is no approval correlation id).
 
 ```python
 {
@@ -217,7 +217,6 @@ the helper accepts them** (same backlog — **Builder**). Until then, omit those
     "lifecycle_event_id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "lifecycle_run_id": "01JHBDUMMYRUNID000000000000",
     "lifecycle_workflow_id": "wf-email-triage",
-    "lifecycle_approval_request_id": None,
 }
 ```
 
