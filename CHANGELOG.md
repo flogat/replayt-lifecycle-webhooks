@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   verification (public API shape, test matrix, upstream alignment, non-goals); pointer to
   **`reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`** as in-repo contract authority when upstream HTTP delivery
   docs are absent.
-- **`docs/MISSION.md`:** phase **2** / backlog **Ship a one-page MISSION with scope and success criteria**—integrator skim
+- **`docs/MISSION.md`:** phase **3** / backlog **Ship a one-page MISSION with scope and success criteria**—integrator skim
   paragraph, **replayt** capabilities consumed, explicit in/out scope bullets, success including **CI** and **automated
   tests** (**pytest**), short doc hygiene checklist; v0.x defers enterprise / extended LLM narrative to
   **DESIGN_PRINCIPLES.md**.
