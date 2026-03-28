@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **`DEFAULT_SENSITIVE_HEADER_NAMES`** / **`DEFAULT_SENSITIVE_MAPPING_KEYS`**. Re-exported from the package root **`__init__`**.
   **`tests/test_redaction.py`** covers **SPEC_AUTOMATED_TESTS** **L1–L8**. No new mandatory runtime dependencies.
 
+### Fixed
+
+- **`format_safe_webhook_log_extra`** (phase **5** architecture review, same backlog **`fa75ecf3`**): removed an unused
+  **`extra_sensitive_keys`** keyword argument (it was ignored). Use **`redact_mapping(..., extra_sensitive_keys=...)`** for
+  non-header fields in **`Logger.*(..., extra={...})`**.
+
 ### Documentation
 
 - **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** (phase **2**, backlog **Add structured logging helper that redacts sensitive keys by default** /

@@ -131,13 +131,13 @@ def format_safe_webhook_log_extra(
     status_code: int | None = None,
     error_code: str | None = None,
     extra_sensitive_header_names: Iterable[str] = (),
-    extra_sensitive_keys: Iterable[str] = (),
 ) -> dict[str, Any]:
     """Build a dict safe for ``Logger.*(..., extra={...})`` (no LogRecord name clashes).
 
     ``path`` wins over ``uri`` when both are set. Header names and values are copied through
-    :func:`redact_headers` only. Keys use a ``webhook_`` prefix so they avoid stdlib
-    :class:`logging.LogRecord` attribute names.
+    :func:`redact_headers` only (including ``extra_sensitive_header_names``). Other dict
+    fields for ``extra=`` should use :func:`redact_mapping` separately. Keys use a ``webhook_``
+    prefix so they avoid stdlib :class:`logging.LogRecord` attribute names.
     """
     extra: dict[str, Any] = {}
     if method is not None:
