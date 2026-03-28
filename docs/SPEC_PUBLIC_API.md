@@ -35,7 +35,7 @@ The authoritative list of **public** names is the package **`__all__`** in **`sr
 | Replay protection | `LifecycleWebhookDedupStore`, `InMemoryLifecycleWebhookDedupStore`, `LifecycleWebhookReplayPolicy`, `ReplayFreshnessRejected`, `ensure_occurred_at_within_replay_window` |
 | Redaction / logging helpers | `DEFAULT_SENSITIVE_HEADER_NAMES`, `DEFAULT_SENSITIVE_MAPPING_KEYS`, `REDACTED_PLACEHOLDER`, `redact_headers`, `redact_mapping`, `format_safe_webhook_log_extra` |
 
-**Acceptance (Builder / CI):** **`__all__`** contains **exactly** the names in the table above (same set; order in `__all__` follows the module’s existing grouping convention).
+**Acceptance (Builder / CI):** **`__all__`** lists **exactly** the names in the table above in **table order** (Version row, then Signature, Events / parsing, HTTP handler, Replay protection, Redaction / logging helpers). **`tests/test_public_api.py`** checks both the set and this order.
 
 ### Secondary: `replayt_lifecycle_webhooks.events`
 

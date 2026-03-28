@@ -10,68 +10,67 @@ import pytest
 import replayt_lifecycle_webhooks as rlw
 from replayt_lifecycle_webhooks import events
 
-# Canonical set: docs/SPEC_PUBLIC_API.md § Supported import paths (package root table). Keep in sync when the spec changes.
-_EXPECTED_PACKAGE_ROOT_EXPORTS: frozenset[str] = frozenset(
-    {
-        "__version__",
-        "LIFECYCLE_WEBHOOK_SIGNATURE_HEADER",
-        "WebhookSignatureError",
-        "WebhookSignatureFormatError",
-        "WebhookSignatureMismatchError",
-        "WebhookSignatureMissingError",
-        "compute_lifecycle_webhook_signature_header",
-        "verify_lifecycle_webhook_signature",
-        "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
-        "LIFECYCLE_WEBHOOK_EVENT_TYPES",
-        "LifecycleCorrelation",
-        "LifecycleWebhookEvent",
-        "ApprovalPendingDetail",
-        "ApprovalPendingEvent",
-        "ApprovalResolvedDetail",
-        "ApprovalResolvedEvent",
-        "RunCompletedDetail",
-        "RunCompletedEvent",
-        "RunFailedDetail",
-        "RunFailedEvent",
-        "RunStartedDetail",
-        "RunStartedEvent",
-        "parse_lifecycle_webhook_event",
-        "LifecycleWebhookHttpResult",
-        "handle_lifecycle_webhook_post",
-        "make_lifecycle_webhook_wsgi_app",
-        "LifecycleWebhookDedupStore",
-        "InMemoryLifecycleWebhookDedupStore",
-        "LifecycleWebhookReplayPolicy",
-        "ReplayFreshnessRejected",
-        "ensure_occurred_at_within_replay_window",
-        "DEFAULT_SENSITIVE_HEADER_NAMES",
-        "DEFAULT_SENSITIVE_MAPPING_KEYS",
-        "REDACTED_PLACEHOLDER",
-        "redact_headers",
-        "redact_mapping",
-        "format_safe_webhook_log_extra",
-    }
+# Canonical order: docs/SPEC_PUBLIC_API.md § Supported import paths (package root table). Keep in sync when the spec changes.
+_PACKAGE_ROOT_EXPORT_ORDER: tuple[str, ...] = (
+    "__version__",
+    "LIFECYCLE_WEBHOOK_SIGNATURE_HEADER",
+    "WebhookSignatureError",
+    "WebhookSignatureFormatError",
+    "WebhookSignatureMismatchError",
+    "WebhookSignatureMissingError",
+    "compute_lifecycle_webhook_signature_header",
+    "verify_lifecycle_webhook_signature",
+    "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
+    "LIFECYCLE_WEBHOOK_EVENT_TYPES",
+    "LifecycleCorrelation",
+    "LifecycleWebhookEvent",
+    "ApprovalPendingDetail",
+    "ApprovalPendingEvent",
+    "ApprovalResolvedDetail",
+    "ApprovalResolvedEvent",
+    "RunCompletedDetail",
+    "RunCompletedEvent",
+    "RunFailedDetail",
+    "RunFailedEvent",
+    "RunStartedDetail",
+    "RunStartedEvent",
+    "parse_lifecycle_webhook_event",
+    "LifecycleWebhookHttpResult",
+    "handle_lifecycle_webhook_post",
+    "make_lifecycle_webhook_wsgi_app",
+    "LifecycleWebhookDedupStore",
+    "InMemoryLifecycleWebhookDedupStore",
+    "LifecycleWebhookReplayPolicy",
+    "ReplayFreshnessRejected",
+    "ensure_occurred_at_within_replay_window",
+    "DEFAULT_SENSITIVE_HEADER_NAMES",
+    "DEFAULT_SENSITIVE_MAPPING_KEYS",
+    "REDACTED_PLACEHOLDER",
+    "redact_headers",
+    "redact_mapping",
+    "format_safe_webhook_log_extra",
 )
+_EXPECTED_PACKAGE_ROOT_EXPORTS: frozenset[str] = frozenset(_PACKAGE_ROOT_EXPORT_ORDER)
 
-_EXPECTED_EVENTS_EXPORTS: frozenset[str] = frozenset(
-    {
-        "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
-        "LIFECYCLE_WEBHOOK_EVENT_TYPES",
-        "LifecycleCorrelation",
-        "LifecycleWebhookEvent",
-        "ApprovalPendingDetail",
-        "ApprovalPendingEvent",
-        "ApprovalResolvedDetail",
-        "ApprovalResolvedEvent",
-        "RunCompletedDetail",
-        "RunCompletedEvent",
-        "RunFailedDetail",
-        "RunFailedEvent",
-        "RunStartedDetail",
-        "RunStartedEvent",
-        "parse_lifecycle_webhook_event",
-    }
+# Order matches src/replayt_lifecycle_webhooks/events.py and SPEC_PUBLIC_API Events / parsing row.
+_EVENTS_EXPORT_ORDER: tuple[str, ...] = (
+    "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
+    "LIFECYCLE_WEBHOOK_EVENT_TYPES",
+    "LifecycleCorrelation",
+    "LifecycleWebhookEvent",
+    "ApprovalPendingDetail",
+    "ApprovalPendingEvent",
+    "ApprovalResolvedDetail",
+    "ApprovalResolvedEvent",
+    "RunCompletedDetail",
+    "RunCompletedEvent",
+    "RunFailedDetail",
+    "RunFailedEvent",
+    "RunStartedDetail",
+    "RunStartedEvent",
+    "parse_lifecycle_webhook_event",
 )
+_EXPECTED_EVENTS_EXPORTS: frozenset[str] = frozenset(_EVENTS_EXPORT_ORDER)
 
 
 def _repo_root() -> pathlib.Path:
@@ -88,11 +87,13 @@ def test_package_root___all___names_are_importable(name: str) -> None:
 
 
 def test_package_root___all___matches_spec_table() -> None:
+    assert list(rlw.__all__) == list(_PACKAGE_ROOT_EXPORT_ORDER)
     assert frozenset(rlw.__all__) == _EXPECTED_PACKAGE_ROOT_EXPORTS
     assert len(rlw.__all__) == len(_EXPECTED_PACKAGE_ROOT_EXPORTS)
 
 
 def test_events___all___matches_spec_events_row() -> None:
+    assert list(events.__all__) == list(_EVENTS_EXPORT_ORDER)
     assert frozenset(events.__all__) == _EXPECTED_EVENTS_EXPORTS
     assert _EXPECTED_EVENTS_EXPORTS <= _EXPECTED_PACKAGE_ROOT_EXPORTS
     assert len(events.__all__) == len(_EXPECTED_EVENTS_EXPORTS)

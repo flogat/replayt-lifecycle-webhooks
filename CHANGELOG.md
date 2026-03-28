@@ -67,6 +67,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **`extra_sensitive_keys`** keyword argument (it was ignored). Use **`redact_mapping(..., extra_sensitive_keys=...)`** for
   non-header fields in **`Logger.*(..., extra={...})`**.
 
+- **SPEC_PUBLIC_API** acceptance text and **API1** tests (phase **5** architecture review, backlog **Define public API surface and deprecation policy before 1.0** /
+  `30e133a5-78fa-4eee-ae56-56a1af4c9f73`): **§ Primary: package root** now states **`__all__`** order matches the table; **`tests/test_public_api.py`** asserts list order for the package root and **`events`** **`__all__`**, not only set equality. **SPEC_AUTOMATED_TESTS** **API1** rows updated to match.
+
 ### Documentation
 
 - **`docs/SPEC_LOCAL_WEBHOOK_DEMO.md`** (phase **3**, backlog **Specify idempotency and replay-safe delivery semantics** /
