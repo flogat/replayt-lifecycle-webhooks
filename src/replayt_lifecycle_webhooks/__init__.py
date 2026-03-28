@@ -2,6 +2,7 @@
 
 from .events import (
     LIFECYCLE_WEBHOOK_EVENT_TYPES,
+    SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS,
     ApprovalPendingDetail,
     ApprovalPendingEvent,
     ApprovalResolvedDetail,
@@ -31,6 +32,7 @@ from .signature import (
 )
 
 __all__ = [
+    "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
     "LIFECYCLE_WEBHOOK_EVENT_TYPES",
     "ApprovalPendingDetail",
     "ApprovalPendingEvent",

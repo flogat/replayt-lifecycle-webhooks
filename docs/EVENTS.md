@@ -368,7 +368,7 @@ Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; *
 | T1 | Public **`parse_lifecycle_webhook_event`** validates a **`dict`**-like JSON object and returns a typed union discriminated by **`event_type`**. | Unit tests + **`__all__`** / import review. |
 | T2 | Exported types cover at minimum **one run** and **one approval** **`event_type`**; **E1** compliance requires **all** registry rows. | Model/module review + fixtures. |
 | T3 | **JSON fixtures** under **`tests/fixtures/events/`** (one file per documented **`event_type`** when **E1** is satisfied); tests parse each fixture through **`parse_lifecycle_webhook_event`** without error. | **pytest** |
-| T4 | Invalid **`detail`** for a known **`event_type`**, unknown **`event_type`**, or missing required **envelope** / **`correlation`** fields produce **`pydantic.ValidationError`** (or documented equivalent); covered by tests. | **pytest** |
+| T4 | Invalid **`detail`** for a known **`event_type`**, unknown **`event_type`**, unsupported **`schema_version`** when present, or missing required **envelope** / **`correlation`** fields produce **`pydantic.ValidationError`** (or documented equivalent); covered by tests. | **pytest** |
 | T5 | Supported payload / **`schema_version`** expectations are visible in **`events`** module docstrings and/or model fields. | Doc review |
 | T6 | **[README.md](../README.md)** links to **replayt** upstream for **semantics** and states that **wire JSON** is normative in **EVENTS.md** until upstream publishes an official HTTP schema. | Doc review |
 | T7 | User-visible parsing or shape changes appear under **CHANGELOG.md** **Unreleased** (or release section) with migration notes when shapes change. | Release hygiene |

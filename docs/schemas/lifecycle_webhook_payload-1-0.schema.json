@@ -18,7 +18,8 @@
       "properties": {
         "schema_version": {
           "type": "string",
-          "description": "Optional; omit or use 1.0 per EVENTS.md"
+          "enum": ["1.0"],
+          "description": "Optional per EVENTS.md; if present must be 1.0 for this schema artifact"
         },
         "event_type": { "const": "replayt.lifecycle.run.started" },
         "occurred_at": { "type": "string", "description": "RFC 3339 timestamp" },
@@ -58,7 +59,7 @@
         "detail"
       ],
       "properties": {
-        "schema_version": { "type": "string" },
+        "schema_version": { "type": "string", "enum": ["1.0"] },
         "event_type": { "const": "replayt.lifecycle.run.completed" },
         "occurred_at": { "type": "string" },
         "event_id": { "type": "string" },
@@ -98,7 +99,7 @@
         "detail"
       ],
       "properties": {
-        "schema_version": { "type": "string" },
+        "schema_version": { "type": "string", "enum": ["1.0"] },
         "event_type": { "const": "replayt.lifecycle.run.failed" },
         "occurred_at": { "type": "string" },
         "event_id": { "type": "string" },
@@ -138,7 +139,7 @@
         "detail"
       ],
       "properties": {
-        "schema_version": { "type": "string" },
+        "schema_version": { "type": "string", "enum": ["1.0"] },
         "event_type": { "const": "replayt.lifecycle.approval.pending" },
         "occurred_at": { "type": "string" },
         "event_id": { "type": "string" },
@@ -177,7 +178,7 @@
         "detail"
       ],
       "properties": {
-        "schema_version": { "type": "string" },
+        "schema_version": { "type": "string", "enum": ["1.0"] },
         "event_type": { "const": "replayt.lifecycle.approval.resolved" },
         "occurred_at": { "type": "string" },
         "event_id": { "type": "string" },
