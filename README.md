@@ -313,7 +313,7 @@ local tooling entries. Adapt or remove optional directories to match your teamâ€
 | `docs/MISSION.md` | Mission and scope |
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
 | `docs/SPEC_PUBLIC_API.md` | Supported public imports (`__all__`), internal modules until 1.0, semver + deprecation + **CHANGELOG** rules |
-| `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** range: contract, **compatibility matrix**, upper-bound policy, checklist, CI expectations |
+| `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** range: contract, **compatibility matrix** (**replayt**, **`requires-python`**, CI-tested Python), upper-bound policy, checklist, CI expectations |
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1â€“H12** |
