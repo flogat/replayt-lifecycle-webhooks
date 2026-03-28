@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import pytest
 
-from replayt_lifecycle_webhooks import (
+from replayt_lifecycle_webhooks.signature import (
     LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
     WebhookSignatureFormatError,
     WebhookSignatureMismatchError,
@@ -19,6 +19,22 @@ from replayt_lifecycle_webhooks import (
 
 _SECRET = "test-webhook-secret"
 _BODY = b'{"event":"run_finished","run_id":"r1"}'
+
+# A6 (SPEC_AUTOMATED_TESTS Backlog 2b4c6927): fixed secret + body + committed v1 header
+# (HMAC-SHA256 over raw body; secret UTF-8). Independent of _sign() helper below.
+_GOLDEN_SECRET = "2b4c6927-golden-secret"
+_GOLDEN_BODY = b'{"golden":true,"case":"a6"}'
+_GOLDEN_REPLAYT_SIGNATURE = (
+    "sha256=cdef1c6a1f1850132ca76877bbc60bea94390edb23ee9b137c784dd62fed737f"
+)
+
+
+def test_golden_vector_committed_replayt_signature() -> None:
+    verify_lifecycle_webhook_signature(
+        secret=_GOLDEN_SECRET,
+        body=_GOLDEN_BODY,
+        signature=_GOLDEN_REPLAYT_SIGNATURE,
+    )
 
 
 def _sign(body: bytes, secret: str | bytes = _SECRET) -> str:
