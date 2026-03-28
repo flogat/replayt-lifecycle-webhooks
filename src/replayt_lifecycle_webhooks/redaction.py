@@ -63,6 +63,11 @@ DEFAULT_SENSITIVE_MAPPING_KEYS: frozenset[str] = frozenset(
         "secret",
         "token",
         "bearer",
+        # Shallow redaction when integrators put request bodies in ``extra=``; prefer omission.
+        "body",
+        "raw_body",
+        "payload",
+        "request_body",
     }
 )
 
@@ -130,6 +135,11 @@ def format_safe_webhook_log_extra(
     uri: str | None = None,
     status_code: int | None = None,
     error_code: str | None = None,
+    webhook_body_bytes_len: int | None = None,
+    lifecycle_event_id: str | None = None,
+    lifecycle_run_id: str | None = None,
+    lifecycle_workflow_id: str | None = None,
+    lifecycle_approval_request_id: str | None = None,
     extra_sensitive_header_names: Iterable[str] = (),
 ) -> dict[str, Any]:
     """Build a dict safe for ``Logger.*(..., extra={...})`` (no LogRecord name clashes).
@@ -138,6 +148,11 @@ def format_safe_webhook_log_extra(
     :func:`redact_headers` only (including ``extra_sensitive_header_names``). Other dict
     fields for ``extra=`` should use :func:`redact_mapping` separately. Keys use a ``webhook_``
     prefix so they avoid stdlib :class:`logging.LogRecord` attribute names.
+
+    The returned mapping never includes raw body bytes or decoded body text. Optional
+    ``webhook_body_bytes_len`` is a non-negative body length summary only. Correlation
+    ``lifecycle_*`` fields should be taken from verified JSON only; keys whose values are
+    ``None`` are omitted from the returned dict.
     """
     extra: dict[str, Any] = {}
     if method is not None:
@@ -149,6 +164,20 @@ def format_safe_webhook_log_extra(
         extra["webhook_status_code"] = status_code
     if error_code is not None:
         extra["webhook_error_code"] = error_code
+    if webhook_body_bytes_len is not None:
+        if type(webhook_body_bytes_len) is not int:
+            raise TypeError("webhook_body_bytes_len must be int or None")
+        if webhook_body_bytes_len < 0:
+            raise ValueError("webhook_body_bytes_len must be non-negative")
+        extra["webhook_body_bytes_len"] = webhook_body_bytes_len
+    if lifecycle_event_id is not None:
+        extra["lifecycle_event_id"] = lifecycle_event_id
+    if lifecycle_run_id is not None:
+        extra["lifecycle_run_id"] = lifecycle_run_id
+    if lifecycle_workflow_id is not None:
+        extra["lifecycle_workflow_id"] = lifecycle_workflow_id
+    if lifecycle_approval_request_id is not None:
+        extra["lifecycle_approval_request_id"] = lifecycle_approval_request_id
     if headers is not None:
         extra["webhook_headers"] = redact_headers(
             headers,

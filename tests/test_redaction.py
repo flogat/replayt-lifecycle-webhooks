@@ -1,4 +1,4 @@
-"""Structured logging redaction (backlog fa75ecf3, SPEC_AUTOMATED_TESTS L1–L8)."""
+"""Structured logging redaction (SPEC_AUTOMATED_TESTS L1–L9)."""
 
 from __future__ import annotations
 
@@ -78,6 +78,67 @@ def test_l7_extra_sensitive_mapping_keys() -> None:
     assert "xyzzy" not in str(redacted)
 
 
+def test_l9_success_verified_delivery_no_raw_body_in_logs(caplog: pytest.LogCaptureFixture) -> None:
+    """L9: 204-style success logging uses safe ``extra=`` only; raw body marker never appears."""
+    caplog.set_level(logging.INFO)
+    raw_body = b'{"distinctive":"L9_RAW_BODY_MARKER_7f3e9a2b_forbidden_in_logs"}'
+    marker = "L9_RAW_BODY_MARKER_7f3e9a2b_forbidden_in_logs"
+    assert marker.encode() in raw_body
+
+    extra = format_safe_webhook_log_extra(
+        method="POST",
+        path="/webhook",
+        status_code=204,
+        headers={
+            "Content-Type": "application/json; charset=utf-8",
+            "Authorization": "Bearer x",
+            "Replayt-Signature": "sha256=" + "a" * 64,
+        },
+        webhook_body_bytes_len=len(raw_body),
+        lifecycle_event_id="f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        lifecycle_run_id="01JHBDUMMYRUNID000000000000",
+        lifecycle_workflow_id="wf-email-triage",
+    )
+    assert extra["webhook_method"] == "POST"
+    assert extra["webhook_path"] == "/webhook"
+    assert extra["webhook_status_code"] == 204
+    assert extra["webhook_body_bytes_len"] == len(raw_body)
+    assert extra["webhook_headers"]["Authorization"] == REDACTED_PLACEHOLDER
+    assert extra["webhook_headers"]["Replayt-Signature"] == REDACTED_PLACEHOLDER
+    assert extra["webhook_headers"]["Content-Type"] == "application/json; charset=utf-8"
+    assert extra["lifecycle_event_id"] == "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    assert extra["lifecycle_run_id"] == "01JHBDUMMYRUNID000000000000"
+    assert extra["lifecycle_workflow_id"] == "wf-email-triage"
+    assert "lifecycle_approval_request_id" not in extra
+
+    log = logging.getLogger("replayt_lifecycle_webhooks.tests.redaction_l9")
+    log.info("webhook_delivery %r", extra)
+    assert marker not in caplog.text
+
+
+def test_l9_lifecycle_approval_request_id_preserved_when_set() -> None:
+    extra = format_safe_webhook_log_extra(
+        status_code=204,
+        lifecycle_approval_request_id="apr-123",
+    )
+    assert extra["lifecycle_approval_request_id"] == "apr-123"
+
+
+def test_format_safe_webhook_log_extra_rejects_negative_body_len() -> None:
+    with pytest.raises(ValueError, match="non-negative"):
+        format_safe_webhook_log_extra(webhook_body_bytes_len=-1)
+
+
+def test_format_safe_webhook_log_extra_rejects_non_int_body_len() -> None:
+    with pytest.raises(TypeError, match="webhook_body_bytes_len"):
+        format_safe_webhook_log_extra(webhook_body_bytes_len=1.0)  # type: ignore[arg-type]
+
+
+def test_format_safe_webhook_log_extra_rejects_bool_body_len() -> None:
+    with pytest.raises(TypeError, match="webhook_body_bytes_len"):
+        format_safe_webhook_log_extra(webhook_body_bytes_len=True)  # type: ignore[arg-type]
+
+
 def test_l8_caplog_no_secret_in_formatted_output(caplog: pytest.LogCaptureFixture) -> None:
     caplog.set_level(logging.INFO)
     secret = "fake_bearer_high_entropy_7Qk9mZp2vLx4nR8wY1tH6jF3cD0sA5bE"
@@ -98,8 +159,27 @@ def test_default_sensitive_header_names_documents_builtins() -> None:
 
 
 def test_default_sensitive_mapping_keys_covers_spec_minimums() -> None:
-    for k in ("token", "secret", "api_key", "signature"):
+    for k in ("token", "secret", "api_key", "signature", "body", "raw_body", "payload", "request_body"):
         assert k in DEFAULT_SENSITIVE_MAPPING_KEYS
+
+
+def test_redact_mapping_default_body_like_keys() -> None:
+    secret = "payload-leak-secret-9z8y"
+    r = redact_mapping(
+        {
+            "body": secret,
+            "raw_body": secret,
+            "payload": secret,
+            "request_body": secret,
+            "ok": "visible",
+        }
+    )
+    assert r["body"] == REDACTED_PLACEHOLDER
+    assert r["raw_body"] == REDACTED_PLACEHOLDER
+    assert r["payload"] == REDACTED_PLACEHOLDER
+    assert r["request_body"] == REDACTED_PLACEHOLDER
+    assert r["ok"] == "visible"
+    assert secret not in str(r)
 
 
 def test_format_safe_webhook_log_extra_redacts_headers() -> None:

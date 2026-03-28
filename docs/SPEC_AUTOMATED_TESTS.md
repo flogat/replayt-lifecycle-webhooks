@@ -6,7 +6,8 @@
 - Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
 - Replace scaffold smoke tests with unit and boundary coverage (`2b4c6927-573a-463c-b59f-f2f91dfb6381`) — rows **A6–A10** under **Backlog `2b4c6927`** below.
 - Local demo webhook POST (`ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`) — checklist **D1–D9** in **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
-- Structured logging with default sensitive-key redaction (`fa75ecf3-a113-418e-99cc-aa0c31237eba`) — checklist **L1–L8** in
+- Structured logging with default sensitive-key redaction (`fa75ecf3-a113-418e-99cc-aa0c31237eba`; workflow
+  **`6ea52b2b-ff96-4511-a9f8-d5d9ed6d3711`**) — checklist **L1–L9** in
   **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** and **Backlog `fa75ecf3`** below.
 - Delivery idempotency and **`event_id`** (`4280c054-4193-4754-8e4c-1da320975fac`) — acceptance **I3**/**I4** in
   **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; **`tests/test_lifecycle_events.py`** and packaged duplicate fixture under **Backlog `4280c054`** below.
@@ -40,7 +41,7 @@ behavioral coverage.
 | **replayt** dependency / doc contract (**A1**–**A8**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
-| Structured logging + redaction (**L1–L8**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
+| Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 
 ## CI entrypoint (invariant)
 
@@ -104,7 +105,7 @@ When **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** is implemented
 tests **must not** replace items **1**–**3**.
 
 When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** is implemented, the suite **must**
-additionally include **network-free** tests that satisfy checklist **L1–L8** under **Backlog `fa75ecf3`** below. Those
+additionally include **network-free** tests that satisfy checklist **L1–L9** under **Backlog `fa75ecf3`** below. Those
 tests **must not** replace items **1**–**3**.
 
 When **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** is implemented, the suite **must** additionally include
@@ -169,7 +170,8 @@ These extend **A1–A5** and **§ Minimum behavioral coverage** item **2**; they
 ## Backlog `fa75ecf3`: structured logging and redaction
 
 Checklist rows for **Add structured logging helper that redacts sensitive keys by default**
-(`fa75ecf3-a113-418e-99cc-aa0c31237eba`). Normative API and defaults: **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
+(`fa75ecf3-a113-418e-99cc-aa0c31237eba`) and **Establish structured logging and redaction for webhook handling**
+(`6ea52b2b-ff96-4511-a9f8-d5d9ed6d3711`). Normative API and defaults: **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
 These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
 
 | # | Criterion | Verification |
@@ -182,6 +184,7 @@ These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
 | L6 | **`redact_mapping`** performs **shallow** redaction for at least one default sensitive key (e.g. **`token`**, **`secret`**, or **`api_key`**) and preserves non-sensitive keys unchanged. | Unit test |
 | L7 | **`extra_sensitive_keys`** causes a **non-default** mapping key to be redacted (lowercase comparison per spec). | Unit test |
 | L8 | At least one test uses **`caplog`**, a **`logging.Handler`**, or equivalent to capture formatted log output showing **`[REDACTED]`** for sensitive fields and **asserting the absence** of a representative **high-entropy secret substring** (for example a fake bearer token) in the captured text. | Unit test (e.g. **`tests/test_redaction.py`** or module name aligned with implementation) |
+| L9 | **Successful verified delivery** (**HTTP 204** path): captured log text **must not** contain a distinctive raw body substring from a request fixture (proving default logging does not echo the POST body). **`extra`** from **`format_safe_webhook_log_extra`** **must** include **`webhook_status_code`** **204**, **`webhook_headers`** with sensitive names redacted when headers were passed, **`webhook_body_bytes_len`**, and **`lifecycle_*`** keys per **§ Example: successful verified delivery** in **SPEC_STRUCTURED_LOGGING_REDACTION** (omit **`lifecycle_approval_request_id`** when absent). | **`tests/test_redaction.py`** — **`test_l9_success_verified_delivery_no_raw_body_in_logs`** |
 
 ## Backlog `069e0240`: PM/support event digest format
 
@@ -220,5 +223,5 @@ These extend **§ Minimum behavioral coverage** item **4**; they do not replace 
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
-- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L8**.
+- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**.
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.
