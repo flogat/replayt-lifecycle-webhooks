@@ -3,7 +3,13 @@ name = "replayt-lifecycle-webhooks"
 version = "0.1.0"
 description = "Signed HTTP webhooks for replayt run and approval lifecycle events: Python project using replayt; see docs for scope."
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+  "replayt>=0.4.25",
+]
+
+[project.urls]
+Homepage = "https://github.com/flogat/replayt-lifecycle-webhooks"
+Issues = "https://github.com/flogat/replayt-lifecycle-webhooks/issues"
 
 [project.optional-dependencies]
 dev = [
