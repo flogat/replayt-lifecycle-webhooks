@@ -48,6 +48,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (**DG1**–**DG6**); **`MISSION.md`** and **`DESIGN_PRINCIPLES.md`** link **SPEC_EVENT_DIGEST** (CHANGELOG cross-link list
   now matches the tree).
 
+- **`CHANGELOG.md`** (phase **6**, security review, backlog **Publish PM- and support-friendly event digest format** /
+  `069e0240-54c5-44a9-bba3-ad0a80a52c60`): recorded security pass — digest implementation does not log or expose signing
+  material; digest text/record carries sender-controlled fields as documented (**SPEC_EVENT_DIGEST** external-sharing
+  section + integrator docs); dependency manifest unchanged in this diff; **CI** still runs **pytest** and **`pip-audit`**.
+
 - **`docs/SPEC_REPLAY_PROTECTION.md`** (phase **2**, backlog **Add replay protection and idempotency hooks for deliveries** /
   `f9677140-0803-41c7-9d1c-82fc85f25f8d`): normative contract for **stale capture** vs **benign duplicate** delivery;
   post-MAC processing order; **`occurred_at`** freshness with recommended **900s** max age and **300s** future skew;
