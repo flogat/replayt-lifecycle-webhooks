@@ -119,6 +119,13 @@ def test_parse_rejects_missing_correlation_field() -> None:
         parse_lifecycle_webhook_event(data)
 
 
+def test_parse_rejects_missing_envelope_detail() -> None:
+    data = json.loads((_FIXTURES_DIR / "run_started.json").read_bytes())
+    del data["detail"]
+    with pytest.raises(ValidationError):
+        parse_lifecycle_webhook_event(data)
+
+
 def test_parse_rejects_unknown_event_type() -> None:
     data = json.loads((_FIXTURES_DIR / "run_started.json").read_bytes())
     data["event_type"] = "replayt.lifecycle.run.unknown"

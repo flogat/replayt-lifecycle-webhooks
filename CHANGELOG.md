@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`src/replayt_lifecycle_webhooks/events.py`**, **`tests/test_lifecycle_events.py`** (phase **3**, backlog **Define typed lifecycle event payloads (run + approval)** /
+  `0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`): **`events`** module docstring documents **``schema_version``** and **1.0** payload semantics per **EVENTS.md**; **pytest** covers a missing required **`detail`** envelope field (**T4** / **T5**).
 - **`tests/test_replayt_dependency.py`** (phase **3**, backlog **Declare replayt dependency range and compatibility matrix** /
   `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`): asserts README **Compatibility matrix** pointer and dual-version issue reporting,
   **DESIGN_PRINCIPLES** link to **SPEC_REPLAYT_DEPENDENCY**, and the spec **Compatibility matrix** section includes the
@@ -16,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/EVENTS.md`**, **`README.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **2**, backlog **Define typed lifecycle event payloads (run + approval)** /
+  `0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`): **T1–T7** acceptance criteria for typed parsing; **upstream vs wire JSON** authority; **schema versioning and migration**; normative **Pydantic v2** / **`events`** module table; README links **replayt (PyPI)** for semantics and states **EVENTS.md** + **`parse_lifecycle_webhook_event`** as the package wire contract until upstream publishes an HTTP schema; design principles reference **`events`** and **schema_version** discipline.
+- **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`** (phase **5**, architecture review, backlog **Define typed lifecycle event payloads (run + approval)** /
+  `0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`): **Related docs** / **JSON payload** text names **EVENTS.md** and **`replayt_lifecycle_webhooks.events`** as the normative lifecycle JSON contract, consistent with **README** and **EVENTS.md**.
 - **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`README.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **3**, backlog **Declare replayt dependency range and compatibility matrix** /
   `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`): **compatibility matrix**, upper-bound policy, dual-backlog traceability, reporting breakage (**both** package versions), acceptance **A5–A7**; README **Compatibility matrix** pointer and layout row; design principles name matrix and optional upper bound.
 - **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`CHANGELOG.md`** (phase **5**, architecture review, same backlog /

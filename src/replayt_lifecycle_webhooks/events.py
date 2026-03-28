@@ -1,6 +1,10 @@
 """Pydantic models for lifecycle webhook JSON bodies (``docs/EVENTS.md``).
 
 Use after :func:`replayt_lifecycle_webhooks.verify_lifecycle_webhook_signature` succeeds.
+
+**EVENTS.md** documents payload schema **1.0**. Optional ``schema_version`` may be ``\"1.0\"`` or omitted
+(equivalent to **1.0** per the spec). The field is not checked against an allowlist; treat unexpected
+values in application code until **EVENTS.md** defines more versions.
 """
 
 from __future__ import annotations

@@ -1,6 +1,10 @@
 # Spec: lifecycle webhook JSON payload shapes (run and approval)
 
-**Backlog:** Map replayt run and approval events to webhook payload shapes (`076a56b7-afd9-4778-b46a-4dc8875a431f`).  
+**Backlogs:**
+
+- Map replayt run and approval events to webhook payload shapes (`076a56b7-afd9-4778-b46a-4dc8875a431f`).
+- Define typed lifecycle event payloads (run + approval) (`0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`).
+
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators, operators.
 
 ## Purpose and normative status
@@ -246,9 +250,46 @@ All identifiers and text below are **fabricated** for documentation.
 }
 ```
 
+## Upstream documentation (semantics vs wire JSON)
+
+- **Product / library semantics:** Integrators should consult **[replayt on PyPI](https://pypi.org/project/replayt/)**
+  (project description, release history, and any **Homepage** / **Source** links on that page) for what workflows,
+  runs, and approvals mean in replayt itself.
+- **HTTP lifecycle webhook JSON:** As of **replayt `0.4.25`**, the installed distribution does not ship a single
+  canonical webhook body schema. For consumers of **this** package, the **normative** field contract for verified POST
+  bodies is **this document** together with the **typed** Python surface in **`replayt_lifecycle_webhooks.events`**.
+  If upstream later publishes an official wire schema, maintainers should align **EVENTS.md**, models, fixtures, and
+  **CHANGELOG.md** with that authority.
+
+## Schema versioning and migration
+
+- **`schema_version`** (optional on the wire, see **Common envelope**) labels the payload shape described here (e.g.
+  **`1.0`**). Omitting it means “assume behavior described for **`1.0`**” unless a future revision says otherwise.
+- The **Python** implementation MUST document supported schema version(s) in the **`replayt_lifecycle_webhooks.events`**
+  module docstring and/or on the shared envelope model (for example via `Field(description=...)`).
+- **Breaking** changes (removed fields, changed requiredness, renamed `event_type` values, or incompatible **`detail`**
+  shapes) require **CHANGELOG.md** **Unreleased** notes and updates to **EVENTS.md** and JSON fixtures before release.
+- **Additive** changes (new optional fields, new **`event_type`** rows) follow the same documentation and changelog
+  discipline; extend the **Event registry** and acceptance rows accordingly.
+
+## Typed Python representation (normative package API)
+
+This section refines backlog **Define typed lifecycle event payloads (run + approval)**
+(`0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`): integrators get **editor assistance** and **runtime validation** instead of
+ad hoc **`dict`** access after signature verification.
+
+| Topic | Normative choice for this repository |
+| ----- | ------------------------------------- |
+| **Import surface** | **`replayt_lifecycle_webhooks.events`**: **`parse_lifecycle_webhook_event`**, **`LIFECYCLE_WEBHOOK_EVENT_TYPES`**, envelope and **`detail`** model types per **`event_type`**. |
+| **Implementation technology** | **Pydantic v2** models (**`pydantic>=2.6.0`** per **`pyproject.toml`**). **TypedDict**-only or stdlib **dataclasses** are out of scope unless a future ADR replaces this row. |
+| **Discrimination** | Union of event models discriminated by literal **`event_type`** (Pydantic discriminated union). |
+| **Unknown `event_type`** | MUST fail validation (no silent default or partial parse). |
+| **Minimum `event_type` coverage** | At least **two** distinct values with distinct **`detail`** shapes, including **one run-category** and **one approval-category** row from the **Event registry**. Claiming full compliance with **E1** requires covering **every** registry row with typed models and fixtures. |
+| **Call order** | Call **`parse_lifecycle_webhook_event`** only **after** **`verify_lifecycle_webhook_signature`** (or equivalent) succeeds per **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**. |
+
 ## Acceptance criteria (for Builder / Tester)
 
-Use with Spec gate and implementation phases.
+Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; **typed Python** rows **T1–T7**.
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
@@ -258,6 +299,18 @@ Use with Spec gate and implementation phases.
 | E4 | **`summary`** is suitable for notifications (short, human-readable). | Review examples and any golden fixtures. |
 | E5 | Spec states **verification-before-JSON** and **prohibited content** (no secrets, no full prompts in required fields). | Review **this file** and **SPEC_WEBHOOK_SIGNATURE.md**. |
 | E6 | **replayt** core need not change for consumers to adopt this contract; drift from upstream product docs is called out in **CHANGELOG.md** when discovered. | Maintainer review alongside **SPEC_REPLAYT_DEPENDENCY.md**. |
+
+### Typed payloads (`0b929c17`)
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| T1 | Public **`parse_lifecycle_webhook_event`** validates a **`dict`**-like JSON object and returns a typed union discriminated by **`event_type`**. | Unit tests + **`__all__`** / import review. |
+| T2 | Exported types cover at minimum **one run** and **one approval** **`event_type`**; **E1** compliance requires **all** registry rows. | Model/module review + fixtures. |
+| T3 | **JSON fixtures** under **`tests/fixtures/events/`** (one file per documented **`event_type`** when **E1** is satisfied); tests parse each fixture through **`parse_lifecycle_webhook_event`** without error. | **pytest** |
+| T4 | Invalid **`detail`** for a known **`event_type`**, unknown **`event_type`**, or missing required **envelope** / **`correlation`** fields produce **`pydantic.ValidationError`** (or documented equivalent); covered by tests. | **pytest** |
+| T5 | Supported payload / **`schema_version`** expectations are visible in **`events`** module docstrings and/or model fields. | Doc review |
+| T6 | **[README.md](../README.md)** links to **replayt** upstream for **semantics** and states that **wire JSON** is normative in **EVENTS.md** until upstream publishes an official HTTP schema. | Doc review |
+| T7 | User-visible parsing or shape changes appear under **CHANGELOG.md** **Unreleased** (or release section) with migration notes when shapes change. | Release hygiene |
 
 ## Related docs
 
