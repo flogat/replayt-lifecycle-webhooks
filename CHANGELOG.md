@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **3**, backlog **Add optional
+  reference-documentation snapshot workflow** / `eb884da9-5273-4ce0-b105-5130c6b1ac79`): acceptance **RD1**–**RD5** are
+  enforced by **`tests/test_reference_documentation_workflow.py`** (folder **README**, root **README** refresh notes,
+  **`.gitignore`** / **`git check-ignore`**, **CI** workflow must not reference **`docs/reference-documentation/`**, trace
+  table in **SPEC_AUTOMATED_TESTS**).
+
 - **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/reference-documentation/README.md`**, **`README.md`** (project layout,
   **Reference documentation**), **`.gitignore`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**,
   **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add optional reference-documentation snapshot workflow** /

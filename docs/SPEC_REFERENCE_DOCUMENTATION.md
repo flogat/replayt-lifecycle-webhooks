@@ -56,11 +56,11 @@ Use for Spec gate, Builder, and Tester sign-off for backlog **`eb884da9`**.
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
-| **RD1** | **`docs/reference-documentation/README.md`** states that the tree is **optional**, what belongs in committed files vs **`_upstream_snapshot/`**, and links this spec. | Doc review |
-| **RD2** | Root **`README.md`** **Reference documentation (optional)** section links **`docs/reference-documentation/README.md`** and this spec; includes a **how to refresh** note (manual copy into **`_upstream_snapshot/`** and/or optional **`scripts/`** helper). | Doc review |
-| **RD3** | **`.gitignore`** ignores **`docs/reference-documentation/_upstream_snapshot/`** (entire subtree). | Doc review; **`git check-ignore -v docs/reference-documentation/_upstream_snapshot/`** when the path exists |
-| **RD4** | **CI** (e.g. **`.github/workflows/ci.yml`**) does **not** require fetching or generating a large upstream documentation mirror under **`docs/reference-documentation/`**. | Workflow review |
-| **RD5** | **SPEC_AUTOMATED_TESTS.md** lists backlog **`eb884da9`** and **RD1**–**RD5** for traceability. | Doc review |
+| **RD1** | **`docs/reference-documentation/README.md`** states that the tree is **optional**, what belongs in committed files vs **`_upstream_snapshot/`**, and links this spec. | **`pytest`** — **`tests/test_reference_documentation_workflow.py`** |
+| **RD2** | Root **`README.md`** **Reference documentation (optional)** section links **`docs/reference-documentation/README.md`** and this spec; includes a **how to refresh** note (manual copy into **`_upstream_snapshot/`** and/or optional **`scripts/`** helper). | **`pytest`** (same module) |
+| **RD3** | **`.gitignore`** ignores **`docs/reference-documentation/_upstream_snapshot/`** (entire subtree). | **`pytest`** (same module; **`git check-ignore -v`** on a path under that directory) |
+| **RD4** | **CI** (e.g. **`.github/workflows/ci.yml`**) does **not** require fetching or generating a large upstream documentation mirror under **`docs/reference-documentation/`**. | **`pytest`** (same module) |
+| **RD5** | **SPEC_AUTOMATED_TESTS.md** lists backlog **`eb884da9`** and **RD1**–**RD5** for traceability. | **`pytest`** (same module) |
 
 ## Related docs
 
