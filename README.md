@@ -81,7 +81,7 @@ specs add one.
 
 ```bash
 pytest tests/test_webhook_signature.py tests/test_lifecycle_events.py -q   # crypto + parsing only (example)
-pytest tests -m replayt_boundary -q                                         # after Builder registers the marker
+pytest tests -m replayt_boundary -q                                         # replayt import + symbol checks only
 ```
 
 Checklist rows **A1–A5** (minimum verification / parsing) and **R1–R5** (replayt boundary): **SPEC_AUTOMATED_TESTS** and
