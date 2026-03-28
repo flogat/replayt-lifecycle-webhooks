@@ -21,7 +21,9 @@ on **`occurred_at`**, clock skew, optional wire headers, pluggable dedupe store 
 **[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**. Informative **JSON Schema** mirror (**Draft-07**):
 **[docs/schemas/lifecycle_webhook_payload-1-0.schema.json](docs/schemas/lifecycle_webhook_payload-1-0.schema.json)**.
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
-entrypoint:** **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**.
+entrypoint:** **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**. **Public Python API** (`__all__`, supported
+vs internal import paths, **`python -m`** entrypoints, deprecation / **pre-1.0** policy):
+**[docs/SPEC_PUBLIC_API.md](docs/SPEC_PUBLIC_API.md)**.
 
 **Lifecycle semantics (upstream) vs wire JSON (this repo):** Replaytâ€™s product and library semantics are described on
 **[replayt (PyPI)](https://pypi.org/project/replayt/)** (project description, release history, and links from that
@@ -304,6 +306,7 @@ local tooling entries. Adapt or remove optional directories to match your teamâ€
 | `docs/REPLAYT_ECOSYSTEM_IDEA.md` | Ecosystem taxonomy; primary pattern recorded and aligned with **MISSION** |
 | `docs/MISSION.md` | Mission and scope |
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
+| `docs/SPEC_PUBLIC_API.md` | Supported public imports (`__all__`), internal modules until 1.0, semver + deprecation + **CHANGELOG** rules |
 | `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** range: contract, **compatibility matrix**, upper-bound policy, checklist, CI expectations |
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
