@@ -39,5 +39,8 @@ _Novel composition of replayt + other tools._
 
 ## Your choice
 
-- **Primary pattern:** _(1–4 or short name)_
-- **One-paragraph pitch:** _
+- **Primary pattern:** **Core-gap** (taxonomy option 1 above) — normative statement and scope live in **[MISSION.md](MISSION.md)**.
+- **One-paragraph pitch:** Replayt defines run and approval lifecycle **semantics** and HTTP **signing**; integrators still
+  need a **small, tested** way to verify **`Replayt-Signature`** over the **raw body** before acting on JSON. This
+  repository documents that consumer contract, ships verification (and optional minimal HTTP glue), and keeps **CI** and
+  **pytest** aligned with **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** and **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**—without vendoring or steering **replayt** core.

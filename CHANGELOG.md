@@ -7,8 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/MISSION.md`** (phase **2**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
+  `3f27ad86-ef1f-4883-8cc2-cee94ba301cb`): **Ecosystem positioning** — primary pattern **Core-gap**; skim links to
+  **README**; success metrics add **releases and versioning** (SemVer, `pyproject.toml`, changelog
+  sections, PyPI); **DESIGN_PRINCIPLES** cross-reference uses a proper in-tree link.
+- **`docs/REPLAYT_ECOSYSTEM_IDEA.md`:** completed **Your choice** (core-gap pitch; pointers to **MISSION** and key specs).
+  Phase **5** (architecture review): **Your choice** references **taxonomy option 1 above** in plain text (section sign removed).
+- **`README.md`:** **Overview** reflects the **MISSION** ecosystem framing (consumer-side gap-fill) and points there for
+  scope, success, and release expectations; project layout row updated.
+
 ### Added
 
+- **`tests/test_mission_docs.py`** (phase **3**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
+  `3f27ad86-ef1f-4883-8cc2-cee94ba301cb`): regression tests for **MISSION** / **REPLAYT_ECOSYSTEM_IDEA** / **README**
+  acceptance (ecosystem section, **Core-gap** named once in **MISSION**, link targets, success metrics, README avoids
+  repeating the taxonomy token).
 - **Lifecycle JSON validation** (phase 3, backlog **Map replayt run and approval events to webhook payload shapes** /
   `076a56b7-afd9-4778-b46a-4dc8875a431f`): **`parse_lifecycle_webhook_event`**, **`LIFECYCLE_WEBHOOK_EVENT_TYPES`**,
   and Pydantic models for the envelope and each **`event_type`** in **`docs/EVENTS.md`**. Golden fixtures live under
