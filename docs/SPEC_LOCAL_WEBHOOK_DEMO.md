@@ -61,6 +61,7 @@ New contributors and integrators want to **exercise the reference HTTP server** 
 
 - **Source directory:** **`tests/fixtures/events/`** (existing **`run_started.json`**, **`run_completed.json`**, etc.).
 - **Dev-only:** Fixtures are **test and demo** inputs; they may contain **synthetic** ids and **no** real secrets.
+- **Retries:** To mimic an HTTP retry of one logical emission, POST the **same** file bytes again (same **`event_id`**, same MAC). **`run_started_redelivery.json`** matches **`run_started.json`** for that pattern in tests; see **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**.
 - **Default fixture** (if the CLI supports a named default): **`run_completed.json`** unless maintainers choose another
   single default and update this spec + **README** together.
 

@@ -24,6 +24,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_LOCAL_WEBHOOK_DEMO.md`** (phase **3**, backlog **Specify idempotency and replay-safe delivery semantics** /
+  `4280c054-4193-4754-8e4c-1da320975fac`): fixtures section notes reusing the same file bytes for dev HTTP retries (stable
+  **`event_id`** and MAC) and links **`docs/SPEC_DELIVERY_IDEMPOTENCY.md`**.
+
+- **`docs/SPEC_DELIVERY_IDEMPOTENCY.md`** (phase **2**, backlog **Specify idempotency and replay-safe delivery semantics** /
+  `4280c054-4193-4754-8e4c-1da320975fac`): normative consumer contract for **at-least-once** HTTP delivery, **`event_id`**
+  as primary dedupe key (senders **SHOULD** stabilize per logical emission), composite-key fallbacks, idempotency store
+  **TTL** guidance, and acceptance rows **I1–I4**. **`docs/EVENTS.md`** **`event_id`** row and **E7** aligned; cross-links
+  from **README** (**Troubleshooting**), **MISSION**, **DESIGN_PRINCIPLES**, **SPEC_WEBHOOK_SIGNATURE**,
+  **SPEC_WEBHOOK_FAILURE_RESPONSES**, **REPLAYT_WEBHOOK_SIGNING**.
+
+- **`docs/EVENTS.md`** (**E7** verification row) and **`docs/SPEC_AUTOMATED_TESTS.md`** (traceability table, minimum coverage
+  item **2**, **Backlog `4280c054`** **I3**/**I4** table, **Related docs**): phase **5** architecture review so automated-test
+  docs match implemented **SPEC_DELIVERY_IDEMPOTENCY** coverage.
+
 - **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** (phase **2**, backlog **Add structured logging helper that redacts sensitive keys by default** /
   `fa75ecf3-a113-418e-99cc-aa0c31237eba`): normative contract for **stdlib** **`logging`**, **`[REDACTED]`** placeholder,
   default sensitive **HTTP header** names (incl. **`X-Signature*`** prefix rule) and **mapping** keys, public API surface
@@ -40,6 +55,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **DESIGN_PRINCIPLES** / **SPEC_HTTP_SERVER_ENTRYPOINT** / **SPEC_WEBHOOK_SIGNATURE** pointers updated.
 
 ### Tests
+
+- **`event_id`** idempotency fixtures (**I3**, **I4**, **SPEC_DELIVERY_IDEMPOTENCY**; phase **3**, backlog **Specify
+  idempotency and replay-safe delivery semantics** / `4280c054-4193-4754-8e4c-1da320975fac`): **`run_started_redelivery.json`**
+  (byte-identical to **`run_started.json`**) under **`tests/fixtures/events/`** and **`replayt_lifecycle_webhooks/fixtures/events/`**;
+  **`tests/test_lifecycle_events.py`** asserts same logical emission shares **`event_id`** and body octets, distinct fixtures
+  differ, and a signed duplicate POST pattern dedupes side effects on **`event_id`**. **`tests/test_demo_webhook.py`** keeps
+  packaged bytes aligned with the tests tree.
 
 - **Golden-vector** **`Replayt-Signature`** case with committed expected MAC, and **explicit** imports of
   **`replayt_lifecycle_webhooks.signature`** / **`handler`** in **`tests/`** (phase **3**, backlog **Replace scaffold

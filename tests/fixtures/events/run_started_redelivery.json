@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "event_type": "replayt.lifecycle.run.started",
+  "occurred_at": "2026-03-28T14:30:00Z",
+  "event_id": "7b2c4f8e-0d01-4a5b-9c3d-111111111111",
+  "correlation": {
+    "run_id": "run_01jqexampleabcd",
+    "workflow_id": "wf_invoice_automation_v3",
+    "deployment_id": "dep_staging_west"
+  },
+  "summary": "Run started: Invoice automation v3",
+  "detail": {
+    "workflow_name": "Invoice automation v3",
+    "trigger": "schedule"
+  }
+}

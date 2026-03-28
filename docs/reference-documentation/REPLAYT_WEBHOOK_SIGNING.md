@@ -27,7 +27,7 @@ store or environment variable; **README** recommends the name **`REPLAYT_LIFECYC
 ## Clock skew and replay (v1)
 
 - **Clock skew:** not part of v1 — there is no required timestamp in the signed material or headers.
-- **Replay protection:** not specified in v1; use application-level idempotency or freshness controls if needed.
+- **Replay protection:** not specified in v1; use application-level idempotency or freshness controls if needed (see **`docs/SPEC_DELIVERY_IDEMPOTENCY.md`** in this repo for **`event_id`** and consumer store guidance).
 
 ## Verification steps (summary)
 

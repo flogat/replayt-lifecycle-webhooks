@@ -8,6 +8,8 @@
 - Local demo webhook POST (`ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`) — checklist **D1–D9** in **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
 - Structured logging with default sensitive-key redaction (`fa75ecf3-a113-418e-99cc-aa0c31237eba`) — checklist **L1–L8** in
   **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** and **Backlog `fa75ecf3`** below.
+- Delivery idempotency and **`event_id`** (`4280c054-4193-4754-8e4c-1da320975fac`) — acceptance **I3**/**I4** in
+  **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; **`tests/test_lifecycle_events.py`** and packaged duplicate fixture under **Backlog `4280c054`** below.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -27,6 +29,7 @@ behavioral coverage.
 | Reference HTTP server entrypoint (**S1–S8**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
+| **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | Structured logging + redaction (**L1–L8**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
@@ -65,8 +68,9 @@ The suite **must** include **network-free** **pytest** tests that fail when the 
    (and related handler tests per **H** rows).
 2. **JSON parsing / lifecycle events** — Exercises **`parse_lifecycle_webhook_event`** on representative payloads and on
    invalid or unknown shapes so validation regressions fail. Align with **EVENTS.md** rows **T3–T5** (fixtures, invalid
-   **`detail`**, unknown **`event_type`**, missing required envelope fields). Existing coverage is expected under
-   **`tests/test_lifecycle_events.py`** and **`tests/fixtures/events/`**.
+   **`detail`**, unknown **`event_type`**, missing required envelope fields). When **SPEC_DELIVERY_IDEMPOTENCY** **I3**/**I4**
+   apply, the same module also holds duplicate-delivery fixture checks and the signed duplicate-**POST** dedupe pattern.
+   Existing coverage is expected under **`tests/test_lifecycle_events.py`** and **`tests/fixtures/events/`**.
 3. **Replayt boundary (dependency seam)** — At least one module **imports `replayt`** and asserts **documented** public
    symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
    This is **in addition to** items **1** and **2**, not a substitute. Existing **`tests/test_replayt_dependency.py`** work
@@ -117,6 +121,17 @@ boundary rows **R1–R5**.
 | A9 | After verify, the success path invokes the caller hook (**H7**). | **`tests/test_http_handler.py`** — **`test_on_success_called_after_verify`** |
 | A10 | Tests **`import`** **`replayt_lifecycle_webhooks.signature`**, **`replayt_lifecycle_webhooks.handler`**, and **`replayt_lifecycle_webhooks.events`** directly (not only the package root), and exercise **`replayt_lifecycle_webhooks.serve`** where the reference server is in tree. | Search **`tests/`**; **`tests/test_reference_server.py`** for **serve** |
 
+## Backlog `4280c054`: delivery idempotency (`event_id`)
+
+Checklist rows for **Specify idempotency and replay-safe delivery semantics**
+(`4280c054-4193-4754-8e4c-1da320975fac`). Normative contract: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**.
+These extend **A1–A5** and lifecycle coverage in **§ Minimum behavioral coverage** item **2**; they do not replace **R1–R5**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| I3 | Fixtures include a byte-identical duplicate-delivery pair with the same **`event_id`**; distinct logical emissions in fixtures use distinct **`event_id`** values. | **`tests/test_lifecycle_events.py`**; **`tests/fixtures/events/run_started.json`** and **`run_started_redelivery.json`** |
+| I4 | Two **`handle_lifecycle_webhook_post`** calls with the same verified body and signature do not double integrator side effects when **`on_success`** dedupes on **`event_id`**. | **`tests/test_lifecycle_events.py`** — **`test_i4_duplicate_signed_post_idempotent_side_effects_pattern`** |
+
 ## Backlog `fa75ecf3`: structured logging and redaction
 
 Checklist rows for **Add structured logging helper that redacts sensitive keys by default**
@@ -140,4 +155,5 @@ These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
 - **[MISSION.md](MISSION.md)** — success metrics and alignment with what CI runs.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — observable automation and explicit contracts.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
+- **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L8**.

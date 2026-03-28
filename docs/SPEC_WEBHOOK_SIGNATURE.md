@@ -68,7 +68,7 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
 | Topic | Policy (v1) |
 | ----- | ----------- |
 | **Clock skew** | **Not applicable** to MAC verification alone: v1 does **not** include a normative timestamp in the signed material or required headers. |
-| **Replay / freshness** | **Out of contract for v1.** Integrators who need bounded replay windows must enforce **application-level** controls (e.g. event IDs, idempotency stores, optional middleware that checks a future upstream timestamp if one is added to the contract). |
+| **Replay / freshness** | **Out of contract for v1.** Integrators who need bounded replay windows must enforce **application-level** controls (e.g. event IDs, idempotency stores, optional middleware that checks a future upstream timestamp if one is added to the contract). Normative **`event_id`** and dedupe guidance: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**. |
 | **If upstream adds a timestamp later** | Update **[`REPLAYT_WEBHOOK_SIGNING.md`](reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)**, this spec, and **CHANGELOG.md**; add **unit tests** for **acceptable skew** and **rejection of expired** (or stale) deliveries **without** real time/network (inject clock or fixed instants). Until then, acceptance criteria that mention “expired/skewed timestamp” are **N/A**.
 
 ### Verification procedure (integrators)
