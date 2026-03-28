@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** explicit **signing scheme v1** identifier, normative **consumer contract** (headers, raw body, header value shapes), **clock skew / replay policy** (N/A for v1; how to extend), **ordered verification steps** for integrators, and acceptance row **W3b** for timestamp tests when applicable.
+- **`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`:** scheme version, clock/replay summary, and short verification-step list aligned with the spec.
+
 ### Added
 
 - **`verify_lifecycle_webhook_signature`** with **`LIFECYCLE_WEBHOOK_SIGNATURE_HEADER`** (`Replayt-Signature`),
