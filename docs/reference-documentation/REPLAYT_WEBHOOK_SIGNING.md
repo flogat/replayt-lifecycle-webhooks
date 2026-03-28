@@ -14,6 +14,9 @@ dedicated HTTP delivery document.
 - **Signed input:** the **raw HTTP request body** (bytes exactly as received).
 - **Key:** the shared secret. In this package, a Python `str` secret is encoded as **UTF-8** for the HMAC key.
 
+**Configuration:** the verifier takes the secret as a function argument only. Operators typically load it from a secret
+store or environment variable; **README** recommends the name **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**.
+
 ## Header
 
 - **Name:** `Replayt-Signature` (HTTP headers are case-insensitive).

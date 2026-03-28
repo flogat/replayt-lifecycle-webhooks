@@ -56,7 +56,19 @@ running automation. Ordered steps for handlers:
 **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. Full contract detail also in
 **[docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)**.
 
+**Signing secret configuration:** this package does **not** read the environment for you. Operators should configure one
+shared secret out of band and pass it into **`verify_lifecycle_webhook_signature`**. **Recommended environment variable
+name:** **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** (string secret; UTF-8 when used as the HMAC key via a `str` argument).
+Load it with your framework or `os.environ`, inject via a secret manager in production, and **never** log the raw value.
+
+**HTTP failures:** on missing, malformed, or non-matching signatures, respond with **401 Unauthorized** and/or **403
+Forbidden** as described in
+**[HTTP responses and logging](docs/SPEC_WEBHOOK_SIGNATURE.md#http-responses-and-logging-normative-for-integrators)**.
+Use **generic** client-facing error bodies; do not echo the secret, the full signature header, or a computed MAC.
+
 ```python
+import os
+
 from replayt_lifecycle_webhooks import (
     LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
     verify_lifecycle_webhook_signature,
@@ -65,7 +77,7 @@ from replayt_lifecycle_webhooks import (
 # raw_body: bytes exactly as received from the HTTP layer
 # header_value: request header LIFECYCLE_WEBHOOK_SIGNATURE_HEADER (e.g. "sha256=<hex>")
 verify_lifecycle_webhook_signature(
-    secret=your_secret,
+    secret=os.environ["REPLAYT_LIFECYCLE_WEBHOOK_SECRET"],
     body=raw_body,
     signature=header_value,
 )

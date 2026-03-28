@@ -9,9 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** explicit **signing scheme v1** identifier, normative **consumer contract** (headers, raw body, header value shapes), **clock skew / replay policy** (N/A for v1; how to extend), **ordered verification steps** for integrators, and acceptance row **W3b** for timestamp tests when applicable.
-- **`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`:** scheme version, clock/replay summary, and short verification-step list aligned with the spec.
-- **README.md:** link to the spec **Verification procedure** section (`#verification-procedure-integrators`).
+- **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** explicit **signing scheme v1**, normative **consumer contract** (headers, raw
+  body, header value shapes), **clock skew / replay policy** (N/A for v1; how to extend), **ordered verification steps**,
+  acceptance rows **W1–W7** and **W3b**. **Backlog `35f984f8-67cc-48bf-9385-0ec73a054314`:** **single verification path**;
+  **secret configuration** (recommended **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**; library does not read env); **HTTP
+  401/403** and **no leakage** of secret / full signature / MAC in responses or production logs; rows **W8–W10**;
+  cryptographic hygiene for digest **byte** comparison.
+- **`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`:** scheme version, clock/replay summary, verification steps,
+  recommended env var (see README).
+- **README.md:** verification procedure link; **HTTP responses and logging** pointer; **`os.environ`** example for the
+  recommended secret name.
 
 ### Added
 
