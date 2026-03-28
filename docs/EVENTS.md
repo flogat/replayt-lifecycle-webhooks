@@ -5,6 +5,7 @@
 - Map replayt run and approval events to webhook payload shapes (`076a56b7-afd9-4778-b46a-4dc8875a431f`).
 - Define typed lifecycle event payloads (run + approval) (`0b929c17-525d-4ec7-b13c-a7b4f3f8ca10`).
 - Define canonical webhook payload and event envelope schema (Mission Control `df51dbf9`; phase **2** spec refinement).
+- Specify idempotency and replay-safe delivery semantics (`4280c054-4193-4754-8e4c-1da320975fac`).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators, operators.
 
@@ -30,6 +31,7 @@ approval-category kinds are both **required** surface area for this spec (see **
 | Topic | Where it lives |
 | ----- | -------------- |
 | **Integrity of the HTTP payload** (raw body + `Replayt-Signature`) | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**, **[reference-documentation/REPLAYT_WEBHOOK_SIGNING.md](reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)** |
+| **Delivery retries, duplicate POSTs, `event_id` dedupe, idempotency store TTL** | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | **When events fire in the product** (workflow semantics) | **replayt** upstream documentation and runtime behavior — this repo **does not** redefine those moments |
 | **Field names and examples below** | **Normative for integrators** who adopt this package’s documented payload contract; senders (automation or bridges) should emit compatible JSON when claiming compatibility with this spec |
 | **Machine-readable JSON Schema (informative)** | **[schemas/lifecycle_webhook_payload-1-0.schema.json](schemas/lifecycle_webhook_payload-1-0.schema.json)** — mirrors the **`1.0`**-family shapes; if it disagrees with this file, **EVENTS.md** is authoritative |
@@ -71,7 +73,7 @@ under **`detail`** (or top-level only when noted).
 | ----- | ---- | -------- | ----------- |
 | **`event_type`** | string | yes | Stable, namespaced identifier (see **Event registry**). Treat as an opaque enum in consumers; unknown values should be logged and ignored or dead-lettered per your policy. |
 | **`occurred_at`** | string | yes | Timestamp when the sending system **emitted** the event, in **RFC 3339** form with explicit offset (prefer **UTC**, e.g. `2026-03-28T14:32:01Z`). Used for ordering and dashboards, **not** for MAC verification in v1. |
-| **`event_id`** | string | yes | Unique id for **this delivery** (UUID string recommended). Use for idempotency and deduplication keys in workers. |
+| **`event_id`** | string | yes | **Idempotency key** for this **logical lifecycle emission** (UUID string recommended). Compatible senders **SHOULD** reuse the **same** **`event_id`** and **same** serialized body for every HTTP attempt of that emission; each **new** emission **SHOULD** get a **new** **`event_id`**. Consumers **SHOULD** dedupe on **`event_id`** after verification; composite keys for legacy senders in **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**. |
 | **`correlation`** | object | yes | Opaque identifiers safe to show in **dashboards** and support tickets (no secrets, no PII by default). See **Correlation object** below. |
 | **`summary`** | string | yes | One-line, human-readable description suitable for **Slack** or **email** subject lines (UTF-8; keep under ~200 chars for UX). |
 | **`detail`** | object | yes | Event-specific payload. Must not duplicate secret material; see **Prohibited content**. |
@@ -360,6 +362,7 @@ Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; *
 | E4 | **`summary`** is suitable for notifications (short, human-readable). | Review examples and any golden fixtures. |
 | E5 | Spec states **verification-before-JSON** and **prohibited content** (no secrets, no full prompts in required fields). | Review **this file** and **SPEC_WEBHOOK_SIGNATURE.md**. |
 | E6 | **replayt** core need not change for consumers to adopt this contract; drift from upstream product docs is called out in **CHANGELOG.md** when discovered. | Maintainer review alongside **SPEC_REPLAYT_DEPENDENCY.md**. |
+| E7 | **`event_id`** semantics align with **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** (stable per logical emission, dedupe, TTL guidance). | Doc review; tests **I3** when implemented. |
 
 ### Typed payloads (`0b929c17`)
 
@@ -375,6 +378,7 @@ Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; *
 
 ## Related docs
 
+- **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once expectations, **`event_id`** dedupe rules, consumer idempotency store TTL guidance.
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint; suite must exercise **`parse_lifecycle_webhook_event`**
   per **T3–T5** (not placeholder smoke tests).
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verify the raw body before parsing JSON.

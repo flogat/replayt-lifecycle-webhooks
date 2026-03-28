@@ -24,6 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_DELIVERY_IDEMPOTENCY.md`** (phase **2**, backlog **Specify idempotency and replay-safe delivery semantics** /
+  `4280c054-4193-4754-8e4c-1da320975fac`): normative consumer contract for **at-least-once** HTTP delivery, **`event_id`**
+  as primary dedupe key (senders **SHOULD** stabilize per logical emission), composite-key fallbacks, idempotency store
+  **TTL** guidance, and acceptance rows **I1–I4**. **`docs/EVENTS.md`** **`event_id`** row and **E7** aligned; cross-links
+  from **README** (**Troubleshooting**), **MISSION**, **DESIGN_PRINCIPLES**, **SPEC_WEBHOOK_SIGNATURE**,
+  **SPEC_WEBHOOK_FAILURE_RESPONSES**, **REPLAYT_WEBHOOK_SIGNING**.
+
 - **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** (phase **2**, backlog **Add structured logging helper that redacts sensitive keys by default** /
   `fa75ecf3-a113-418e-99cc-aa0c31237eba`): normative contract for **stdlib** **`logging`**, **`[REDACTED]`** placeholder,
   default sensitive **HTTP header** names (incl. **`X-Signature*`** prefix rule) and **mapping** keys, public API surface

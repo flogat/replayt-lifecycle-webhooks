@@ -124,7 +124,7 @@ correct.
 | Topic | Spec |
 | ----- | ---- |
 | **v1 signing (this repo today)** | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — there is **no** normative timestamp **inside** the signed material for v1. MAC verification alone does **not** prove freshness. |
-| **Operator runbooks** | Still document **`replay_rejected`** (or **`stale_delivery`** as an alias code **only if** you document both as equivalent) for **your** deduplication store, **`event_id`** replay windows, or **future** upstream timestamp headers. |
+| **Operator runbooks** | Still document **`replay_rejected`** (or **`stale_delivery`** as an alias code **only if** you document both as equivalent) for **your** deduplication store, **`event_id`** replay windows, or **future** upstream timestamp headers. Dedupe keys and TTL starting points: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**. |
 | **If upstream adds a signed timestamp later** | Update **SPEC_WEBHOOK_SIGNATURE**, **REPLAYT_WEBHOOK_SIGNING.md**, and this file; add tests with injected clocks; map wire failures to **`replay_rejected`** or a dedicated stable code (e.g. **`timestamp_skew`**) in a minor release. |
 
 ## What not to log or return (normative)

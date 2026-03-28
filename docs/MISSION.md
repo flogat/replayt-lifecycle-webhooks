@@ -10,6 +10,8 @@ live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
 Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
 **Structured logging** with default **redaction** for sensitive headers and metadata:
 **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
+**Delivery retries and `event_id` idempotency:**
+**[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**.
 Repository map and quick links:
 **[README.md](../README.md)**.
 
@@ -78,6 +80,9 @@ Integrators and operators are responsible for:
   the recommended env var name and hygiene.
 - **Raw body discipline** — Provide the **exact** request body **bytes** from the HTTP layer **before** JSON parsing or
   mutation; otherwise the MAC will not match.
+- **Idempotent handling** — Assume **at-least-once** delivery; after verification, dedupe with **`event_id`** (and an
+  idempotency store with an appropriate **TTL**) per **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** so
+  retries do not double-charge approvals, tickets, or metrics.
 - **Failure mapping** — Map verification failures to **401/403** (or your policy) and **avoid leaking** the secret,
   full signature header, or computed MAC in responses or logs, per **SPEC_WEBHOOK_SIGNATURE**. For stable JSON **`error`**
   codes, example bodies, and post-verify failures (**unknown `event_type`**, replay windows), see
