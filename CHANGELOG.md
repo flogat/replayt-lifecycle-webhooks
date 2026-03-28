@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   match **`docs/SPEC_PUBLIC_API.md`**, documented internal modules import, and deprecation policy anchors in the spec.
   Package root **`__all__`** order aligned with that spec table.
 
+- **SPEC_REPLAYT_DEPENDENCY acceptance A8** (phase **3**, backlog **Add replayt dependency declaration and compatibility matrix stub** /
+  `8b16060d-f6e6-4111-bed2-4978b965ff52`): **`tests/test_replayt_dependency.py`** now checks **README**, the spec **compatibility matrix**,
+  **`pyproject.toml`** **`requires-python`**, **`.github/workflows/ci.yml`** **`python-version`**, and the **CI note on replayt versions**
+  stay aligned (single CI Python; matrix echoes declared and tested interpreters).
+
 ### Documentation
 
 - **`docs/REPLAYT_ECOSYSTEM_IDEA.md`** and **README** Overview (phase **2**, backlog **Record primary ecosystem pattern in REPLAYT_ECOSYSTEM_IDEA** /
