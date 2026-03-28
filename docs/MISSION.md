@@ -10,7 +10,7 @@ live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
 
 - **Integrators** — A **correct, copy-friendly** verification path and normative handler steps without mandatory full
   HTTP-framework dependencies from this package.
-- **Maintainers** — Explicit contracts for **replayt** versions and **signature verification**, aligned with
+- **Maintainers** — Explicit contracts for **replayt** versions and **signature verification**, consistent with
   **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)**.
 - **Contributors** — Clear **scope**, **success bar**, and pointers to specs and **CI** expectations.
 
@@ -46,8 +46,8 @@ live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
 - Patching or vendoring **replayt** core.
 - Shipping a **mandatory** Starlette/FastAPI/Flask (or similar) stack as part of this package’s required surface—integrators
   wrap the primitive in their own HTTP layer.
-- Arbitrary third-party webhook providers unless their contract is **aligned** with the replayt-compatible signing
-  rules documented here.
+- Arbitrary third-party webhook providers unless their contract **matches** the replayt-compatible signing rules
+  documented here.
 - **Enterprise** positioning narratives and extended **LLM**/demo policy on this page for **v0.x**—defer those to
   **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** (and extend MISSION when the project needs them).
 
@@ -66,4 +66,4 @@ When you change behavior or contracts:
 
 - [ ] Update the relevant **spec** and **README** if integrator-facing text changes.
 - [ ] Add **CHANGELOG.md** **Unreleased** notes for user-visible API, dependency, or notable doc contract changes.
-- [ ] Keep **MISSION** scope/success aligned with **DESIGN_PRINCIPLES** and what **CI** actually runs.
+- [ ] Keep **MISSION** scope/success consistent with **DESIGN_PRINCIPLES** and what **CI** actually runs.

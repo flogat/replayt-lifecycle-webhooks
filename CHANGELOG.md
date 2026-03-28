@@ -53,8 +53,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`docs/MISSION.md`:** phase **3** / backlog **Ship a one-page MISSION with scope and success criteria**—integrator skim
   paragraph, **replayt** capabilities consumed, explicit in/out scope bullets, success including **CI** and **automated
   tests** (**pytest**), short doc hygiene checklist; v0.x defers enterprise / extended LLM narrative to
-  **DESIGN_PRINCIPLES.md**.
-- **`README.md`:** link to the webhook signature spec, project layout row, reference-documentation note, and a
+  **DESIGN_PRINCIPLES.md**. Phase **5** (architecture review): minor prose tightening on **MISSION** (clearer consistency
+  wording).
+- **`README.md`:** **Overview** lists **MISSION** before **REPLAYT_ECOSYSTEM_IDEA** so scope and success are easy to find
+  (phase **5**); link to the webhook signature spec, project layout row, reference-documentation note, and a
   copy-paste verification example using the public API; compatibility one-liner, how to check the installed **replayt**
   version, PyPI and release-history links, and [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues)
   for breakage reports.
