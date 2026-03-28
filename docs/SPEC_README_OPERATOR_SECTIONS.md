@@ -1,0 +1,144 @@
+# Spec: README operator sections (troubleshooting, approval path, signature checks)
+
+**Backlog:** Expand README with operator troubleshooting and approval-flow walkthrough  
+**Workflow id:** `23e2da29-8042-4721-a1eb-e44a2076273f` (phase **2** spec refinement; Builder implements **README.md** in phase **3**).
+
+**Audience:** Spec gate (2b), Builder (3), Tester (4), operators, integrators.
+
+## Purpose and normative status
+
+This document is the **contract** for **integrator-facing** content in the repository root **`README.md`** that helps
+**on-call operators** validate webhook configuration and understand **approval** lifecycle traffic at a high level.
+It does **not** redefine **replayt** product semantics (when approvals fire upstream)—see **[EVENTS.md](EVENTS.md)** and
+upstream documentation for payload meaning.
+
+**Normative for Builder:** When this backlog is in scope, **`README.md`** **must** satisfy **§ Required sections** and
+**§ Content requirements** below. **§ Automated acceptance** maps to **pytest** rows **OP1**–**OP8** in
+**[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**.
+
+**Non-goals for README prose:** Full HTTP framework tutorials, enterprise runbooks, or copying entire normative specs into
+the README—**link** to **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**,
+**[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**,
+**[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**,
+**[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**,
+**[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**,
+**[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** instead of duplicating them verbatim.
+
+## Backlog acceptance mapping (`23e2da29`)
+
+| Source criterion | Where addressed in this spec |
+| ---------------- | ---------------------------- |
+| README **Troubleshooting** | **§ Required sections** — **Troubleshooting** |
+| README **Approval flow** (high level) | **§ Required sections** — **Approval webhook flow** |
+| README **Verify signatures** (copy-paste friendly) | **§ Required sections** — **Verifying webhook signatures** |
+| No secrets in examples; placeholders | **§ Secrets and examples hygiene** |
+| CHANGELOG **Unreleased** when user-visible README changes | **§ Release hygiene** |
+| Verify signing locally; common misconfigurations; logs; error catalog | **§ Content requirements** |
+| Optional sequence diagram (markdown) | **§ Content requirements** — **Approval webhook flow** |
+
+## Required sections (`README.md`)
+
+Use these **exact markdown headings** (level-2 `## …`) so doc-guard tests and readers can rely on stable anchors:
+
+| # | Heading | Role |
+| - | ------- | ---- |
+| 1 | `## Troubleshooting` | Fast diagnosis: misconfigurations, retries, replay vs duplicate, signature failures, pointers to logs and specs. |
+| 2 | `## Approval webhook flow` | Short narrative of how **approval**-category deliveries fit consumer handling (verify-first, then parse); optional diagram. |
+| 3 | `## Verifying webhook signatures` | Copy-paste friendly steps: local verification loop (env placeholder + library API and/or documented **`python -m`** demo), links to normative signing procedure. |
+
+**Ordering:** **Troubleshooting** may appear **before** or **after** **Verifying webhook signatures** as long as all three
+headings exist and **Approval webhook flow** is **adjacent** to the other operator-focused blocks (recommended order:
+**Troubleshooting** → **Approval webhook flow** → **Verifying webhook signatures**, or **Verifying** first if the README
+already groups “how to verify” near quick start—**Builder** chooses one contiguous operator block).
+
+**Note:** If **`README.md`** already contains material under different headings (for example a combined section), **merge**
+content and **rename** headings to match this spec in the **Builder** commit—doc guards (**OP1**–**OP3**) require the exact
+strings above.
+
+## Content requirements
+
+### `## Troubleshooting`
+
+The section **must**:
+
+1. Call out **at least three** common misconfigurations from this list (paraphrase is fine):  
+   **wrong or rotated shared secret**; **body not raw bytes** (parsed/mutated JSON before MAC); **header name or**
+   **`Replayt-Signature`** format mistakes; **assuming exactly-once delivery** without **`event_id`** dedupe; **treating**
+   **stale** payloads as safe because the MAC is valid.
+2. Tell operators **where to look in logs**: structured **`extra=`** fields (**`webhook_*`**, **`lifecycle_*`**,
+   **`error_code`**) and **redaction** expectations, with a link to
+   **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (not a dump of the full spec).
+3. Link **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** as the **stable `error` code catalog**
+   (HTTP + JSON) for verification and post-verify failures.
+4. Cross-link **at least two** of: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**,
+   **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**,
+   **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** for the matching symptom (duplicate delivery, replay policy,
+   raw body discipline).
+
+### `## Approval webhook flow`
+
+The section **must**:
+
+1. State that **approval** and **run** deliveries share the same **verify-then-parse** bar (**`Replayt-Signature`** over
+   **raw body** per **SPEC_WEBHOOK_SIGNATURE**).
+2. Name the two approval **`event_type`** values from **[EVENTS.md](EVENTS.md)** (**`replayt.lifecycle.approval.pending`**
+   and **`replayt.lifecycle.approval.resolved`**) and explain in plain language: **pending** = work blocked waiting for a
+   decision; **resolved** = decision recorded (approved/rejected per payload **`detail`**—point at **EVENTS.md** for
+   fields, without duplicating full tables).
+3. Mention **`correlation.approval_request_id`** when discussing routing or support correlation (optional in envelope per
+   **EVENTS.md**).
+4. Clarify this package **does not** implement approval UI or policy—consumers act **after** verification.
+
+**Optional (recommended):** A **Mermaid** or ASCII **sequence diagram** in markdown showing: **sender** → **HTTPS POST** →
+**receiver verifies** → **parse JSON** → **idempotent handler** (and optionally **downstream ticket/notification**). Keep
+diagrams **free of secrets** and **free of real signature hex** (use placeholders like `sha256=<redacted>` or omit the
+value line).
+
+### `## Verifying webhook signatures`
+
+The section **must**:
+
+1. Link the **Verification procedure (integrators)** subsection in
+   **`docs/SPEC_WEBHOOK_SIGNATURE.md`** (anchor **`#verification-procedure-integrators`**), matching how other
+   **`docs/…`** links are written from **`README.md`**.
+2. Include **copy-paste ready** examples that use **placeholders only** for secrets, for example
+   **`your-shared-secret`** or **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**—see **§ Secrets and examples hygiene**.
+3. Show **at least one** of:  
+   (a) a **minimal** **`verify_lifecycle_webhook_signature`** snippet (secret + raw **`bytes`** + header value variable), or  
+   (b) the **documented local loop**: reference server + **`python -m replayt_lifecycle_webhooks.demo_webhook`** per
+   **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** with env-based secret (no literal secret strings).
+
+**Must not** include complete **`Replayt-Signature`** header values tied to real fixtures (no committed **64-char hex**
+example posing as a live MAC) or **base64/raw key** material.
+
+## Secrets and examples hygiene
+
+- **Never** document real shared secrets, bearer tokens, or live **`Replayt-Signature`** values. Use obvious placeholders
+  (**`your-shared-secret`**, **`<signature-header-value>`**).
+- Code blocks **must not** echo **SPEC_WEBHOOK_FAILURE_RESPONSES** “safe example” signature fragments if those examples use
+  distinctive hex patterns—prefer ellipses or generic placeholders in README-only snippets.
+- Align with **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** **LLM / demos** and **MISSION** redaction expectations for
+  anything resembling production logs.
+
+## Release hygiene
+
+When **Builder** changes **`README.md`** to satisfy this spec (user-visible operator guidance):
+
+- Add a bullet under **`CHANGELOG.md`** **Unreleased** (**Documentation** or **Changed**) referencing this backlog and the
+  new/expanded sections.
+
+**Phase 2 (spec-only):** No **CHANGELOG** entry is **required** until **README** text ships; this spec file alone is
+maintainer-facing contract.
+
+## Automated acceptance
+
+See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP1**–**OP8**). Implementations
+**must** use **network-free** tests that read **`README.md`** from disk (same pattern as **DG6**, **A2**/README checks).
+
+## Related docs
+
+- **[README.md](../README.md)** — target document for Builder.
+- **[EVENTS.md](EVENTS.md)** — approval and run **`event_type`** registry and **`correlation`** fields.
+- **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — signing and verification procedure.
+- **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator error catalog.
+- **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local signed POST command (**D1**–**D9**).
