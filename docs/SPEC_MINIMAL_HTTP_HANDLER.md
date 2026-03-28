@@ -66,6 +66,8 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 
 ## Related docs
 
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI **`pytest`** entrypoint; suite must cover verification (and
+  parsing where handler tests apply), not placeholder smoke tests.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification procedure, **401/403** guidance, v1 header format.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON contract and typed parsing after a successful parse (see **README**).
 - **[README.md](../README.md)** — copy-paste examples for **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`**.

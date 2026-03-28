@@ -11,7 +11,8 @@ coverage integrators would otherwise reimplement (ecosystem pattern and scope: *
 acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. **Optional minimal HTTP POST
 handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**. **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**.
-**Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**.
+**Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
+entrypoint:** **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**.
 
 **Lifecycle semantics (upstream) vs wire JSON (this repo):** Replayt’s product and library semantics are described on
 **[replayt (PyPI)](https://pypi.org/project/replayt/)** (project description, release history, and links from that
@@ -60,6 +61,18 @@ python -m venv .venv
 # Windows: .venv\\Scripts\\activate
 pip install -e ".[dev]"
 ```
+
+## Running tests
+
+From the repository root after a dev install:
+
+```bash
+pytest tests -q
+```
+
+CI runs the same **`tests/`** tree (see **`.github/workflows/ci.yml`**). Minimum behavioral coverage (signature
+verification and lifecycle JSON parsing), removal of placeholder smoke tests, and checklist rows **A1–A5**:
+**[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**.
 
 ## Verifying webhook signatures
 
@@ -158,6 +171,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/MISSION.md` | Mission and scope |
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
 | `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** range: contract, **compatibility matrix**, upper-bound policy, checklist, CI expectations |
+| `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H7** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, synthetic examples |

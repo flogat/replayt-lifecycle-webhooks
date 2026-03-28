@@ -314,6 +314,8 @@ Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; *
 
 ## Related docs
 
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint; suite must exercise **`parse_lifecycle_webhook_event`**
+  per **T3–T5** (not placeholder smoke tests).
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verify the raw body before parsing JSON.
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional handler that verifies then parses JSON.
 - **[MISSION.md](MISSION.md)** — run vs approval scope and consumer responsibilities.

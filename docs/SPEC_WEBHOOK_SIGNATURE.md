@@ -164,6 +164,8 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 
 ## Related docs
 
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI **`pytest tests -q`** invariant; minimum suite coverage
+  including **W3** verification paths; placeholder smoke tests forbidden.
 - **[README.md](../README.md)** — integrator entry and quick example.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON field contract and **`parse_lifecycle_webhook_event`** after verification (see **README** overview).
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H7**.
