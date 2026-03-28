@@ -165,7 +165,7 @@ wrappers may still extend responses (for example **`request_id`**) per the optio
 | F3 | Guidance forbids returning or logging **secrets**, **full signature header**, **computed MAC**, and **raw payload** excerpts. | Review **§ What not to log or return** and **SPEC_WEBHOOK_SIGNATURE**. |
 | F4 | Semantics align with **SPEC_MINIMAL_HTTP_HANDLER** status table and **verify-before-JSON** ordering. | Cross-check both specs. |
 | F5 | **Unknown `event_type`** and **replay / freshness** are documented with v1 **MAC** limitations and application-layer responsibility. | Review **§ Stale timestamp / replay** and post-verification table. |
-| F6 | **Structured logging / redaction** defaults and test rows **L1–L8** are specified for header- and metadata-shaped fields. | Review **SPEC_STRUCTURED_LOGGING_REDACTION**; **SPEC_AUTOMATED_TESTS** backlog **`fa75ecf3`**. |
+| F6 | **Structured logging / redaction** defaults and test rows **L1–L9** are specified for header- and metadata-shaped fields (including **no raw body** in default request logs). | Review **SPEC_STRUCTURED_LOGGING_REDACTION**; **SPEC_AUTOMATED_TESTS** backlog **`fa75ecf3`**. |
 
 ## Related docs
 

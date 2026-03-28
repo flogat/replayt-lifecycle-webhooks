@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`**, **`README.md`** (phase **2**, backlog **Establish structured logging and redaction for webhook handling** /
+  `6ea52b2b-ff96-4511-a9f8-d5d9ed6d3711`): normative **request logging** rules (**no default raw body**; length-only
+  **`body_bytes_len`**); **recommended `extra=` field names** aligned with **[EVENTS.md](docs/EVENTS.md)** correlation ids;
+  **§ Example: successful verified delivery** for operators; default **mapping** keys extended with **`body`** /
+  **`raw_body`** / **`payload`** / **`request_body`**; **L9** test row (success-path log shape + absence of raw body
+  substring); cross-links and **L1–L9** wording across specs and README.
 - **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`README.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add replayt dependency declaration and compatibility matrix stub** /
   `8b16060d-f6e6-4111-bed2-4978b965ff52`): **compatibility matrix** now lists **`requires-python`**, **CI-tested Python** (**3.12**, `.github/workflows/ci.yml`), and how **replayt** is resolved in CI vs the declared lower bound; **stub / pre-coupling** checklist when **`replayt`** is not yet in **`[project.dependencies]`**; acceptance **A8**; **A1**/**A2** cover the stub path. README states **Python** / **CI** expectations; **SPEC_AUTOMATED_TESTS** traceability points at **A1**–**A8**.
 - **`docs/DESIGN_PRINCIPLES.md`**, **README** project layout table (phase **5**, architecture review, same backlog): **explicit contracts** bullet and **SPEC_REPLAYT_DEPENDENCY** row now name **Python** / **CI-tested** columns in the **compatibility matrix**, not only **replayt** ↔ package wording.

@@ -204,8 +204,10 @@ See the spec for full tables and examples. **`handle_lifecycle_webhook_post`** r
 metadata, pass them through **`replayt_lifecycle_webhooks.redaction`** first
 (**[docs/SPEC_STRUCTURED_LOGGING_REDACTION.md](docs/SPEC_STRUCTURED_LOGGING_REDACTION.md)**): defaults mask
 **`Authorization`**, **`Replayt-Signature`**, **`X-Signature*`**-family headers, cookies, and common token-like mapping
-keys; use **`extra_sensitive_names`** / **`extra_sensitive_keys`** for deployment-specific names. **Do not** log the
-**raw body**, **full** signature header, **computed MAC**, or **HMAC secret** (same boundaries as
+keys; use **`extra_sensitive_names`** / **`extra_sensitive_keys`** for deployment-specific names. **`format_safe_webhook_log_extra`**
+**must not** put raw body text or JSON snapshots into **`extra=`** by default—only safe summaries such as
+**`webhook_body_bytes_len`** (see the spec’s **successful delivery** example). **Do not** log the **raw body**, **full**
+signature header, **computed MAC**, or **HMAC secret** (same boundaries as
 **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**).
 
 ```python
@@ -322,7 +324,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `replayt_lifecycle_webhooks.demo_webhook` | **`python -m replayt_lifecycle_webhooks.demo_webhook`**: signed POST to default **`/webhook`** URL |
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
-| `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L8** |
+| `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L9** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, **`event_id`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |
