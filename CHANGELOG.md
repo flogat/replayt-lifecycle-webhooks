@@ -27,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   recommended env var (see README).
 - **README.md:** verification procedure link; **HTTP responses and logging** pointer; **`os.environ`** example for the
   recommended secret name.
+- **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`:** normative status table, public handler API, WSGI notes, acceptance rows **H1–H7**;
+  cross-links to the webhook signature spec.
+- **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** **Related docs** link to the minimal HTTP handler spec.
+- **`docs/MISSION.md`:** skim pointer to **SPEC_MINIMAL_HTTP_HANDLER**.
 
 ### Added
 

@@ -165,5 +165,6 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 ## Related docs
 
 - **[README.md](../README.md)** — integrator entry and quick example.
+- **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H7**.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — **replayt** version floor and bump policy.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — small public surfaces and explicit contracts.
