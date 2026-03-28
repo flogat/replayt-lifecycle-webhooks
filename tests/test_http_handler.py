@@ -9,11 +9,11 @@ import json
 from http import HTTPStatus
 from typing import Any
 
-from replayt_lifecycle_webhooks import (
-    LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
+from replayt_lifecycle_webhooks.handler import (
     handle_lifecycle_webhook_post,
     make_lifecycle_webhook_wsgi_app,
 )
+from replayt_lifecycle_webhooks.signature import LIFECYCLE_WEBHOOK_SIGNATURE_HEADER
 
 _SECRET = "handler-test-secret"
 _GOOD_BODY = b'{"event":"run_finished","run_id":"r1"}'

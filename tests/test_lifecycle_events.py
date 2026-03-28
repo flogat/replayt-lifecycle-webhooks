@@ -11,10 +11,10 @@ import jsonschema
 import pytest
 from pydantic import ValidationError
 
-from replayt_lifecycle_webhooks import (
+from replayt_lifecycle_webhooks.handler import handle_lifecycle_webhook_post
+from replayt_lifecycle_webhooks.signature import (
     LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
     WebhookSignatureMismatchError,
-    handle_lifecycle_webhook_post,
     verify_lifecycle_webhook_signature,
 )
 from replayt_lifecycle_webhooks.events import (
