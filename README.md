@@ -4,9 +4,10 @@
 
 This project builds on **[replayt](https://pypi.org/project/replayt/)**. It declares a runtime dependency on
 **replayt `>=0.4.25`** (see `pyproject.toml`). Formal contract, bump policy, and acceptance criteria:
-**[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Read
+**[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Webhook signature verification contract and
+acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. Read
 **[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)** for positioning prompts, then
-**[docs/MISSION.md](docs/MISSION.md)** for scope and goals (stubs until you flesh them out).
+**[docs/MISSION.md](docs/MISSION.md)** for scope and goals.
 
 **Compatibility:** After `pip install -e .` (or `pip install -e ".[dev]"` when you work in this repo), check the installed **replayt** with either:
 
@@ -45,6 +46,21 @@ python -m venv .venv
 pip install -e ".[dev]"
 ```
 
+## Verifying webhook signatures (planned API)
+
+Operators should verify the **raw request body** with the shared secret and the **signature headers replayt sends**
+before parsing JSON or running automation. Exact header names and MAC details are defined in
+**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**; the Builder phase will add the public helper and
+unit tests. Intended usage (illustrativeâ€”names may differ once implemented):
+
+```python
+from replayt_lifecycle_webhooks import verify_lifecycle_webhook_signature  # name TBD
+
+# raw_body: bytes exactly as received from the HTTP layer
+# headers: signature (and any other required) values from the incoming request
+verify_lifecycle_webhook_signature(secret=..., body=raw_body, signature=..., ...)
+```
+
 ## Optional agent workflows
 
 This repo may include a [`.cursor/skills/`](.cursor/skills/) directory for Cursor-style agent skills. **`.gitignore`**
@@ -59,6 +75,7 @@ local tooling entries. Adapt or remove optional directories to match your teamâ€
 | `docs/MISSION.md` | Mission and scope |
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
 | `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** pin: contract, checklist, CI expectations |
+| `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (when present) |
 | `src/replayt_lifecycle_webhooks/` | Python package (import `replayt_lifecycle_webhooks`) |
 | `pyproject.toml` | Package metadata |
