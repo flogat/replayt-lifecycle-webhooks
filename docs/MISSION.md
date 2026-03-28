@@ -105,7 +105,9 @@ Integrators and operators are responsible for:
 
 - **Automated tests** (e.g. **pytest**) run in **CI** on every change workflow the project uses; they cover claimed
   verification behavior, dependency contract checks, and spec-driven acceptance where implemented—**green CI** is part
-  of “done.”
+  of “done.” The suite must **not** rely on placeholder tests (e.g. bare **`assert True`**) as the only proof that
+  verification or parsing works; see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** for the CI entrypoint and
+  minimum behavioral coverage.
 - **Releases and versioning** — Public API and dependency contract changes are tracked under **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)** as declared in **`CHANGELOG.md`**; cutting a release means updating the version in **`pyproject.toml`**, grouping **Unreleased** notes into a dated section, and publishing to PyPI (or the project’s canonical index) per maintainer practice. Integrators rely on the **replayt** lower bound and changelog for upgrade safety (**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**).
 - **CHANGELOG.md** records user-visible API and dependency changes under **Unreleased** (or the releasing section) per
   project convention.
