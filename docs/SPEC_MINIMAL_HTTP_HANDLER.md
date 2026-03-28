@@ -30,10 +30,9 @@ Handled in order: method check → signature verification → UTF-8 decode → J
 
 **H5 (ordering):** If verification fails, the implementation must **not** return **400** for JSON errors. Garbage bodies with missing or wrong MAC must yield **401** or **403**, not **400**.
 
-**Response bodies (4xx / 405):** **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** defines the
-recommended **`application/json`** envelope (**`error`** + **`message`**) for operator runbooks. The reference
-**`handle_lifecycle_webhook_post`** implementation may return **empty** bodies for client errors while still using the
-status codes above; integrators may wrap or extend responses to match the failure-response spec.
+**Response bodies (4xx / 405):** **`handle_lifecycle_webhook_post`** returns JSON per
+**[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** with
+**`Content-Type: application/json; charset=utf-8`**, **`error`**, and **`message`**. **204** success responses have an empty body.
 
 ## Public API (Python)
 
@@ -68,6 +67,7 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 | **H5** | Invalid signature with invalid JSON → **401** or **403**, never **400**. | **`test_h5_verify_before_json_invalid_signature_bad_json_is_401_not_400`** |
 | **H6** | Non-POST → **405** with **`Allow: POST`**. | **`test_method_not_allowed_405`**, **`test_wsgi_wrong_method_405`** |
 | **H7** | **`on_success`** runs only after verification and successful JSON parse. | **`test_on_success_called_after_verify`** |
+| **H8** | Client error bodies match **SPEC_WEBHOOK_FAILURE_RESPONSES** stable codes and operator-facing **`message`** strings. | **`test_h8_error_messages_match_failure_response_spec`** |
 
 ## Related docs
 

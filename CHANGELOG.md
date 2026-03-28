@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **`handle_lifecycle_webhook_post`** / **`make_lifecycle_webhook_wsgi_app`** (phase **3**, backlog **Document webhook
+  failure responses operators can act on** / `5ec1325a-5b45-440f-b93f-28b711fa5482`): **405** / **401** / **403** /
+  **400** responses now include **`application/json; charset=utf-8`** bodies with stable **`error`** codes
+  (**`method_not_allowed`**, **`signature_required`**, **`signature_malformed`**, **`signature_mismatch`**,
+  **`invalid_json`**) and operator-facing **`message`** text per **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`**. **204**
+  remains empty.
+
 ### Documentation
 
 - **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`**, **`README.md`**, **`docs/MISSION.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**,
@@ -15,8 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (**`error`** + **`message`**), stable codes (**`signature_required`**, **`signature_mismatch`**, **`invalid_json`**,
   **`unknown_event_type`**, **`replay_rejected`**, etc.), typical HTTP statuses, redacted examples, **v1** replay/timestamp
   scope, **what not to log or return**; README runbook table; cross-links from signature / minimal-handler / design
-  principles; acceptance **F1–F5**; notes reference **`handle_lifecycle_webhook_post`** empty 4xx bodies until optional
-  Builder alignment.
+  principles; acceptance **F1–F5**; **Builder (phase 3)** aligned the reference handler JSON bodies with this spec.
 - **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**,
   **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/EVENTS.md`** (phase **2**,
   backlog **Replace smoke-only test with real

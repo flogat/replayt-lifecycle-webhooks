@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import io
+import json
 from http import HTTPStatus
 from typing import Any
 
@@ -29,6 +30,22 @@ def _fake_headers(signature: str | None) -> dict[str, str]:
     if signature is not None:
         h[LIFECYCLE_WEBHOOK_SIGNATURE_HEADER] = signature
     return h
+
+
+def _assert_json_error(
+    result: Any,
+    *,
+    status: HTTPStatus,
+    error: str,
+    content_type: str = "application/json; charset=utf-8",
+) -> None:
+    assert result.status == status
+    hdrs = list(result.headers)
+    assert ("Content-Type", content_type) in hdrs
+    data = json.loads(result.body.decode("utf-8"))
+    assert data["error"] == error
+    assert isinstance(data["message"], str) and data["message"]
+    assert set(data.keys()) == {"error", "message"}
 
 
 def _call_wsgi(
@@ -78,7 +95,7 @@ def test_h3_bad_signature_4xx() -> None:
         body=_GOOD_BODY,
         headers={},
     )
-    assert missing.status == HTTPStatus.UNAUTHORIZED
+    _assert_json_error(missing, status=HTTPStatus.UNAUTHORIZED, error="signature_required")
 
     malformed = handle_lifecycle_webhook_post(
         secret=_SECRET,
@@ -86,7 +103,7 @@ def test_h3_bad_signature_4xx() -> None:
         body=_GOOD_BODY,
         headers=_fake_headers("sha256=zz"),
     )
-    assert malformed.status == HTTPStatus.UNAUTHORIZED
+    _assert_json_error(malformed, status=HTTPStatus.UNAUTHORIZED, error="signature_malformed")
 
     mismatch = handle_lifecycle_webhook_post(
         secret=_SECRET,
@@ -94,7 +111,7 @@ def test_h3_bad_signature_4xx() -> None:
         body=_GOOD_BODY,
         headers=_fake_headers(_sign(_GOOD_BODY, secret="other-secret")),
     )
-    assert mismatch.status == HTTPStatus.FORBIDDEN
+    _assert_json_error(mismatch, status=HTTPStatus.FORBIDDEN, error="signature_mismatch")
 
 
 def test_h4_bad_json_400_after_good_signature() -> None:
@@ -106,7 +123,7 @@ def test_h4_bad_json_400_after_good_signature() -> None:
         body=raw,
         headers=_fake_headers(_sign(raw)),
     )
-    assert result.status == HTTPStatus.BAD_REQUEST
+    _assert_json_error(result, status=HTTPStatus.BAD_REQUEST, error="invalid_json")
 
 
 def test_h5_verify_before_json_invalid_signature_bad_json_is_401_not_400() -> None:
@@ -118,7 +135,7 @@ def test_h5_verify_before_json_invalid_signature_bad_json_is_401_not_400() -> No
         body=garbage,
         headers={},
     )
-    assert no_sig.status == HTTPStatus.UNAUTHORIZED
+    _assert_json_error(no_sig, status=HTTPStatus.UNAUTHORIZED, error="signature_required")
 
     wrong_mac = handle_lifecycle_webhook_post(
         secret=_SECRET,
@@ -126,7 +143,7 @@ def test_h5_verify_before_json_invalid_signature_bad_json_is_401_not_400() -> No
         body=garbage,
         headers=_fake_headers(_sign(garbage, secret="other")),
     )
-    assert wrong_mac.status == HTTPStatus.FORBIDDEN
+    _assert_json_error(wrong_mac, status=HTTPStatus.FORBIDDEN, error="signature_mismatch")
 
 
 def test_method_not_allowed_405() -> None:
@@ -137,7 +154,11 @@ def test_method_not_allowed_405() -> None:
         headers=_fake_headers(_sign(_GOOD_BODY)),
     )
     assert result.status == HTTPStatus.METHOD_NOT_ALLOWED
-    assert ("Allow", "POST") in list(result.headers)
+    hdrs = list(result.headers)
+    assert ("Allow", "POST") in hdrs
+    assert ("Content-Type", "application/json; charset=utf-8") in hdrs
+    data = json.loads(result.body.decode("utf-8"))
+    assert data["error"] == "method_not_allowed"
 
 
 def test_on_success_called_after_verify() -> None:
@@ -178,6 +199,67 @@ def test_wsgi_wrong_method_405() -> None:
         "CONTENT_LENGTH": "0",
         "wsgi.input": io.BytesIO(b""),
     }
-    status, hdrs, _ = _call_wsgi(app, env)
+    status, hdrs, body = _call_wsgi(app, env)
     assert status.startswith("405 ")
     assert ("Allow", "POST") in hdrs
+    assert ("Content-Type", "application/json; charset=utf-8") in hdrs
+    assert json.loads(body.decode("utf-8"))["error"] == "method_not_allowed"
+
+
+def test_h8_error_messages_match_failure_response_spec() -> None:
+    """Stable operator-facing copy (SPEC_WEBHOOK_FAILURE_RESPONSES)."""
+    expected = {
+        "method_not_allowed": "Only POST is supported for this endpoint.",
+        "signature_required": "The Replayt-Signature header is missing or empty.",
+        "signature_malformed": "The signature header is not a valid v1 value.",
+        "signature_mismatch": "Signature does not match the request body.",
+        "invalid_json": "Request body is not valid UTF-8 JSON.",
+    }
+    raw = b"not-json"
+    cases: list[tuple[Any, str]] = [
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET,
+                method="GET",
+                body=_GOOD_BODY,
+                headers=_fake_headers(_sign(_GOOD_BODY)),
+            ),
+            "method_not_allowed",
+        ),
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET, method="POST", body=_GOOD_BODY, headers={}
+            ),
+            "signature_required",
+        ),
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET,
+                method="POST",
+                body=_GOOD_BODY,
+                headers=_fake_headers("nope"),
+            ),
+            "signature_malformed",
+        ),
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET,
+                method="POST",
+                body=_GOOD_BODY,
+                headers=_fake_headers(_sign(_GOOD_BODY, secret="x")),
+            ),
+            "signature_mismatch",
+        ),
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET,
+                method="POST",
+                body=raw,
+                headers=_fake_headers(_sign(raw)),
+            ),
+            "invalid_json",
+        ),
+    ]
+    for result, code in cases:
+        data = json.loads(result.body.decode("utf-8"))
+        assert data["message"] == expected[code]

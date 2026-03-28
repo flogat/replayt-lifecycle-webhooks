@@ -108,8 +108,8 @@ and notes that **v1** MAC verification does **not** include a wire timestamp.
 | Unknown `event_type` **after** verify | **422** (recommended) | `unknown_event_type` |
 | Replay / duplicate / freshness policy | **422** or **409** | `replay_rejected` |
 
-See the spec for full tables, examples, and **reference handler** notes (**`handle_lifecycle_webhook_post`** may return
-empty 4xx bodies until aligned with the JSON envelope).
+See the spec for full tables and examples. **`handle_lifecycle_webhook_post`** returns **`application/json`** bodies
+(**`error`** + **`message`**) for **405** / **401** / **403** / **400** per that spec; **204** stays empty.
 
 **Drop-in HTTP handler:** **`handle_lifecycle_webhook_post`** maps a POST, raw body, and header map to status **405** /
 **401** / **403** / **400** / **204** as in **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.

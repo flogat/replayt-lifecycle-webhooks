@@ -147,11 +147,9 @@ Optional: first **8** characters of **`event_id`** from **verified** payloads fo
 
 ## Reference handler vs this spec
 
-**`handle_lifecycle_webhook_post`** (**SPEC_MINIMAL_HTTP_HANDLER**) returns **empty `body` bytes** for **4xx** and **405**
-today while still using the correct **status** codes. Integrators and support runbooks should use **this document** as
-the **target** JSON contract for new endpoints and proxies. **Aligning** the library’s **4xx** responses with the JSON
-envelope above (and setting **`Content-Type`**) is **implementation work** for phase **3** (Builder) unless
-**CONTRIBUTING.md** defers it; until then, custom wrappers may attach bodies per this spec.
+**`handle_lifecycle_webhook_post`** (**SPEC_MINIMAL_HTTP_HANDLER**) returns the JSON envelope above for **405** / **401**
+/ **403** / **400** (with **`Content-Type: application/json; charset=utf-8`**). **204** success has **no** body. Custom
+wrappers may still extend responses (for example **`request_id`**) per the optional extension rule.
 
 ## Acceptance criteria (checklist)
 

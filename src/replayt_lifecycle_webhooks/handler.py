@@ -8,6 +8,10 @@ Status policy (see ``docs/SPEC_MINIMAL_HTTP_HANDLER.md``):
 - **400** — verification passed but body is not valid UTF-8 JSON text.
 - **204** — accepted (empty body).
 
+Client errors (**405**, **401**, **403**, **400**) return a JSON body per
+``docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`` (**``error``** + **``message``**) and
+``Content-Type: application/json; charset=utf-8``.
+
 Uses :func:`replayt_lifecycle_webhooks.verify_lifecycle_webhook_signature` only;
 no JSON parsing runs until verification succeeds.
 """
@@ -27,6 +31,31 @@ from .signature import (
     WebhookSignatureMissingError,
     verify_lifecycle_webhook_signature,
 )
+
+_JSON_CONTENT_TYPE = "application/json; charset=utf-8"
+
+
+def _json_error_body(error: str, message: str) -> bytes:
+    return json.dumps(
+        {"error": error, "message": message},
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+
+
+def _error_result(
+    status: int,
+    *,
+    error: str,
+    message: str,
+    extra_headers: tuple[tuple[str, str], ...] = (),
+) -> LifecycleWebhookHttpResult:
+    body = _json_error_body(error, message)
+    hdrs: tuple[tuple[str, str], ...] = (
+        *extra_headers,
+        ("Content-Type", _JSON_CONTENT_TYPE),
+    )
+    return LifecycleWebhookHttpResult(status, hdrs, body)
 
 
 @dataclass(frozen=True, slots=True)
@@ -75,15 +104,17 @@ def handle_lifecycle_webhook_post(
     :func:`json.loads`. On verification failure, JSON is not parsed.
 
     **Raises:** This function does not raise for client errors; it returns 4xx
-    :class:`LifecycleWebhookHttpResult` values. Verification exceptions are mapped to status codes only.
+    :class:`LifecycleWebhookHttpResult` values with JSON bodies (see
+    ``docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md``). Verification exceptions are mapped to status codes only.
 
     See ``docs/SPEC_MINIMAL_HTTP_HANDLER.md`` for the full normative table.
     """
     if method.strip().upper() != "POST":
-        return LifecycleWebhookHttpResult(
+        return _error_result(
             HTTPStatus.METHOD_NOT_ALLOWED,
-            (("Allow", "POST"),),
-            b"",
+            error="method_not_allowed",
+            message="Only POST is supported for this endpoint.",
+            extra_headers=(("Allow", "POST"),),
         )
 
     norm = _normalize_header_map(headers)
@@ -95,16 +126,34 @@ def handle_lifecycle_webhook_post(
             body=body,
             signature=signature,
         )
-    except (WebhookSignatureMissingError, WebhookSignatureFormatError):
-        return LifecycleWebhookHttpResult(HTTPStatus.UNAUTHORIZED, (), b"")
+    except WebhookSignatureMissingError:
+        return _error_result(
+            HTTPStatus.UNAUTHORIZED,
+            error="signature_required",
+            message="The Replayt-Signature header is missing or empty.",
+        )
+    except WebhookSignatureFormatError:
+        return _error_result(
+            HTTPStatus.UNAUTHORIZED,
+            error="signature_malformed",
+            message="The signature header is not a valid v1 value.",
+        )
     except WebhookSignatureMismatchError:
-        return LifecycleWebhookHttpResult(HTTPStatus.FORBIDDEN, (), b"")
+        return _error_result(
+            HTTPStatus.FORBIDDEN,
+            error="signature_mismatch",
+            message="Signature does not match the request body.",
+        )
 
     try:
         text = body.decode("utf-8")
         payload = json.loads(text)
     except (UnicodeDecodeError, json.JSONDecodeError):
-        return LifecycleWebhookHttpResult(HTTPStatus.BAD_REQUEST, (), b"")
+        return _error_result(
+            HTTPStatus.BAD_REQUEST,
+            error="invalid_json",
+            message="Request body is not valid UTF-8 JSON.",
+        )
 
     if on_success is not None:
         on_success(payload)
