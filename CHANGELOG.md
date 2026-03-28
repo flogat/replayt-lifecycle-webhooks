@@ -9,26 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- **`CHANGELOG.md`** (phase **6**, security review, backlog **Add optional reference-documentation snapshot workflow** /
-  `eb884da9-5273-4ce0-b105-5130c6b1ac79`): reviewed `git diff master -- . ':!.orchestrator'` (**docs**, **`.gitignore`**,
-  **`tests/test_reference_documentation_workflow.py`** only; no **`src/`**, **`pyproject.toml`**, or
-  **`.github/workflows/ci.yml`** changes). New tests read repo files from disk and run **`git check-ignore`** with fixed
-  arguments (no shell, no network). No secrets or live credentials in added prose; dependency pins unchanged; **CI** still
-  runs **ruff**, **`pytest tests`**, and **`supply-chain`** **`pip-audit`**. **RD4** keeps **`ci.yml`** free of the
-  **`reference-documentation`** substring so merge gating cannot depend on that tree.
+- **Optional reference-documentation workflow** (backlog **`eb884da9`**, refinement **`2db687f4`**): new **`CONTRIBUTING.md`**
+  entry; **`README.md`** and **`docs/reference-documentation/README.md`** describe when to refresh, small default clones, and
+  gitignored **`_upstream_snapshot/`**. **`docs/SPEC_REFERENCE_DOCUMENTATION.md`** adds acceptance mapping, committed-path
+  exclusivity (no alternate vendor roots), licensing rules, repeatable **`git`** / **`curl`** / **`rsync`** examples, and the
+  optional **`scripts/`** helper contract. **`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`** adds **Source and
+  licensing**. **`docs/SPEC_AUTOMATED_TESTS.md`** and **`docs/DESIGN_PRINCIPLES.md`** reference **RD1**–**RD8**;
+  **`tests/test_reference_documentation_workflow.py`** enforces them.
 
-- **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **3**, backlog **Add optional
-  reference-documentation snapshot workflow** / `eb884da9-5273-4ce0-b105-5130c6b1ac79`): acceptance **RD1**–**RD5** are
-  enforced by **`tests/test_reference_documentation_workflow.py`** (folder **README**, root **README** refresh notes,
-  **`.gitignore`** / **`git check-ignore`**, **CI** workflow must not reference **`docs/reference-documentation/`**, trace
-  table in **SPEC_AUTOMATED_TESTS**).
-
-- **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/reference-documentation/README.md`**, **`README.md`** (project layout,
-  **Reference documentation**), **`.gitignore`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**,
-  **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add optional reference-documentation snapshot workflow** /
-  `eb884da9-5273-4ce0-b105-5130c6b1ac79`): normative optional **`docs/reference-documentation/`** workflow—committed
-  excerpts vs gitignored **`_upstream_snapshot/`**, **how to refresh** (manual copy and optional future **`scripts/`**
-  helper), **CI** must not require upstream doc mirroring; acceptance **RD1**–**RD5**.
+- **`scripts/sync_upstream_reference_docs.sh`**: optional maintainer helper copies a local upstream **`docs/`** tree into
+  **`docs/reference-documentation/_upstream_snapshot/replayt-docs/`** (**`rsync`** when available, else **`cp -a`**). Not invoked
+  by **CI** or the main **`pytest`** collection beyond syntax and path-contract checks in
+  **`tests/test_reference_documentation_workflow.py`**.
 
 - **`README.md`** (phase **3**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
   `23e2da29-8042-4721-a1eb-e44a2076273f`): operator block uses **`## Troubleshooting`**, **`## Approval webhook flow`**, and

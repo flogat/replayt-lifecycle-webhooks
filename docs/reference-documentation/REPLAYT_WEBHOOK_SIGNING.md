@@ -4,6 +4,16 @@ This file records the **verification contract** implemented in `replayt_lifecycl
 It is the authority cited from `docs/SPEC_WEBHOOK_SIGNATURE.md` until replayt publishes a
 dedicated HTTP delivery document.
 
+## Source and licensing
+
+- **Provenance:** Maintainer-authored **consumer contract** for this repository — not a verbatim copy of upstream
+  documentation (the **replayt** PyPI distribution does not currently ship an equivalent HTTP signing spec in-package;
+  see **Upstream note** below).
+- **License / attribution:** Treat this file like the rest of the **replayt-lifecycle-webhooks** documentation: reuse
+  and redistribution follow the **same license and attribution rules** as the enclosing project once the repository
+  publishes them (for example **LICENSE** or packaging metadata). When citing externally, link to this file in **GitHub**
+  or your fork rather than stripping attribution.
+
 ## Signing scheme version
 
 - **v1** (document name: `replayt-lifecycle-hmac-sha256-v1`): rules in this file. No separate version header in v1; see **`docs/SPEC_WEBHOOK_SIGNATURE.md`** for how future versions will be introduced.

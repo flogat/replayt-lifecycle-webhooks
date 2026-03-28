@@ -1,4 +1,4 @@
-"""SPEC_REFERENCE_DOCUMENTATION / SPEC_AUTOMATED_TESTS backlog eb884da9 RD1–RD5."""
+"""SPEC_REFERENCE_DOCUMENTATION / SPEC_AUTOMATED_TESTS backlog eb884da9 RD1–RD8."""
 
 from __future__ import annotations
 
@@ -80,5 +80,78 @@ def test_rd4_ci_does_not_touch_reference_documentation_tree() -> None:
 def test_rd5_spec_automated_tests_traces_backlog_and_rows() -> None:
     spec = _read("docs/SPEC_AUTOMATED_TESTS.md")
     assert "## Backlog `eb884da9`" in spec
-    for n in range(1, 6):
+    for n in range(1, 9):
         assert f"| **RD{n}** |" in spec
+
+
+def test_rd6_committed_reference_docs_have_source_and_licensing() -> None:
+    """Each tracked markdown under docs/reference-documentation/ except README.md."""
+    root = _repo_root() / "docs" / "reference-documentation"
+    for path in sorted(root.glob("*.md")):
+        if path.name.upper() == "README.MD":
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "## Source and licensing" in text, path.name
+        lower = text.lower()
+        assert "provenance" in lower, path.name
+        assert "license" in lower or "attribution" in lower, path.name
+
+
+def test_rd7_spec_documents_repeatable_git_curl_rsync_snapshot_commands() -> None:
+    spec = _read("docs/SPEC_REFERENCE_DOCUMENTATION.md")
+    section = _h2_section(spec, "Repeatable snapshot commands (no script required)")
+    assert section.strip() != ""
+    lower = section.lower()
+    assert "git" in lower
+    assert "curl" in lower
+    assert "rsync" in lower
+    assert "_upstream_snapshot" in section
+
+
+def test_rd8_readme_or_contributing_states_refresh_small_clone_gitignored_bulk() -> (
+    None
+):
+    root_readme = _read("README.md")
+    ref_body = _h2_section(root_readme, "Reference documentation (optional)")
+    readme_ok = (
+        "when to refresh" in ref_body.lower()
+        and "small" in ref_body.lower()
+        and "_upstream_snapshot" in ref_body
+        and ("gitignore" in ref_body.lower() or "gitignored" in ref_body.lower())
+    )
+    contributing = _read("CONTRIBUTING.md")
+    contrib_body = _h2_section(
+        contributing, "Reference documentation snapshots (optional maintainer task)"
+    )
+    contributing_ok = (
+        "when" in contrib_body.lower()
+        and "small" in contrib_body.lower()
+        and "_upstream_snapshot" in contrib_body
+        and (
+            "gitignore" in contrib_body.lower() or "gitignored" in contrib_body.lower()
+        )
+    )
+    assert readme_ok or contributing_ok
+
+
+def test_optional_sync_script_exists_and_passes_bash_syntax_check() -> None:
+    root = _repo_root()
+    script = root / "scripts" / "sync_upstream_reference_docs.sh"
+    assert script.is_file()
+    proc = subprocess.run(
+        ["bash", "-n", str(script)],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_optional_sync_script_writes_only_under_upstream_snapshot() -> None:
+    text = _read("scripts/sync_upstream_reference_docs.sh")
+    assert "docs/reference-documentation/_upstream_snapshot" in text
+    assert "replayt-docs" in text
+    lowered = text.lower()
+    assert "vendor/" not in lowered
+    assert "third_party" not in lowered
