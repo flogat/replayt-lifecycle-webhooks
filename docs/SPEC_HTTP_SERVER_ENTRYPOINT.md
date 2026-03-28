@@ -101,6 +101,7 @@ When this backlog is implemented:
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — handler and WSGI factory; status table **H1–H8**.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — JSON **`error`** codes for client failures.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification and integrator logging rules.
+- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction when server or handler code logs headers or metadata.
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint; minimum coverage when **S** rows are active.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — declaring and justifying dependency changes.
 - **[README.md](../README.md)** — operator copy-paste for the canonical start command (once implemented).

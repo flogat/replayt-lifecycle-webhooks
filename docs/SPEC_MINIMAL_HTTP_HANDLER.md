@@ -79,3 +79,4 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON contract and typed parsing after a successful parse (see **README**).
 - **[README.md](../README.md)** — copy-paste examples for **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`**.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable JSON **`error`** codes, HTTP mapping, and logging boundaries for operators.
+- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction helpers when logging headers or structured metadata.

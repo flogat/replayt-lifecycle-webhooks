@@ -7,7 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Structured logging redaction** (phase **3**, backlog **Add structured logging helper that redacts sensitive keys by default** /
+  `fa75ecf3-a113-418e-99cc-aa0c31237eba`): **`replayt_lifecycle_webhooks.redaction`** with **`REDACTED_PLACEHOLDER`**,
+  **`redact_headers`** (case-insensitive defaults, **`X-Signature*`** prefix rule, **`extra_sensitive_names`**),
+  **`redact_mapping`** (shallow defaults, **`extra_sensitive_keys`**), **`format_safe_webhook_log_extra`**, and documented
+  **`DEFAULT_SENSITIVE_HEADER_NAMES`** / **`DEFAULT_SENSITIVE_MAPPING_KEYS`**. Re-exported from the package root **`__init__`**.
+  **`tests/test_redaction.py`** covers **SPEC_AUTOMATED_TESTS** **L1–L8**. No new mandatory runtime dependencies.
+
+### Fixed
+
+- **`format_safe_webhook_log_extra`** (phase **5** architecture review, same backlog **`fa75ecf3`**): removed an unused
+  **`extra_sensitive_keys`** keyword argument (it was ignored). Use **`redact_mapping(..., extra_sensitive_keys=...)`** for
+  non-header fields in **`Logger.*(..., extra={...})`**.
+
 ### Documentation
+
+- **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** (phase **2**, backlog **Add structured logging helper that redacts sensitive keys by default** /
+  `fa75ecf3-a113-418e-99cc-aa0c31237eba`): normative contract for **stdlib** **`logging`**, **`[REDACTED]`** placeholder,
+  default sensitive **HTTP header** names (incl. **`X-Signature*`** prefix rule) and **mapping** keys, public API surface
+  (**`redact_headers`**, **`redact_mapping`**, structured **`extra`** helper), **package-owned** logging rules, and spec
+  checklists **G1–G4** / test rows **L1–L8** in **SPEC_AUTOMATED_TESTS**. Cross-links from **SPEC_WEBHOOK_FAILURE_RESPONSES**
+  (**F6**), **DESIGN_PRINCIPLES**, **MISSION**, **README** (**Production logging and redaction**), **SPEC_MINIMAL_HTTP_HANDLER**,
+  **SPEC_HTTP_SERVER_ENTRYPOINT**.
 
 - **`docs/SPEC_LOCAL_WEBHOOK_DEMO.md`** (phase **2**, backlog **Add a one-command local demo script for webhook delivery** /
   `ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`): normative contract for a **local** signed **POST** demo — primary

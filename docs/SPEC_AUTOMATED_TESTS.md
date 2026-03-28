@@ -6,6 +6,8 @@
 - Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
 - Replace scaffold smoke tests with unit and boundary coverage (`2b4c6927-573a-463c-b59f-f2f91dfb6381`) — rows **A6–A10** under **Backlog `2b4c6927`** below.
 - Local demo webhook POST (`ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`) — checklist **D1–D9** in **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
+- Structured logging with default sensitive-key redaction (`fa75ecf3-a113-418e-99cc-aa0c31237eba`) — checklist **L1–L8** in
+  **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** and **Backlog `fa75ecf3`** below.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -27,6 +29,7 @@ behavioral coverage.
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
+| Structured logging + redaction (**L1–L8**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 
 ## CI entrypoint (invariant)
 
@@ -83,6 +86,10 @@ When **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** is implemented
 **`verify_lifecycle_webhook_signature`**; non-success HTTP maps to non-zero exit or equivalent tested behavior). Those
 tests **must not** replace items **1**–**3**.
 
+When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** is implemented, the suite **must**
+additionally include **network-free** tests that satisfy checklist **L1–L8** under **Backlog `fa75ecf3`** below. Those
+tests **must not** replace items **1**–**3**.
+
 ## Acceptance criteria (checklist)
 
 Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows **R1–R5** in
@@ -110,9 +117,27 @@ boundary rows **R1–R5**.
 | A9 | After verify, the success path invokes the caller hook (**H7**). | **`tests/test_http_handler.py`** — **`test_on_success_called_after_verify`** |
 | A10 | Tests **`import`** **`replayt_lifecycle_webhooks.signature`**, **`replayt_lifecycle_webhooks.handler`**, and **`replayt_lifecycle_webhooks.events`** directly (not only the package root), and exercise **`replayt_lifecycle_webhooks.serve`** where the reference server is in tree. | Search **`tests/`**; **`tests/test_reference_server.py`** for **serve** |
 
+## Backlog `fa75ecf3`: structured logging and redaction
+
+Checklist rows for **Add structured logging helper that redacts sensitive keys by default**
+(`fa75ecf3-a113-418e-99cc-aa0c31237eba`). Normative API and defaults: **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
+These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| L1 | **`REDACTED_PLACEHOLDER`** is exactly **`[REDACTED]`** (ASCII) per spec. | Unit test asserts constant or equivalent public re-export. |
+| L2 | **`redact_headers`** returns a **new** mapping; **`Authorization`** value (e.g. **`Bearer <secret>`**) is replaced and the **secret substring** does not appear in the redacted dict’s values. | Unit test |
+| L3 | **`redact_headers`** redacts **`Replayt-Signature`** (case-insensitive name) to **`[REDACTED]`**. | Unit test |
+| L4 | **`redact_headers`** redacts names matching the **`X-Signature`** **prefix** rule (e.g. **`X-Signature-Custom`**). | Unit test |
+| L5 | **`extra_sensitive_names`** causes a **non-default** header (e.g. **`X-Internal-Token`**) to be redacted. | Unit test |
+| L6 | **`redact_mapping`** performs **shallow** redaction for at least one default sensitive key (e.g. **`token`**, **`secret`**, or **`api_key`**) and preserves non-sensitive keys unchanged. | Unit test |
+| L7 | **`extra_sensitive_keys`** causes a **non-default** mapping key to be redacted (lowercase comparison per spec). | Unit test |
+| L8 | At least one test uses **`caplog`**, a **`logging.Handler`**, or equivalent to capture formatted log output showing **`[REDACTED]`** for sensitive fields and **asserting the absence** of a representative **high-entropy secret substring** (for example a fake bearer token) in the captured text. | Unit test (e.g. **`tests/test_redaction.py`** or module name aligned with implementation) |
+
 ## Related docs
 
 - **[README.md](../README.md)** — quick start; see **Running tests** for the canonical command.
 - **[MISSION.md](MISSION.md)** — success metrics and alignment with what CI runs.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — observable automation and explicit contracts.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
+- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L8**.

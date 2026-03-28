@@ -8,6 +8,8 @@ live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
 **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**, and the optional **reference server** contract
 **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (one documented start command when implemented).
 Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
+**Structured logging** with default **redaction** for sensitive headers and metadata:
+**[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
 Repository map and quick links:
 **[README.md](../README.md)**.
 
@@ -92,6 +94,9 @@ Integrators and operators are responsible for:
 - **Public** verification helper(s) with **unit tests** that do **not** require the network.
 - **[README.md](../README.md)** and spec docs integrators can copy from; **CHANGELOG.md** for user-visible changes.
 - **CI** that installs the package and runs the **automated test suite** (see **Success metrics (v0.x)**).
+- **Structured logging** helpers with **default redaction** for sensitive headers and metadata dict keys, per
+  **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**stdlib** **`logging`**; **no** new
+  mandatory dependencies; **L1–L8** in **SPEC_AUTOMATED_TESTS** when implemented).
 
 ### Out of scope
 
@@ -112,7 +117,8 @@ Integrators and operators are responsible for:
   claimed verification behavior, dependency contract checks, and spec-driven acceptance where implemented—**green CI** is part
   of “done.” It **must** also include **replayt** boundary coverage (**`import replayt`**, documented symbols **R1–R5**) per
   **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** in addition to **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**
-  (signature / parsing minima). The suite must **not** rely on placeholder tests (e.g. bare **`assert True`**) as the only
+  (signature / parsing minima). When **SPEC_STRUCTURED_LOGGING_REDACTION** is implemented, the suite **must** also satisfy
+  checklist **L1–L8** for that backlog. The suite must **not** rely on placeholder tests (e.g. bare **`assert True`**) as the only
   proof that verification or parsing works. Contributors run **`pytest tests -q`** for the full collection; **[README.md](../README.md)**
   (**Running tests**) lists optional focused commands.
 - **Releases and versioning** — Public API and dependency contract changes are tracked under **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)** as declared in **`CHANGELOG.md`**; cutting a release means updating the version in **`pyproject.toml`**, grouping **Unreleased** notes into a dated section, and publishing to PyPI (or the project’s canonical index) per maintainer practice. Integrators rely on the **replayt** lower bound and changelog for upgrade safety (**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**).
