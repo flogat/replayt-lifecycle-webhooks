@@ -20,6 +20,7 @@ behavioral coverage.
 | ----- | -------------- |
 | Signature verification behavior and **W** rows | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** |
 | Optional HTTP handler status codes (**H1–H8**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
+| Reference HTTP server entrypoint (**S1–S8**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | **replayt** dependency / doc contract | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
@@ -63,6 +64,11 @@ The suite **must** include **network-free** **pytest** tests that fail when the 
 
 Other modules (**mission** doc anchors, **replayt** dependency doc checks, and so on) may coexist; they do **not** replace
 items **1** and **2**.
+
+When **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** is implemented, the suite **must** additionally
+include **network-free** tests that fail if the documented **POST** webhook path or **`GET /health`** (or the spec-chosen
+health path) regresses per checklist **S3**, **S4**, and **S6** in that document. Those tests **must not** replace items
+**1**–**3** above.
 
 3. **Replayt boundary (dependency seam)** — At least one module **imports `replayt`** and asserts **documented** public
    symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.

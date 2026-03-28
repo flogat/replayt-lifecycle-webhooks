@@ -9,7 +9,10 @@ coverage integrators would otherwise reimplement (ecosystem pattern and scope: *
 **replayt `>=0.4.25`** (see `pyproject.toml`). Formal contract, bump policy, and acceptance criteria:
 **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Webhook signature verification contract and
 acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. **Optional minimal HTTP POST
-handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**. **Run / approval JSON envelope** (field
+handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
+**Reference HTTP server** (stdlib **WSGI**, no extra install): primary command **`python -m replayt_lifecycle_webhooks`**,
+**POST** on **`/webhook`** by default, **`GET /health`**. Details and acceptance **S1–S8**:
+**[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. Informative **JSON Schema** mirror (**Draft-07**):
 **[docs/schemas/lifecycle_webhook_payload-1-0.schema.json](docs/schemas/lifecycle_webhook_payload-1-0.schema.json)**.
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
@@ -62,6 +65,26 @@ python -m venv .venv
 # Windows: .venv\\Scripts\\activate
 pip install -e ".[dev]"
 ```
+
+## Reference HTTP server
+
+Primary start command (same handler semantics as **`make_lifecycle_webhook_wsgi_app`**; see
+**[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**):
+
+```bash
+export REPLAYT_LIFECYCLE_WEBHOOK_SECRET='your-shared-secret'
+python -m replayt_lifecycle_webhooks
+```
+
+Defaults: bind **`127.0.0.1`:**`8000`, webhook **POST** URL path **`/webhook`**, probe **`GET /health`** (body **`ok`**,
+plain text). Override with **`--host`**, **`--port`**, **`--webhook-path`**; optional **`--secret`** for local debugging
+(prefer the environment variable in runbooks so the shell does not retain the value).
+
+The **library** still does not read the environment for **`verify_lifecycle_webhook_signature`** or
+**`handle_lifecycle_webhook_post`**; only this **process** entrypoint loads **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** by
+default (**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**).
+
+Secondary console script (equivalent): **`replayt-lifecycle-webhooks-serve`**.
 
 ## Running tests
 
@@ -147,8 +170,9 @@ result = handle_lifecycle_webhook_post(
 # result.status, result.headers, result.body — e.g. 204 with empty body on success
 ```
 
-**WSGI (stdlib server):** **`make_lifecycle_webhook_wsgi_app`** returns an app you can mount or run with
-**`wsgiref.simple_server`** (no extra install beyond this package):
+**WSGI (stdlib server):** use **`python -m replayt_lifecycle_webhooks`** for routing (**`GET /health`**, **`POST /webhook`**
+by default), or build your own server from **`make_lifecycle_webhook_wsgi_app`** (single-path app, no health route) with
+**`wsgiref.simple_server`**:
 
 ```python
 import os
@@ -164,6 +188,8 @@ if __name__ == "__main__":
         print("Listening on http://127.0.0.1:8000")
         httpd.serve_forever()
 ```
+
+For a composite app in code (health + webhook path), use **`replayt_lifecycle_webhooks.serve.make_reference_lifecycle_webhook_wsgi_app`**.
 
 Optional **`on_success`** on both APIs runs only after verification and successful JSON parse.
 
@@ -208,11 +234,12 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H8** |
+| `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S8** |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |
-| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events` (`parse_lifecycle_webhook_event`, models) |
+| `src/replayt_lifecycle_webhooks/` | Python package: `signature`, `handler`, `events`, `serve`; **`__main__`** for **`python -m`** |
 | `pyproject.toml` | Package metadata |
 | `CHANGELOG.md` | Release notes (Keep a Changelog); keep **Unreleased** updated |
 | `.gitignore` | Ignores `path/` (doc placeholders), `.orchestrator/`, `.cursor/skills/`, and `AGENTS.md` (local tooling) |

@@ -12,6 +12,10 @@ dependencies = [
 Homepage = "https://github.com/flogat/replayt-lifecycle-webhooks"
 Issues = "https://github.com/flogat/replayt-lifecycle-webhooks/issues"
 
+[project.scripts]
+# Secondary alias; primary operator command is `python -m replayt_lifecycle_webhooks` (README).
+replayt-lifecycle-webhooks-serve = "replayt_lifecycle_webhooks.__main__:main"
+
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0",
