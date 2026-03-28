@@ -99,6 +99,8 @@ def test_l9_success_verified_delivery_no_raw_body_in_logs(caplog: pytest.LogCapt
         lifecycle_run_id="01JHBDUMMYRUNID000000000000",
         lifecycle_workflow_id="wf-email-triage",
     )
+    assert extra["webhook_method"] == "POST"
+    assert extra["webhook_path"] == "/webhook"
     assert extra["webhook_status_code"] == 204
     assert extra["webhook_body_bytes_len"] == len(raw_body)
     assert extra["webhook_headers"]["Authorization"] == REDACTED_PLACEHOLDER
