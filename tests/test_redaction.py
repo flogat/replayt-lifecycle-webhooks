@@ -78,7 +78,9 @@ def test_l7_extra_sensitive_mapping_keys() -> None:
     assert "xyzzy" not in str(redacted)
 
 
-def test_l9_success_verified_delivery_no_raw_body_in_logs(caplog: pytest.LogCaptureFixture) -> None:
+def test_l9_success_verified_delivery_no_raw_body_in_logs(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     """L9: 204-style success logging uses safe ``extra=`` only; raw body marker never appears."""
     caplog.set_level(logging.INFO)
     raw_body = b'{"distinctive":"L9_RAW_BODY_MARKER_7f3e9a2b_forbidden_in_logs"}'
@@ -139,7 +141,9 @@ def test_format_safe_webhook_log_extra_rejects_bool_body_len() -> None:
         format_safe_webhook_log_extra(webhook_body_bytes_len=True)  # type: ignore[arg-type]
 
 
-def test_l8_caplog_no_secret_in_formatted_output(caplog: pytest.LogCaptureFixture) -> None:
+def test_l8_caplog_no_secret_in_formatted_output(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     caplog.set_level(logging.INFO)
     secret = "fake_bearer_high_entropy_7Qk9mZp2vLx4nR8wY1tH6jF3cD0sA5bE"
     log = logging.getLogger("replayt_lifecycle_webhooks.tests.redaction_l8")
@@ -159,7 +163,16 @@ def test_default_sensitive_header_names_documents_builtins() -> None:
 
 
 def test_default_sensitive_mapping_keys_covers_spec_minimums() -> None:
-    for k in ("token", "secret", "api_key", "signature", "body", "raw_body", "payload", "request_body"):
+    for k in (
+        "token",
+        "secret",
+        "api_key",
+        "signature",
+        "body",
+        "raw_body",
+        "payload",
+        "request_body",
+    ):
         assert k in DEFAULT_SENSITIVE_MAPPING_KEYS
 
 

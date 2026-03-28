@@ -25,7 +25,9 @@ from replayt_lifecycle_webhooks.events import (
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures" / "events"
-_LIFECYCLE_SCHEMA_PATH = _REPO_ROOT / "docs" / "schemas" / "lifecycle_webhook_payload-1-0.schema.json"
+_LIFECYCLE_SCHEMA_PATH = (
+    _REPO_ROOT / "docs" / "schemas" / "lifecycle_webhook_payload-1-0.schema.json"
+)
 _SECRET = "fixture-verify-secret"
 
 
@@ -89,7 +91,10 @@ def test_approval_fixtures_share_approval_request_id() -> None:
     assert pending.event_type == "replayt.lifecycle.approval.pending"
     assert resolved.event_type == "replayt.lifecycle.approval.resolved"
     assert pending.correlation.approval_request_id == "apr_01jqexamplegate"
-    assert resolved.correlation.approval_request_id == pending.correlation.approval_request_id
+    assert (
+        resolved.correlation.approval_request_id
+        == pending.correlation.approval_request_id
+    )
     assert pending.detail.step_name == resolved.detail.step_name == "production_deploy"
     assert resolved.detail.decision == "approved"
     assert resolved.detail.resolved_by_role == "approver"
@@ -167,10 +172,16 @@ def test_i3_same_logical_emission_duplicate_delivery_fixtures_match() -> None:
         ("approval_pending.json", "approval_resolved.json"),
     ],
 )
-def test_i3_distinct_logical_emissions_distinct_event_ids(path_a: str, path_b: str) -> None:
+def test_i3_distinct_logical_emissions_distinct_event_ids(
+    path_a: str, path_b: str
+) -> None:
     """I3: distinct lifecycle emissions use distinct event_id values in fixtures."""
-    ea = parse_lifecycle_webhook_event(json.loads((_FIXTURES_DIR / path_a).read_bytes()))
-    eb = parse_lifecycle_webhook_event(json.loads((_FIXTURES_DIR / path_b).read_bytes()))
+    ea = parse_lifecycle_webhook_event(
+        json.loads((_FIXTURES_DIR / path_a).read_bytes())
+    )
+    eb = parse_lifecycle_webhook_event(
+        json.loads((_FIXTURES_DIR / path_b).read_bytes())
+    )
     assert ea.event_id != eb.event_id
 
 

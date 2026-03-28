@@ -31,7 +31,9 @@ def _call_wsgi(
     status_info: list[str] = []
     headers_info: list[list[tuple[str, str]]] = []
 
-    def start_response(status: str, headers: list[tuple[str, str]], exc_info: Any = None) -> None:
+    def start_response(
+        status: str, headers: list[tuple[str, str]], exc_info: Any = None
+    ) -> None:
         status_info.append(status)
         headers_info.append(headers)
 

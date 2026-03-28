@@ -35,7 +35,9 @@ def _secret_key(secret: str | bytes) -> bytes:
 def _parse_signature_header(value: str) -> bytes:
     raw = value.strip()
     if not raw:
-        raise WebhookSignatureFormatError("signature header is empty after stripping whitespace")
+        raise WebhookSignatureFormatError(
+            "signature header is empty after stripping whitespace"
+        )
     hex_part = raw[7:].strip() if raw.lower().startswith("sha256=") else raw
     try:
         digest = bytes.fromhex(hex_part)
@@ -81,10 +83,14 @@ def verify_lifecycle_webhook_signature(
     provided = _parse_signature_header(signature)
     expected = hmac.new(_secret_key(secret), body, hashlib.sha256).digest()
     if not hmac.compare_digest(expected, provided):
-        raise WebhookSignatureMismatchError("webhook signature does not match body and secret")
+        raise WebhookSignatureMismatchError(
+            "webhook signature does not match body and secret"
+        )
 
 
-def compute_lifecycle_webhook_signature_header(*, secret: str | bytes, body: bytes) -> str:
+def compute_lifecycle_webhook_signature_header(
+    *, secret: str | bytes, body: bytes
+) -> str:
     """Return a ``Replayt-Signature`` header value (``sha256=<hex>``) for ``body`` octets.
 
     Uses the same HMAC-SHA256 keying and digest as :func:`verify_lifecycle_webhook_signature`.

@@ -38,7 +38,9 @@ def _requires_python_from_pyproject() -> str:
 
 
 def _workflow_python_versions() -> list[str]:
-    text = (_repo_root() / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    text = (_repo_root() / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
     return re.findall(r'python-version:\s*["\']([\d.]+)["\']', text)
 
 
@@ -56,7 +58,9 @@ def test_pyproject_has_single_canonical_replayt_lower_bound() -> None:
         dep = raw.strip()
         if re.fullmatch(r"replayt>=\d+\.\d+\.\d+", dep):
             matches.append(dep)
-    assert len(matches) == 1, f"expected exactly one replayt>=M.m.p line, got {matches!r}"
+    assert len(matches) == 1, (
+        f"expected exactly one replayt>=M.m.p line, got {matches!r}"
+    )
 
 
 def test_readme_documents_integrator_compatibility() -> None:
@@ -77,8 +81,12 @@ def test_readme_documents_integrator_compatibility() -> None:
     assert not missing, f"README missing expected integrator strings: {missing}"
     versions = _workflow_python_versions()
     assert versions, "expected python-version in .github/workflows/ci.yml"
-    assert len(set(versions)) == 1, f"CI must pin one Python version for README alignment, got {versions!r}"
-    assert f"Python {versions[0]}" in text, "README must state the same Python minor CI uses (see SPEC A8)"
+    assert len(set(versions)) == 1, (
+        f"CI must pin one Python version for README alignment, got {versions!r}"
+    )
+    assert f"Python {versions[0]}" in text, (
+        "README must state the same Python minor CI uses (see SPEC A8)"
+    )
 
 
 def test_replayt_installed_version_meets_pyproject_lower_bound() -> None:
@@ -98,7 +106,9 @@ def test_spec_compatibility_matrix_matches_pyproject_replayt_floor() -> None:
     """SPEC A5: matrix documents the same lower bound as [project.dependencies]."""
     minimum = _replayt_lower_bound()
     floor = f">={minimum[0]}.{minimum[1]}.{minimum[2]}"
-    spec = (_repo_root() / "docs" / "SPEC_REPLAYT_DEPENDENCY.md").read_text(encoding="utf-8")
+    spec = (_repo_root() / "docs" / "SPEC_REPLAYT_DEPENDENCY.md").read_text(
+        encoding="utf-8"
+    )
     assert "## Compatibility matrix" in spec
     assert floor in spec
     assert "no upper bound" in spec.lower() or "upper bound" in spec.lower()
@@ -108,7 +118,9 @@ def test_a8_workflow_pins_single_python_minor() -> None:
     """SPEC A8: one interpreter version across CI jobs that set python-version."""
     versions = _workflow_python_versions()
     assert versions, "expected python-version entries in .github/workflows/ci.yml"
-    assert len(set(versions)) == 1, f"all CI jobs must use the same python-version, got {versions!r}"
+    assert len(set(versions)) == 1, (
+        f"all CI jobs must use the same python-version, got {versions!r}"
+    )
 
 
 def test_a8_spec_matrix_aligns_requires_python_ci_and_workflow_path() -> None:

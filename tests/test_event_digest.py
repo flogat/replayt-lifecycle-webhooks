@@ -153,7 +153,11 @@ def test_worked_example_run_failed_golden_matches_spec() -> None:
                 "event_id": "e3",
                 "correlation": {"run_id": "r1", "workflow_id": "w1"},
                 "summary": "s",
-                "detail": {"workflow_name": "My workflow", "error_code": "E", "error_message": "m"},
+                "detail": {
+                    "workflow_name": "My workflow",
+                    "error_code": "E",
+                    "error_message": "m",
+                },
             },
             "Digest: Run failed",
         ),
@@ -192,7 +196,9 @@ def test_worked_example_run_failed_golden_matches_spec() -> None:
         ),
     ],
 )
-def test_dg1_digest_first_line_covers_all_registry_types(fixture: dict, expected_first_line: str) -> None:
+def test_dg1_digest_first_line_covers_all_registry_types(
+    fixture: dict, expected_first_line: str
+) -> None:
     event = parse_lifecycle_webhook_event(fixture)
     text = rlw.lifecycle_event_to_digest_text(event)
     assert text.split("\n", 1)[0] == expected_first_line
@@ -275,7 +281,9 @@ def test_dg5_approval_resolved_rejected_digest_line() -> None:
         "detail": {"step_name": "st", "decision": "rejected"},
     }
     event = parse_lifecycle_webhook_event(fixture)
-    assert rlw.lifecycle_event_to_digest_text(event).startswith("Digest: Approval rejected\n")
+    assert rlw.lifecycle_event_to_digest_text(event).startswith(
+        "Digest: Approval rejected\n"
+    )
 
 
 def test_dg6_integrator_docs_mention_external_sharing_caution() -> None:

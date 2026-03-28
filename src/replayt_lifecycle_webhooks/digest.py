@@ -19,7 +19,13 @@ from .events import (
 __all__ = ["lifecycle_event_to_digest_record", "lifecycle_event_to_digest_text"]
 
 
-def _correlation_lines(event: RunStartedEvent | RunCompletedEvent | RunFailedEvent | ApprovalPendingEvent | ApprovalResolvedEvent) -> list[str]:
+def _correlation_lines(
+    event: RunStartedEvent
+    | RunCompletedEvent
+    | RunFailedEvent
+    | ApprovalPendingEvent
+    | ApprovalResolvedEvent,
+) -> list[str]:
     c = event.correlation
     lines = [
         f"Run: {c.run_id}",
@@ -40,11 +46,19 @@ def lifecycle_event_to_digest_text(
     """Return deterministic digest text for a parsed lifecycle event (SPEC_EVENT_DIGEST)."""
     lines: list[str]
     if isinstance(event, RunStartedEvent):
-        lines = ["Digest: Run started", f"Workflow: {event.detail.workflow_name}", *_correlation_lines(event)]
+        lines = [
+            "Digest: Run started",
+            f"Workflow: {event.detail.workflow_name}",
+            *_correlation_lines(event),
+        ]
         if event.detail.trigger is not None:
             lines.append(f"Trigger: {event.detail.trigger}")
     elif isinstance(event, RunCompletedEvent):
-        lines = ["Digest: Run completed (success)", f"Workflow: {event.detail.workflow_name}", *_correlation_lines(event)]
+        lines = [
+            "Digest: Run completed (success)",
+            f"Workflow: {event.detail.workflow_name}",
+            *_correlation_lines(event),
+        ]
         if event.detail.duration_ms is not None:
             lines.append(f"Duration (ms): {event.detail.duration_ms}")
     elif isinstance(event, RunFailedEvent):
@@ -56,11 +70,19 @@ def lifecycle_event_to_digest_text(
             f"Error: {event.detail.error_message}",
         ]
     elif isinstance(event, ApprovalPendingEvent):
-        lines = ["Digest: Approval requested", f"Step: {event.detail.step_name}", *_correlation_lines(event)]
+        lines = [
+            "Digest: Approval requested",
+            f"Step: {event.detail.step_name}",
+            *_correlation_lines(event),
+        ]
         if event.detail.policy_hint is not None:
             lines.append(f"Policy hint: {event.detail.policy_hint}")
     elif isinstance(event, ApprovalResolvedEvent):
-        head = "Digest: Approval approved" if event.detail.decision == "approved" else "Digest: Approval rejected"
+        head = (
+            "Digest: Approval approved"
+            if event.detail.decision == "approved"
+            else "Digest: Approval rejected"
+        )
         lines = [head, f"Step: {event.detail.step_name}", *_correlation_lines(event)]
         if event.detail.resolved_by_role is not None:
             lines.append(f"Resolved by role: {event.detail.resolved_by_role}")
@@ -71,7 +93,11 @@ def lifecycle_event_to_digest_text(
 
 
 def _digest_kind(
-    event: RunStartedEvent | RunCompletedEvent | RunFailedEvent | ApprovalPendingEvent | ApprovalResolvedEvent,
+    event: RunStartedEvent
+    | RunCompletedEvent
+    | RunFailedEvent
+    | ApprovalPendingEvent
+    | ApprovalResolvedEvent,
 ) -> str:
     if isinstance(event, RunStartedEvent):
         return "run_started"
@@ -91,7 +117,13 @@ def lifecycle_event_to_digest_record(event: LifecycleWebhookEvent) -> dict[str, 
     """Return the ``digest/1`` JSON record for a parsed lifecycle event (SPEC_EVENT_DIGEST)."""
     if not isinstance(
         event,
-        (RunStartedEvent, RunCompletedEvent, RunFailedEvent, ApprovalPendingEvent, ApprovalResolvedEvent),
+        (
+            RunStartedEvent,
+            RunCompletedEvent,
+            RunFailedEvent,
+            ApprovalPendingEvent,
+            ApprovalResolvedEvent,
+        ),
     ):
         msg = f"unsupported lifecycle event type: {type(event).__name__}"
         raise TypeError(msg)

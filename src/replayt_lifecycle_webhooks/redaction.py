@@ -90,18 +90,27 @@ def redact_headers(
     :data:`REDACTED_PLACEHOLDER`. Non-string values are coerced with ``str()`` for the
     returned mapping so the result is always ``dict[str, str]``.
     """
-    extra_lower = frozenset(n.strip().lower() for n in extra_sensitive_names if n.strip())
+    extra_lower = frozenset(
+        n.strip().lower() for n in extra_sensitive_names if n.strip()
+    )
     out: dict[str, str] = {}
     items = headers.items() if isinstance(headers, Mapping) else headers
     for raw_name, raw_val in items:
         name = str(raw_name)
-        val = REDACTED_PLACEHOLDER if _is_sensitive_header_name(name, extra_lower) else str(raw_val)
+        val = (
+            REDACTED_PLACEHOLDER
+            if _is_sensitive_header_name(name, extra_lower)
+            else str(raw_val)
+        )
         out[name] = val
     return out
 
 
 def _mapping_key_sensitive(key: str, extra_lower: frozenset[str]) -> bool:
-    return key.strip().lower() in DEFAULT_SENSITIVE_MAPPING_KEYS or key.strip().lower() in extra_lower
+    return (
+        key.strip().lower() in DEFAULT_SENSITIVE_MAPPING_KEYS
+        or key.strip().lower() in extra_lower
+    )
 
 
 def redact_mapping(
@@ -114,7 +123,9 @@ def redact_mapping(
     Keys are sensitive if their lowercased form is in :data:`DEFAULT_SENSITIVE_MAPPING_KEYS`
     or in ``extra_sensitive_keys`` (compared lowercased). Nested dicts are not traversed.
     """
-    extra_lower = frozenset(k.strip().lower() for k in extra_sensitive_keys if k.strip())
+    extra_lower = frozenset(
+        k.strip().lower() for k in extra_sensitive_keys if k.strip()
+    )
     out: dict[str, Any] = {}
     for k, v in mapping.items():
         if _mapping_key_sensitive(str(k), extra_lower):

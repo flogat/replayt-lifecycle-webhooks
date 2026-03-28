@@ -68,7 +68,7 @@ Once **`replayt`** is declared, remove or rewrite the **no runtime coupling** wo
 
 | replayt-lifecycle-webhooks | Supported replayt (declared in `pyproject.toml` for that release) | Python (`requires-python`) | CI-tested Python | Notes |
 | -------------------------- | ----------------------------------------------------------------- | -------------------------- | ---------------- | ----- |
-| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.12** (`.github/workflows/ci.yml`, `test` and `supply-chain` jobs) | Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
+| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.12** (`.github/workflows/ci.yml`, `lint`, `test`, and `supply-chain` jobs) | Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
 
 **Integrator expectation:** Install this package from PyPI (or a fork) and let the resolver pick **replayt** consistent with the row for your **replayt-lifecycle-webhooks** version. If you pin **replayt** independently, ensure it still satisfies the declared range; otherwise signature or payload assumptions may not match what this repo tests.
 

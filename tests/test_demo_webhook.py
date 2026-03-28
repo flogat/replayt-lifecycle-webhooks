@@ -44,7 +44,9 @@ def test_packaged_fixture_matches_repo_fixture(preset: str) -> None:
 def test_packaged_run_started_redelivery_matches_repo_fixture() -> None:
     """Duplicate-delivery fixture (I3) stays byte-identical under src and tests trees."""
     root = files("replayt_lifecycle_webhooks")
-    packaged = root.joinpath("fixtures", "events", "run_started_redelivery.json").read_bytes()
+    packaged = root.joinpath(
+        "fixtures", "events", "run_started_redelivery.json"
+    ).read_bytes()
     disk = (_TESTS_EVENTS / "run_started_redelivery.json").read_bytes()
     assert packaged == disk
     assert disk == (_TESTS_EVENTS / "run_started.json").read_bytes()
@@ -74,8 +76,12 @@ def test_d3_post_signed_demo_matches_verify() -> None:
         resp.__exit__ = lambda *a: None
         return resp
 
-    with patch("replayt_lifecycle_webhooks.demo_webhook.urllib.request.urlopen", fake_urlopen):
-        code = post_signed_demo(url="http://127.0.0.1:9/webhook", secret=secret, body=body, timeout=1.0)
+    with patch(
+        "replayt_lifecycle_webhooks.demo_webhook.urllib.request.urlopen", fake_urlopen
+    ):
+        code = post_signed_demo(
+            url="http://127.0.0.1:9/webhook", secret=secret, body=body, timeout=1.0
+        )
     assert code == 204
     verify_lifecycle_webhook_signature(secret=secret, body=body, signature=sig)
 
@@ -92,7 +98,9 @@ def test_d8_main_non_2xx_exit_code() -> None:
             fp=None,
         )
 
-    with patch("replayt_lifecycle_webhooks.demo_webhook.urllib.request.urlopen", fake_urlopen):
+    with patch(
+        "replayt_lifecycle_webhooks.demo_webhook.urllib.request.urlopen", fake_urlopen
+    ):
         rc = main(
             [
                 "--secret",
@@ -106,7 +114,9 @@ def test_d8_main_non_2xx_exit_code() -> None:
     assert rc == 1
 
 
-def test_d9_main_does_not_print_secret_or_signature(capsys: pytest.CaptureFixture[str]) -> None:
+def test_d9_main_does_not_print_secret_or_signature(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     """D9: default output must not echo the secret or full signature header."""
 
     def fake_urlopen(request, timeout=0):  # noqa: ANN001, ANN201
@@ -120,7 +130,9 @@ def test_d9_main_does_not_print_secret_or_signature(capsys: pytest.CaptureFixtur
         return resp
 
     secret = "very-long-demo-secret-value-xyz"
-    with patch("replayt_lifecycle_webhooks.demo_webhook.urllib.request.urlopen", fake_urlopen):
+    with patch(
+        "replayt_lifecycle_webhooks.demo_webhook.urllib.request.urlopen", fake_urlopen
+    ):
         rc = main(
             [
                 "--secret",

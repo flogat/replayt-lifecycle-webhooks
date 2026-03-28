@@ -62,10 +62,10 @@ behavioral coverage.
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
 
-- **Ruff** (**`ruff check`**, optional **`ruff format --check`**) is specified under **§ Backlog `5a3f5a7f`**. Until that
-  backlog is implemented, CI may omit **ruff**; once implemented, **removing** or **weakening** those steps requires
-  updating this document, **README.md** (if contributor commands change), and **CHANGELOG.md** when the change is
-  user-visible to contributors.
+- **Ruff** (**`ruff check`**, **`ruff format --check`**) is specified under **§ Backlog `5a3f5a7f`** and implemented in
+  **`.github/workflows/ci.yml`** (**`lint`** job). **Removing** or **weakening** those steps requires updating this
+  document, **README.md** (if contributor commands change), and **CHANGELOG.md** when the change is user-visible to
+  contributors.
 
 ## Prohibited patterns
 
@@ -251,8 +251,8 @@ runs on the same triggers and fails the workflow.
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
-| **RF1** | CI runs **`ruff check`** (non-zero exit on violations) on pushes and pull requests targeting **`master`** or **`mc/**`**, using **`.github/workflows/ci.yml`** (and any other merge-blocking workflow on those branches, if added later). | Review **`.github/workflows/ci.yml`**; optional CI log from a branch that violates **ruff** |
-| **RF2** | Optional but **recommended:** CI also runs **`ruff format --check`** with the same install posture and trigger surface as **RF1**. If maintainers omit it initially, note that under **CHANGELOG.md** **Unreleased** (**Documentation** or **Changed**) so the gap is explicit. | Review workflow + **CHANGELOG.md** |
+| **RF1** | CI runs **`ruff check`** (non-zero exit on violations) on pushes and pull requests targeting **`master`** or **`mc/**`**, using **`.github/workflows/ci.yml`** (and any other merge-blocking workflow on those branches, if added later). | **`tests/test_ci_ruff_wiring.py`**; review **`.github/workflows/ci.yml`**; optional CI log from a branch that violates **ruff** |
+| **RF2** | Optional but **recommended:** CI also runs **`ruff format --check`** with the same install posture and trigger surface as **RF1**. If maintainers omit it initially, note that under **CHANGELOG.md** **Unreleased** (**Documentation** or **Changed**) so the gap is explicit. | **`tests/test_ci_ruff_wiring.py`**; review workflow + **CHANGELOG.md** |
 | **RF3** | **`pyproject.toml`** contains a minimal **`[tool.ruff]`** section **when** Ruff defaults are insufficient for this tree (for example **`target-version`** alignment with **`requires-python`**, **`line-length`**, or **`extend-exclude`** for generated paths). If defaults are sufficient, the section may be absent; the **Builder** commit message or **CHANGELOG** should make that choice obvious to reviewers. | Review **`pyproject.toml`** |
 | **RF4** | **README.md** documents local **`ruff check`** in at least one line (for example near **Running tests**). If **`ruff format --check`** is enabled in CI, mention **`ruff format`** for contributors too. There is no **CONTRIBUTING.md** today; adding one is optional as long as **README.md** satisfies this row. | Doc review |
 | **RF5** | Wiring **ruff** into CI is recorded under **CHANGELOG.md** **Unreleased** when the change is user-visible to contributors (typical **Added** or **Changed**). | Release hygiene |
