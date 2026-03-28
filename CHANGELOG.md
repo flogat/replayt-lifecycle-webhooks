@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Webhook verification tests (phase **3**, backlog **Implement HMAC (or documented) request signing verification**):
+  success path uses **`hmac.compare_digest`**; failure **`str(exception)`** omits the secret and the header digest hex;
+  **verify-before-JSON** ordering covers **spec W8–W9** expectations in the suite.
 - **`verify_lifecycle_webhook_signature`** with **`LIFECYCLE_WEBHOOK_SIGNATURE_HEADER`** (`Replayt-Signature`),
   HMAC-SHA256 over the raw body, and exceptions **`WebhookSignatureMissingError`**,
   **`WebhookSignatureFormatError`**, **`WebhookSignatureMismatchError`** (stdlib **`hmac`** / **`hashlib`**,
