@@ -25,8 +25,9 @@ Handled in order: method check → signature verification → UTF-8 decode → J
 | **405** | Request method is not **POST**. Response includes **`Allow: POST`** where the API returns headers (callable result and WSGI). |
 | **401** | **`Replayt-Signature`** missing, empty, or malformed (same classes as **`WebhookSignatureMissingError`** / **`WebhookSignatureFormatError`** from verification). |
 | **403** | Header well-formed but MAC does not match body and secret (**`WebhookSignatureMismatchError`**). |
-| **400** | Verification succeeded but body is not valid UTF-8 or not valid JSON text (**`UnicodeDecodeError`** / **`json.JSONDecodeError`**). |
-| **204** | Success: verified, parsed JSON, empty response body. |
+| **400** | Verification succeeded but body is not valid UTF-8 or not valid JSON text (**`UnicodeDecodeError`** / **`json.JSONDecodeError`**), or (when **`dedup_store`** / **`replay_policy`** is set) JSON is not a top-level object. |
+| **422** | Unknown lifecycle **`event_type`** / validation failure (**`unknown_event_type`**), or **`occurred_at`** outside the replay window when **`replay_policy`** checks freshness (**`replay_rejected`**). |
+| **204** | Success: verified, parsed JSON, empty response body; also when **`dedup_store`** treats a duplicate **`event_id`** as an idempotent ack (**`on_success`** not invoked again). |
 
 **H5 (ordering):** If verification fails, the implementation must **not** return **400** for JSON errors. Garbage bodies with missing or wrong MAC must yield **401** or **403**, not **400**.
 
@@ -41,8 +42,8 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 | Symbol | Role |
 | ------ | ---- |
 | **`LifecycleWebhookHttpResult`** | Frozen dataclass: **`status`**, **`headers`** (tuple of pairs), **`body`** (bytes). |
-| **`handle_lifecycle_webhook_post`** | Keyword-only: **`secret`**, **`method`**, **`body`** (bytes), **`headers`**, optional **`on_success`** callback. Returns **`LifecycleWebhookHttpResult`**; does not raise for client errors. |
-| **`make_lifecycle_webhook_wsgi_app`** | Keyword-only: **`secret`**, optional **`on_success`**. Returns a WSGI **application** callable. |
+| **`handle_lifecycle_webhook_post`** | Keyword-only: **`secret`**, **`method`**, **`body`** (bytes), **`headers`**, optional **`on_success`**, optional **`dedup_store`**, optional **`replay_policy`**. Returns **`LifecycleWebhookHttpResult`**; does not raise for client errors. |
+| **`make_lifecycle_webhook_wsgi_app`** | Keyword-only: **`secret`**, optional **`on_success`**, optional **`dedup_store`**, optional **`replay_policy`**. Returns a WSGI **application** callable. |
 
 **Secret:** Passed by the caller only (same rule as **`verify_lifecycle_webhook_signature`**). The library does not read the environment.
 

@@ -155,8 +155,8 @@ Maps to backlog acceptance: *documented strategy*, *code path rejects or de-dupl
 | Item | Status | Notes |
 | ---- | ------ | ----- |
 | Normative spec (this file) | **Done** (phase **2**) | — |
-| Public helpers + in-memory store + handler hooks | **Pending** (phase **3**+) | Follow **RP2**–**RP3** |
-| **pytest** **RP4** / **RP5** | **Pending** (phase **3**+) | **RP5** overlaps **I4** |
+| Public helpers + in-memory store + handler hooks | **Done** (phase **3**) | **`replay_protection`**, optional **`handle_lifecycle_webhook_post`** kwargs |
+| **pytest** **RP4** / **RP5** | **Done** (phase **3**) | **`tests/test_replay_protection.py`**; **RP5** still overlaps **I4** |
 
 ## Related docs
 

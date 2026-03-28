@@ -14,11 +14,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   post-MAC processing order; **`occurred_at`** freshness with recommended **900s** max age and **300s** future skew;
   reserved optional **`Replayt-Delivery-Id`**, **`Replayt-Webhook-Timestamp`**, **`Replayt-Nonce`** headers;
   **`LifecycleWebhookDedupStore`** + **`InMemoryLifecycleWebhookDedupStore`** requirements; optional
-  **`handle_lifecycle_webhook_post`** extension points; acceptance **RP0**–**RP5** (tests **pending** phase **3**).
+  **`handle_lifecycle_webhook_post`** extension points; acceptance **RP0**–**RP5** (implementation and tests: phase **3**).
   Cross-links from **README**, **MISSION**, **DESIGN_PRINCIPLES**, **SPEC_DELIVERY_IDEMPOTENCY**, **SPEC_WEBHOOK_SIGNATURE**,
   **SPEC_MINIMAL_HTTP_HANDLER**, **SPEC_WEBHOOK_FAILURE_RESPONSES**, **SPEC_AUTOMATED_TESTS** (new **Backlog `f9677140`** table).
 
 ### Added
+
+- **Replay protection hooks** (phase **3**, backlog **Add replay protection and idempotency hooks for deliveries** /
+  `f9677140-0803-41c7-9d1c-82fc85f25f8d`): **`LifecycleWebhookDedupStore`** protocol, **`InMemoryLifecycleWebhookDedupStore`**
+  (TTL + injectable clock), **`LifecycleWebhookReplayPolicy`** and **`ensure_occurred_at_within_replay_window`** /
+  **`ReplayFreshnessRejected`** for payload **`occurred_at`** freshness (defaults **900s** max age, **300s** future skew).
+  **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`** accept optional **`dedup_store`** and
+  **`replay_policy`**: post-verify order is freshness then **`event_id`** claim; duplicate **`event_id`** returns **204**
+  without **`on_success`**; stale **`occurred_at`** returns **422** **`replay_rejected`**. **`tests/test_replay_protection.py`**
+  covers **RP4** / **RP5** and helpers. See **`docs/SPEC_REPLAY_PROTECTION.md`**.
 
 - **Structured logging redaction** (phase **3**, backlog **Add structured logging helper that redacts sensitive keys by default** /
   `fa75ecf3-a113-418e-99cc-aa0c31237eba`): **`replayt_lifecycle_webhooks.redaction`** with **`REDACTED_PLACEHOLDER`**,

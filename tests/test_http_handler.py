@@ -6,17 +6,23 @@ import hashlib
 import hmac
 import io
 import json
+from datetime import datetime, timezone
 from http import HTTPStatus
+from pathlib import Path
 from typing import Any
 
 from replayt_lifecycle_webhooks.handler import (
     handle_lifecycle_webhook_post,
     make_lifecycle_webhook_wsgi_app,
 )
+from replayt_lifecycle_webhooks.replay_protection import LifecycleWebhookReplayPolicy
 from replayt_lifecycle_webhooks.signature import LIFECYCLE_WEBHOOK_SIGNATURE_HEADER
 
 _SECRET = "handler-test-secret"
 _GOOD_BODY = b'{"event":"run_finished","run_id":"r1"}'
+_EVENTS_FIXTURE = (
+    Path(__file__).resolve().parent / "fixtures" / "events" / "run_started.json"
+)
 
 
 def _sign(body: bytes, secret: str | bytes = _SECRET) -> str:
@@ -214,8 +220,20 @@ def test_h8_error_messages_match_failure_response_spec() -> None:
         "signature_malformed": "The signature header is not a valid v1 value.",
         "signature_mismatch": "Signature does not match the request body.",
         "invalid_json": "Request body is not valid UTF-8 JSON.",
+        "invalid_payload_shape": (
+            "Valid JSON but not the expected top-level object for lifecycle events."
+        ),
+        "unknown_event_type": "Event type is not supported by this integration.",
+        "replay_rejected": (
+            "Delivery is outside the accepted time window or was already processed."
+        ),
     }
     raw = b"not-json"
+    stale_event = json.loads(_EVENTS_FIXTURE.read_bytes())
+    stale_event["occurred_at"] = "2020-01-01T00:00:00Z"
+    stale_body = json.dumps(
+        stale_event, separators=(",", ":"), ensure_ascii=True
+    ).encode("utf-8")
     cases: list[tuple[Any, str]] = [
         (
             handle_lifecycle_webhook_post(
@@ -258,6 +276,38 @@ def test_h8_error_messages_match_failure_response_spec() -> None:
                 headers=_fake_headers(_sign(raw)),
             ),
             "invalid_json",
+        ),
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET,
+                method="POST",
+                body=b"[1]",
+                headers=_fake_headers(_sign(b"[1]")),
+                replay_policy=LifecycleWebhookReplayPolicy(check_occurred_at=False),
+            ),
+            "invalid_payload_shape",
+        ),
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET,
+                method="POST",
+                body=_GOOD_BODY,
+                headers=_fake_headers(_sign(_GOOD_BODY)),
+                replay_policy=LifecycleWebhookReplayPolicy(check_occurred_at=False),
+            ),
+            "unknown_event_type",
+        ),
+        (
+            handle_lifecycle_webhook_post(
+                secret=_SECRET,
+                method="POST",
+                body=stale_body,
+                headers=_fake_headers(_sign(stale_body)),
+                replay_policy=LifecycleWebhookReplayPolicy(
+                    now=lambda: datetime(2026, 3, 28, 15, 0, 0, tzinfo=timezone.utc),
+                ),
+            ),
+            "replay_rejected",
         ),
     ]
     for result, code in cases:
