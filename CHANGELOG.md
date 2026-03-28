@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`tests/test_mission_docs.py`** (phase **3**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
+  `3f27ad86-ef1f-4883-8cc2-cee94ba301cb`): regression tests for **MISSION** / **REPLAYT_ECOSYSTEM_IDEA** / **README**
+  acceptance (ecosystem section, **Core-gap** named once in **MISSION**, link targets, success metrics, README avoids
+  repeating the taxonomy token).
 - **Lifecycle JSON validation** (phase 3, backlog **Map replayt run and approval events to webhook payload shapes** /
   `076a56b7-afd9-4778-b46a-4dc8875a431f`): **`parse_lifecycle_webhook_event`**, **`LIFECYCLE_WEBHOOK_EVENT_TYPES`**,
   and Pydantic models for the envelope and each **`event_type`** in **`docs/EVENTS.md`**. Golden fixtures live under
