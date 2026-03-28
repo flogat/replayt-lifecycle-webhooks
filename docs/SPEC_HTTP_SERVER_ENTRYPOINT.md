@@ -45,7 +45,7 @@ script) if **README** labels one as **primary** and **`pyproject.toml`** lists b
 | ----------- | ------ |
 | **Documented command** | **`python -m <module>`** and/or **`console_scripts`** entry defined in **`pyproject.toml`**; README shows the **same** command operators should use in docs and runbooks. |
 | **Bind address** | Configurable **host** and **port** with **documented defaults** (suggested defaults: host **`127.0.0.1`**, port **`8000`** for local use; production examples may show **`0.0.0.0`** behind a proxy). |
-| **Webhook route** | **POST** requests that carry lifecycle deliveries **must** use a **single documented default path** (recommended: **`/`** or **`/webhook`**—pick one per implementation and do not change without **CHANGELOG** + spec update). If the CLI accepts a path override, defaults **must** remain stable. |
+| **Webhook route** | **POST** requests that carry lifecycle deliveries **must** use a **single documented default path** (recommended: **`/`** or **`/webhook`**—pick one per implementation and do not change without **CHANGELOG** + spec update). If the CLI accepts a path override, defaults **must** remain stable. **Package default (backlog `2cf0f4fb`):** **`/webhook`**. |
 | **Handler semantics** | **POST** handling **must** match **SPEC_MINIMAL_HTTP_HANDLER** (statuses **405** / **401** / **403** / **400** / **204**, JSON error bodies per **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** where that spec applies). |
 
 ## Health / readiness
