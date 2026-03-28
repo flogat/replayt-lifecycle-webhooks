@@ -21,15 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests that assert the canonical **replayt** `>=M.m.p` line in `pyproject.toml` and README compatibility anchors from
   **SPEC_REPLAYT_DEPENDENCY.md**.
 
-### Documentation
-
-- **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** specification and acceptance checklist for incoming webhook signature
-  verification (public API shape, test matrix, upstream alignment, non-goals); pointer to
-  **`reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`** as contract authority for phase 3.
-- **`docs/MISSION.md`:** mission, scope, and success criteria for signed lifecycle webhooks.
-- **`README.md`:** link to the webhook signature spec, project layout row, reference-documentation note, and a
-  copy-paste verification example using the public API.
-
 ### Changed
 
 - **CI:** the test job runs `pip install -e .` before `pip install -e ".[dev]"` so the minimal editable install is
@@ -37,8 +28,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- **README:** compatibility one-liner, how to check the installed **replayt** version, PyPI and release-history links,
-  and [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues) for breakage reports.
+- **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** specification and acceptance checklist for incoming webhook signature
+  verification (public API shape, test matrix, upstream alignment, non-goals); pointer to
+  **`reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`** as in-repo contract authority when upstream HTTP delivery
+  docs are absent.
+- **`docs/MISSION.md`:** mission, scope, and success criteria for signed lifecycle webhooks.
+- **`README.md`:** link to the webhook signature spec, project layout row, reference-documentation note, and a
+  copy-paste verification example using the public API; compatibility one-liner, how to check the installed **replayt**
+  version, PyPI and release-history links, and [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues)
+  for breakage reports.
 - **`pyproject.toml`:** `Homepage` and `Issues` URLs for this repository.
 - **`docs/SPEC_REPLAYT_DEPENDENCY.md`:** formal spec for the **replayt** lower bound (acceptance criteria, bump policy,
   CI expectations); linked from README and design/dependency docs.

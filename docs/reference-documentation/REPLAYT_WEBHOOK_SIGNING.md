@@ -1,8 +1,8 @@
 # Replayt-compatible lifecycle webhook signing (consumer contract)
 
-This file records the **verification contract** implemented in `replayt_lifecycle_webhooks`
-as of the phase-3 backlog work. It is the authority cited from
-`docs/SPEC_WEBHOOK_SIGNATURE.md` until replayt publishes a dedicated HTTP delivery document.
+This file records the **verification contract** implemented in `replayt_lifecycle_webhooks`.
+It is the authority cited from `docs/SPEC_WEBHOOK_SIGNATURE.md` until replayt publishes a
+dedicated HTTP delivery document.
 
 ## Algorithm and material
 

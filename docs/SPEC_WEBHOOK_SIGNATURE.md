@@ -9,7 +9,9 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
 
 ## Goals
 
-- Ship **one primary public helper** (plus any minimal types or exceptions re-exported from the same module) that answers: “Does this raw request body match the signature, given the shared secret and relevant headers?”
+- Ship **one primary public helper** — **`verify_lifecycle_webhook_signature`** — plus minimal types and exceptions
+  re-exported from the package, answering: “Does this raw request body match the signature, given the shared secret and
+  relevant headers?”
 - Prefer **`hmac` / `hashlib` in the standard library** unless replayt’s documented algorithm requires otherwise.
 - **No framework** in scope for this backlog: no Starlette/FastAPI/Flask middleware as the *required* delivery path—only the verification primitive.
 
@@ -25,13 +27,13 @@ Exact **header names**, **signature encoding** (hex vs base64, with or without a
 
 If upstream prose is hard to find, capture the authoritative reference (URL, version, or a checked-in excerpt under **`docs/reference-documentation/`**) and cite it from this spec in a follow-up edit.
 
-**Authority in this repo (phase 3):** **[`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`](reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)** — HMAC-SHA256 over the raw body; header **`Replayt-Signature`** with value **`sha256=<hex>`** or bare hex. Upstream **replayt** `0.4.25` does not ship HTTP webhook signing docs in the installed package; treat that file as the consumer contract until upstream publishes a delivery spec.
+**Authority in this repo:** **[`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`](reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)** — HMAC-SHA256 over the raw body; header **`Replayt-Signature`** with value **`sha256=<hex>`** or bare hex. Upstream **replayt** `0.4.25` does not ship HTTP webhook signing docs in the installed package; treat that file as the consumer contract until upstream publishes a delivery spec.
 
 ## Contract (package behavior)
 
 ### Public API
 
-- **Single callable** (name chosen by Builder, e.g. `verify_…` / `check_…`) exported from the installable package (`replayt_lifecycle_webhooks`).
+- **Callable** **`verify_lifecycle_webhook_signature`** exported from the installable package (`replayt_lifecycle_webhooks`).
 - **Document in the docstring** (and README):
   - **Parameters:** signing secret (type: `str` or `bytes`—pick one documented convention), **raw body** (`bytes`; callers must not pre-parse JSON before verification unless upstream signs a derived string), and **header values** (either explicit parameters or a small mapping type—document which headers are required vs optional).
   - **Expected headers / body shape** at a **high level** (e.g. “raw POST body as received; signature in header X”).
