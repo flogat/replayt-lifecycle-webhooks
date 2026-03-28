@@ -5,6 +5,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import urllib.error
+from importlib.resources import files
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -38,6 +39,15 @@ def test_packaged_fixture_matches_repo_fixture(preset: str) -> None:
     packaged = load_demo_fixture_bytes(preset)
     disk = (_TESTS_EVENTS / f"{preset}.json").read_bytes()
     assert packaged == disk
+
+
+def test_packaged_run_started_redelivery_matches_repo_fixture() -> None:
+    """Duplicate-delivery fixture (I3) stays byte-identical under src and tests trees."""
+    root = files("replayt_lifecycle_webhooks")
+    packaged = root.joinpath("fixtures", "events", "run_started_redelivery.json").read_bytes()
+    disk = (_TESTS_EVENTS / "run_started_redelivery.json").read_bytes()
+    assert packaged == disk
+    assert disk == (_TESTS_EVENTS / "run_started.json").read_bytes()
 
 
 def test_d3_demo_signing_verify_agrees_on_run_completed() -> None:

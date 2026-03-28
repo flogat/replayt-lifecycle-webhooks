@@ -33,6 +33,7 @@ _SECRET = "fixture-verify-secret"
     ("filename", "expected_event_type"),
     [
         ("run_started.json", "replayt.lifecycle.run.started"),
+        ("run_started_redelivery.json", "replayt.lifecycle.run.started"),
         ("run_completed.json", "replayt.lifecycle.run.completed"),
         ("run_failed.json", "replayt.lifecycle.run.failed"),
         ("approval_pending.json", "replayt.lifecycle.approval.pending"),
@@ -138,6 +139,7 @@ def test_event_fixtures_validate_against_informative_json_schema() -> None:
     validator = jsonschema.Draft7Validator(schema)
     for name in (
         "run_started.json",
+        "run_started_redelivery.json",
         "run_completed.json",
         "run_failed.json",
         "approval_pending.json",
@@ -145,6 +147,59 @@ def test_event_fixtures_validate_against_informative_json_schema() -> None:
     ):
         data = json.loads((_FIXTURES_DIR / name).read_bytes())
         validator.validate(data)
+
+
+def test_i3_same_logical_emission_duplicate_delivery_fixtures_match() -> None:
+    """I3 / SPEC_DELIVERY_IDEMPOTENCY: same logical emission reuses event_id and body octets."""
+    first = (_FIXTURES_DIR / "run_started.json").read_bytes()
+    redelivery = (_FIXTURES_DIR / "run_started_redelivery.json").read_bytes()
+    assert first == redelivery
+    a = parse_lifecycle_webhook_event(json.loads(first))
+    b = parse_lifecycle_webhook_event(json.loads(redelivery))
+    assert a.event_id == b.event_id == "7b2c4f8e-0d01-4a5b-9c3d-111111111111"
+
+
+@pytest.mark.parametrize(
+    ("path_a", "path_b"),
+    [
+        ("run_started.json", "run_completed.json"),
+        ("run_completed.json", "run_failed.json"),
+        ("approval_pending.json", "approval_resolved.json"),
+    ],
+)
+def test_i3_distinct_logical_emissions_distinct_event_ids(path_a: str, path_b: str) -> None:
+    """I3: distinct lifecycle emissions use distinct event_id values in fixtures."""
+    ea = parse_lifecycle_webhook_event(json.loads((_FIXTURES_DIR / path_a).read_bytes()))
+    eb = parse_lifecycle_webhook_event(json.loads((_FIXTURES_DIR / path_b).read_bytes()))
+    assert ea.event_id != eb.event_id
+
+
+def test_i4_duplicate_signed_post_idempotent_side_effects_pattern() -> None:
+    """I4: integrator dedupes on event_id so two identical deliveries do not double side effects."""
+    raw = (_FIXTURES_DIR / "run_started.json").read_bytes()
+    mac = hmac.new(_SECRET.encode("utf-8"), raw, hashlib.sha256).hexdigest()
+    header = f"sha256={mac}"
+    side_effects: list[str] = []
+    seen_ids: set[str] = set()
+
+    def on_success(payload: object) -> None:
+        event = parse_lifecycle_webhook_event(payload)
+        if event.event_id in seen_ids:
+            return
+        seen_ids.add(event.event_id)
+        side_effects.append("processed")
+
+    for _ in range(2):
+        result = handle_lifecycle_webhook_post(
+            secret=_SECRET,
+            method="POST",
+            body=raw,
+            headers={LIFECYCLE_WEBHOOK_SIGNATURE_HEADER: header},
+            on_success=on_success,
+        )
+        assert result.status == 204
+    assert side_effects == ["processed"]
+    assert seen_ids == {"7b2c4f8e-0d01-4a5b-9c3d-111111111111"}
 
 
 def test_parse_rejects_non_object() -> None:

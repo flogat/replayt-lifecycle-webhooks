@@ -120,8 +120,8 @@ silently.
 | Item | Status | Follow-up |
 | ---- | ------ | --------- |
 | **Normative docs** (this file + **EVENTS.md** cross-links) | **Done** (phase **2** spec) | — |
-| **Fixtures / synthetic examples** use **distinct** **`event_id`** per **distinct** logical event in examples | **Done** (examples in **EVENTS.md**) | Builder: add explicit **duplicate-delivery** fixture pair (same **`event_id`**, same bytes) when implementing **I3** tests. |
-| **Automated tests** assert **`event_id`** uniqueness rules per logical event in fixtures | **Planned** (phase **3**+) | See **Acceptance criteria** below. |
+| **Fixtures / synthetic examples** use **distinct** **`event_id`** per **distinct** logical event in examples | **Done** (examples in **EVENTS.md**) | Duplicate-delivery pair: **`run_started.json`** / **`run_started_redelivery.json`** (same bytes, same **`event_id`**) under **`tests/fixtures/events/`** and packaged **`replayt_lifecycle_webhooks/fixtures/events/`**. |
+| **Automated tests** assert **`event_id`** uniqueness rules per logical event in fixtures | **Done** (phase **3**) | **`tests/test_lifecycle_events.py`** (**I3**, **I4**); see **Acceptance criteria** below. |
 | **Upstream replayt** HTTP emitter guarantees | **Out of scope** for this repo | Track in **CHANGELOG** / **SPEC_REPLAYT_DEPENDENCY** when discovered. |
 
 ## Acceptance criteria (Builder / Tester)
@@ -132,8 +132,8 @@ Use with Spec gate and later phases.
 |---|-----------|--------------|
 | I1 | **EVENTS.md** **`event_id`** description matches this spec (primary dedupe key; sender SHOULD stabilize per logical emission). | Doc review |
 | I2 | **README** troubleshooting references duplicate delivery and points here. | Doc review |
-| I3 | **Tests** (when implemented): for at least one **`event_type`**, two serialized payloads that represent the **same** logical emission use the **same** **`event_id`**; distinct emissions use **distinct** **`event_id`** (fixtures or generated examples). | **pytest** |
-| I4 | Optional **duplicate POST** test: same raw body + signature twice → handler / integrator path acknowledges idempotent success without double side effect (where the project exposes a test seam). | **pytest** (phase **3**+ if in scope) |
+| I3 | **Tests** (when implemented): for at least one **`event_type`**, two serialized payloads that represent the **same** logical emission use the **same** **`event_id`**; distinct emissions use **distinct** **`event_id`** (fixtures or generated examples). | **`tests/test_lifecycle_events.py`** (**pytest**) |
+| I4 | Optional **duplicate POST** test: same raw body + signature twice → handler / integrator path acknowledges idempotent success without double side effect (where the project exposes a test seam). | **`tests/test_lifecycle_events.py`** **`test_i4_duplicate_signed_post_idempotent_side_effects_pattern`** (**pytest**) |
 
 ## Related docs
 
