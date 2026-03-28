@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`README.md`** (phase **5**, architecture review, backlog **Define canonical webhook payload and event envelope schema** /
+  `df51dbf9`): **Run / approval payload** paragraph notes **`parse_lifecycle_webhook_event`** and present **`schema_version`**
+  against **`SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`**.
 - **`docs/EVENTS.md`** (phase **3**, backlog **Define canonical webhook payload and event envelope schema** / `df51dbf9`): **T4**
   documents unsupported **`schema_version`** as a validation failure.
 - **`docs/EVENTS.md`**, **`docs/schemas/lifecycle_webhook_payload-1-0.schema.json`**, **`README.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**

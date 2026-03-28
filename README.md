@@ -169,7 +169,8 @@ Optional **`on_success`** on both APIs runs only after verification and successf
 
 **Run / approval payload shape:** after verification, pass the parsed JSON object to
 **`parse_lifecycle_webhook_event`** to validate against **[docs/EVENTS.md](docs/EVENTS.md)** (discriminated by
-**`event_type`**). Combine with **`on_success`** when using **`handle_lifecycle_webhook_post`**.
+**`event_type`**; if **`schema_version`** is present it must match **`SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`**).
+Combine with **`on_success`** when using **`handle_lifecycle_webhook_post`**.
 
 **Lower-level verification only:**
 
