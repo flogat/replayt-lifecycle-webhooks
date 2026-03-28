@@ -17,6 +17,8 @@
   **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**; **Backlog `069e0240`** table below.
 - Add replayt dependency declaration and compatibility matrix stub (`8b16060d-f6e6-4111-bed2-4978b965ff52`) — **SPEC_REPLAYT_DEPENDENCY** matrix (**Python** / CI-tested columns), **A8**, stub checklist when **`replayt`** is absent from **`pyproject.toml`**.
 
+- Run **ruff** in CI for fast lint (and optionally format) feedback (`5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`) — checklist **RF1**–**RF5** under **Backlog `5a3f5a7f`** below.
+
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
 ## Purpose and normative status
@@ -42,6 +44,7 @@ behavioral coverage.
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
+| **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 
 ## CI entrypoint (invariant)
 
@@ -58,6 +61,11 @@ behavioral coverage.
 
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
+
+- **Ruff** (**`ruff check`**, **`ruff format --check`**) is specified under **§ Backlog `5a3f5a7f`** and implemented in
+  **`.github/workflows/ci.yml`** (**`lint`** job). **Removing** or **weakening** those steps requires updating this
+  document, **README.md** (if contributor commands change), and **CHANGELOG.md** when the change is user-visible to
+  contributors.
 
 ## Prohibited patterns
 
@@ -214,6 +222,40 @@ These extend **§ Minimum behavioral coverage** item **4**; they do not replace 
 | **API1** (events) | **`replayt_lifecycle_webhooks.events`** **`__all__`** matches the **Events / parsing** row in **that row’s order** (same symbols as re-exported from the root). | **`tests/test_public_api.py`** — **`test_events___all___matches_spec_events_row`** |
 | **API2** | **SPEC_PUBLIC_API** § **Unsupported imports** module paths exist (internal until **1.0**). | **`tests/test_public_api.py`** — **`test_spec_lists_documented_internal_modules_as_importable`** |
 | **API3** | **SPEC_PUBLIC_API** § **Deprecation policy** documents **CHANGELOG** visibility (**Deprecated**), **minor** / **0.x** notice period, and related bullets. | **`tests/test_public_api.py`** — **`test_spec_public_api_deprecation_policy_mentions_changelog_and_notice`** |
+
+## Backlog `5a3f5a7f`: **ruff** in CI (lint and optional format)
+
+Checklist rows for **Run ruff in CI for fast style and lint feedback**
+(`5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`). These extend **A1–A5**; they do not replace **pytest** coverage, **R1–R5**, or
+items **1**–**4** in **§ Minimum behavioral coverage**.
+
+**Workflow surface:** The repository’s primary GitHub Actions workflow is **`.github/workflows/ci.yml`**, which already
+runs on **push** and **pull_request** for **`master`** and **`mc/**`** (and **`workflow_dispatch`**). **RF1** applies to
+that file unless the project adds another workflow that is also required for merges to **`master`** / **`mc/**`**—if so,
+**every** such workflow must run the same **ruff** gates (or the spec and **CHANGELOG.md** must record a deliberate
+exception).
+
+**Scope on disk:** **`ruff check`** must cover Python sources the project maintains for this package—at minimum
+**`src/`** and **`tests/`** (and any other tracked project Python at the repo root the maintainer group treats as
+in-scope). Prefer repository-root discovery via **`pyproject.toml`** / Ruff defaults; use **`[tool.ruff]`**
+**`extend-exclude`** only with a short comment or spec note when excluding generated or third-party trees.
+
+**Install posture:** The workflow must use a **ruff** compatible with **`[project.optional-dependencies] dev`** (for
+example after **`pip install -e ".[dev]"`**, or by installing **ruff** with a pin that satisfies the same lower bound).
+Do **not** rely on a system **ruff** with an unknown version.
+
+**Runtime / structure:** Keep wall-clock cost low—acceptable patterns include (a) a **dedicated parallel job** that only
+installs **ruff** (or **dev** extras) and runs **ruff**, or (b) **steps** appended to the existing **`test`** job after
+**dev** dependencies are installed. **Supply-chain-only** jobs do **not** need **ruff** if the **lint**/**test** job still
+runs on the same triggers and fails the workflow.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **RF1** | CI runs **`ruff check`** (non-zero exit on violations) on pushes and pull requests targeting **`master`** or **`mc/**`**, using **`.github/workflows/ci.yml`** (and any other merge-blocking workflow on those branches, if added later). | **`tests/test_ci_ruff_wiring.py`**; review **`.github/workflows/ci.yml`**; optional CI log from a branch that violates **ruff** |
+| **RF2** | Optional but **recommended:** CI also runs **`ruff format --check`** with the same install posture and trigger surface as **RF1**. If maintainers omit it initially, note that under **CHANGELOG.md** **Unreleased** (**Documentation** or **Changed**) so the gap is explicit. | **`tests/test_ci_ruff_wiring.py`**; review workflow + **CHANGELOG.md** |
+| **RF3** | **`pyproject.toml`** contains a minimal **`[tool.ruff]`** section **when** Ruff defaults are insufficient for this tree (for example **`target-version`** alignment with **`requires-python`**, **`line-length`**, or **`extend-exclude`** for generated paths). If defaults are sufficient, the section may be absent; the **Builder** commit message or **CHANGELOG** should make that choice obvious to reviewers. | Review **`pyproject.toml`** |
+| **RF4** | **README.md** documents local **`ruff check`** in at least one line (for example near **Running tests**). If **`ruff format --check`** is enabled in CI, mention **`ruff format`** for contributors too. There is no **CONTRIBUTING.md** today; adding one is optional as long as **README.md** satisfies this row. | Doc review |
+| **RF5** | Wiring **ruff** into CI is recorded under **CHANGELOG.md** **Unreleased** when the change is user-visible to contributors (typical **Added** or **Changed**). | Release hygiene |
 
 ## Related docs
 

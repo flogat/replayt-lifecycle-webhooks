@@ -38,6 +38,9 @@ where = ["src"]
 [tool.setuptools.package-data]
 "replayt_lifecycle_webhooks" = ["fixtures/events/*.json"]
 
+[tool.ruff]
+target-version = "py311"
+
 [tool.pytest.ini_options]
 markers = [
   "replayt_boundary: import replayt and assert EVENTS.md-listed symbols (SPEC_REPLAYT_BOUNDARY_TESTS).",

@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **CI / tooling** (phase **3**, backlog **Run ruff in CI for fast style and lint feedback** /
+  `5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`): **`.github/workflows/ci.yml`** runs a parallel **`lint`** job (**`ruff check`**
+  and **`ruff format --check`** on **`src/`** and **`tests/`**, **`pip install "ruff>=0.6.0"`**) on the same triggers as
+  **`test`** / **`supply-chain`**. **`pyproject.toml`** adds **`[tool.ruff]`** with **`target-version = "py311"`** (aligned
+  with **`requires-python`**). **`README.md`** documents local **ruff** commands. **`tests/test_ci_ruff_wiring.py`**
+  asserts the workflow and **`dev`** extra. **Ruff format** applied across **`src/`** and **`tests/`** so format check
+  passes in CI.
+  **`docs/SPEC_REPLAYT_DEPENDENCY.md`** compatibility matrix lists the **`lint`** job with **`test`** and **`supply-chain`**.
+
 ### Documentation
+
+- **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **2**, backlog **Run ruff in CI for fast style and lint feedback** /
+  `5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`): normative **ruff** CI acceptance (**RF1**–**RF5**)—workflow triggers (**`master`**, **`mc/**`**), **`ruff check`** required, optional **`ruff format --check`**, **`[tool.ruff]`** only when defaults are insufficient, **README.md** local command line, **CHANGELOG** when CI wires **ruff**; traceability bullet and **CI entrypoint** cross-links.
+
+- **`docs/MISSION.md`**, **`docs/REPLAYT_ECOSYSTEM_IDEA.md`**, **`docs/SPEC_REPLAYT_DEPENDENCY.md`** (phase **5**, architecture review, backlog **Run ruff in CI for fast style and lint feedback** /
+  `5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`): **MISSION** success metrics and ecosystem pitch mention **ruff** with **pytest**; **SPEC_REPLAYT_DEPENDENCY** **CI** § states **`lint`**, **`test`**, and **`supply-chain`** share the pinned **Python** version.
 
 - **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`** (phase **2**, backlog **Establish structured logging and redaction for webhook handling** /
   `6ea52b2b-ff96-4511-a9f8-d5d9ed6d3711`): backlog **acceptance mapping** (`6ea52b2b`), operator **never-log checklist**,

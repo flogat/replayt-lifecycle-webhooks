@@ -41,7 +41,7 @@ Without a declared, **justified** **replayt** dependency range and a **published
 
 - **`pip install -e .`** must succeed in CI (same standard as local editable install).
 - Supply-chain / dev workflows that use **`pip install -e ".[dev]"`** remain valid; they must still resolve **replayt** from the declared dependency range.
-- **Python version:** The canonical automated test job uses the interpreter pinned in **`.github/workflows/ci.yml`** (currently **3.12**). That version is the **tested** Python for the full **`pytest tests`** collection; it must appear in the **compatibility matrix** below. **`requires-python`** in `pyproject.toml` may be broader (e.g. `>=3.11`); document both so integrators do not assume every supported Python minor is exercised in CI unless you add matrix jobs.
+- **Python version:** Jobs in **`.github/workflows/ci.yml`** that set **`python-version`** (**`lint`**, **`test`**, **`supply-chain`**) pin the same interpreter (currently **3.12**). That version is the **tested** Python for the full **`pytest tests`** collection and for **ruff**; it must appear in the **compatibility matrix** below. **`requires-python`** in `pyproject.toml` may be broader (e.g. `>=3.11`); document both so integrators do not assume every supported Python minor is exercised in CI unless you add matrix jobs.
 
 ## When `replayt` is not listed in `pyproject.toml` yet (stub / pre-coupling)
 
@@ -68,7 +68,7 @@ Once **`replayt`** is declared, remove or rewrite the **no runtime coupling** wo
 
 | replayt-lifecycle-webhooks | Supported replayt (declared in `pyproject.toml` for that release) | Python (`requires-python`) | CI-tested Python | Notes |
 | -------------------------- | ----------------------------------------------------------------- | -------------------------- | ---------------- | ----- |
-| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.12** (`.github/workflows/ci.yml`, `test` and `supply-chain` jobs) | Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
+| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.12** (`.github/workflows/ci.yml`, `lint`, `test`, and `supply-chain` jobs) | Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
 
 **Integrator expectation:** Install this package from PyPI (or a fork) and let the resolver pick **replayt** consistent with the row for your **replayt-lifecycle-webhooks** version. If you pin **replayt** independently, ensure it still satisfies the declared range; otherwise signature or payload assumptions may not match what this repo tests.
 

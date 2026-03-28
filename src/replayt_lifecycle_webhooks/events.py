@@ -170,7 +170,15 @@ LIFECYCLE_WEBHOOK_EVENT_TYPES: tuple[str, ...] = (
 )
 
 
-def parse_lifecycle_webhook_event(data: Any) -> RunStartedEvent | RunCompletedEvent | RunFailedEvent | ApprovalPendingEvent | ApprovalResolvedEvent:
+def parse_lifecycle_webhook_event(
+    data: Any,
+) -> (
+    RunStartedEvent
+    | RunCompletedEvent
+    | RunFailedEvent
+    | ApprovalPendingEvent
+    | ApprovalResolvedEvent
+):
     """Validate a mapping (e.g. from ``json.loads``) against ``docs/EVENTS.md``.
 
     Raises:

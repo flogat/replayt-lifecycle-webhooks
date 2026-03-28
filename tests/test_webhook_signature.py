@@ -101,7 +101,9 @@ def test_tampered_body() -> None:
 @pytest.mark.parametrize("signature", [None, "", "   ", "\t"])
 def test_missing_or_blank_signature(signature: str | None) -> None:
     with pytest.raises(WebhookSignatureMissingError):
-        verify_lifecycle_webhook_signature(secret=_SECRET, body=_BODY, signature=signature)
+        verify_lifecycle_webhook_signature(
+            secret=_SECRET, body=_BODY, signature=signature
+        )
 
 
 def test_malformed_signature_not_hex() -> None:
@@ -128,7 +130,9 @@ def test_header_constant_documents_wire_name() -> None:
 
 def test_compare_digest_used_for_success_path() -> None:
     """MAC equality uses constant-time comparison on digest bytes (spec: cryptographic hygiene)."""
-    with patch.object(hmac, "compare_digest", wraps=hmac.compare_digest) as mock_compare:
+    with patch.object(
+        hmac, "compare_digest", wraps=hmac.compare_digest
+    ) as mock_compare:
         verify_lifecycle_webhook_signature(
             secret=_SECRET,
             body=_BODY,
@@ -146,7 +150,9 @@ def test_failure_messages_do_not_contain_secret() -> None:
         verify_lifecycle_webhook_signature(secret=secret, body=body, signature=None)
     failures.append(missing.value)
     with pytest.raises(WebhookSignatureFormatError) as bad_hex:
-        verify_lifecycle_webhook_signature(secret=secret, body=body, signature="sha256=zz")
+        verify_lifecycle_webhook_signature(
+            secret=secret, body=body, signature="sha256=zz"
+        )
     failures.append(bad_hex.value)
     with pytest.raises(WebhookSignatureMismatchError) as mismatch:
         verify_lifecycle_webhook_signature(
@@ -158,7 +164,9 @@ def test_failure_messages_do_not_contain_secret() -> None:
     tampered = bytearray(body)
     tampered[0] ^= 0x01
     with pytest.raises(WebhookSignatureMismatchError) as tampered_exc:
-        verify_lifecycle_webhook_signature(secret=secret, body=bytes(tampered), signature=sig)
+        verify_lifecycle_webhook_signature(
+            secret=secret, body=bytes(tampered), signature=sig
+        )
     failures.append(tampered_exc.value)
     needle = secret.lower()
     for err in failures:
@@ -198,7 +206,9 @@ def test_verify_before_json_single_path() -> None:
     bad = bytearray(raw)
     bad[0] ^= 0x02
     with pytest.raises(WebhookSignatureMismatchError):
-        verify_lifecycle_webhook_signature(secret=_SECRET, body=bytes(bad), signature=header)
+        verify_lifecycle_webhook_signature(
+            secret=_SECRET, body=bytes(bad), signature=header
+        )
     # Tampered bytes must not be treated as authentic JSON for application logic.
     with pytest.raises(json.JSONDecodeError):
         json.loads(bytes(bad).decode("utf-8"))

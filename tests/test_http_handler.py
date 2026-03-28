@@ -61,7 +61,9 @@ def _call_wsgi(
     status_info: list[str] = []
     headers_info: list[list[tuple[str, str]]] = []
 
-    def start_response(status: str, headers: list[tuple[str, str]], exc_info: Any = None) -> None:
+    def start_response(
+        status: str, headers: list[tuple[str, str]], exc_info: Any = None
+    ) -> None:
         status_info.append(status)
         headers_info.append(headers)
 
@@ -101,7 +103,9 @@ def test_h3_bad_signature_4xx() -> None:
         body=_GOOD_BODY,
         headers={},
     )
-    _assert_json_error(missing, status=HTTPStatus.UNAUTHORIZED, error="signature_required")
+    _assert_json_error(
+        missing, status=HTTPStatus.UNAUTHORIZED, error="signature_required"
+    )
 
     malformed = handle_lifecycle_webhook_post(
         secret=_SECRET,
@@ -109,7 +113,9 @@ def test_h3_bad_signature_4xx() -> None:
         body=_GOOD_BODY,
         headers=_fake_headers("sha256=zz"),
     )
-    _assert_json_error(malformed, status=HTTPStatus.UNAUTHORIZED, error="signature_malformed")
+    _assert_json_error(
+        malformed, status=HTTPStatus.UNAUTHORIZED, error="signature_malformed"
+    )
 
     mismatch = handle_lifecycle_webhook_post(
         secret=_SECRET,
@@ -117,7 +123,9 @@ def test_h3_bad_signature_4xx() -> None:
         body=_GOOD_BODY,
         headers=_fake_headers(_sign(_GOOD_BODY, secret="other-secret")),
     )
-    _assert_json_error(mismatch, status=HTTPStatus.FORBIDDEN, error="signature_mismatch")
+    _assert_json_error(
+        mismatch, status=HTTPStatus.FORBIDDEN, error="signature_mismatch"
+    )
 
 
 def test_h4_bad_json_400_after_good_signature() -> None:
@@ -141,7 +149,9 @@ def test_h5_verify_before_json_invalid_signature_bad_json_is_401_not_400() -> No
         body=garbage,
         headers={},
     )
-    _assert_json_error(no_sig, status=HTTPStatus.UNAUTHORIZED, error="signature_required")
+    _assert_json_error(
+        no_sig, status=HTTPStatus.UNAUTHORIZED, error="signature_required"
+    )
 
     wrong_mac = handle_lifecycle_webhook_post(
         secret=_SECRET,
@@ -149,7 +159,9 @@ def test_h5_verify_before_json_invalid_signature_bad_json_is_401_not_400() -> No
         body=garbage,
         headers=_fake_headers(_sign(garbage, secret="other")),
     )
-    _assert_json_error(wrong_mac, status=HTTPStatus.FORBIDDEN, error="signature_mismatch")
+    _assert_json_error(
+        wrong_mac, status=HTTPStatus.FORBIDDEN, error="signature_mismatch"
+    )
 
 
 def test_method_not_allowed_405() -> None:
