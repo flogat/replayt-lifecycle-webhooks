@@ -145,6 +145,10 @@ them to **generic** client responses per **SPEC_WEBHOOK_SIGNATURE** (**W9**).
 
 **Logging:** Log **stable `error` codes**, **HTTP status**, and opaque **request / correlation ids** you already use.
 Optional: first **8** characters of **`event_id`** from **verified** payloads for support—**never** log unverified JSON.
+When emitting **header maps** or **structured** metadata, use the package **redaction** helpers described in
+**[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (or equivalent integrator-side
+redaction) so **defaults** mask **`Authorization`**, **`Replayt-Signature`**, **`X-Signature*`**-family headers, and
+related keys.
 
 ## Reference handler vs this spec
 
@@ -161,6 +165,7 @@ wrappers may still extend responses (for example **`request_id`**) per the optio
 | F3 | Guidance forbids returning or logging **secrets**, **full signature header**, **computed MAC**, and **raw payload** excerpts. | Review **§ What not to log or return** and **SPEC_WEBHOOK_SIGNATURE**. |
 | F4 | Semantics align with **SPEC_MINIMAL_HTTP_HANDLER** status table and **verify-before-JSON** ordering. | Cross-check both specs. |
 | F5 | **Unknown `event_type`** and **replay / freshness** are documented with v1 **MAC** limitations and application-layer responsibility. | Review **§ Stale timestamp / replay** and post-verification table. |
+| F6 | **Structured logging / redaction** defaults and test rows **L1–L8** are specified for header- and metadata-shaped fields. | Review **SPEC_STRUCTURED_LOGGING_REDACTION**; **SPEC_AUTOMATED_TESTS** backlog **`fa75ecf3`**. |
 
 ## Related docs
 
@@ -168,3 +173,4 @@ wrappers may still extend responses (for example **`request_id`**) per the optio
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — reference handler, **H1–H8**, status table.
 - **[EVENTS.md](EVENTS.md)** — supported **`event_type`** values; unknown types after verify.
 - **[README.md](../README.md)** — integrator entry and operator runbook pointer.
+- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — tested redaction helpers and integrator extension points.

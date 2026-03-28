@@ -169,6 +169,15 @@ and notes that **v1** MAC verification does **not** include a wire timestamp.
 See the spec for full tables and examples. **`handle_lifecycle_webhook_post`** returns **`application/json`** bodies
 (**`error`** + **`message`**) for **405** / **401** / **403** / **400** per that spec; **204** stays empty.
 
+**Production logging and redaction:** use stdlib **`logging`** (or your stack’s structured wrapper) with **stable**
+**`error`** codes, HTTP status, and correlation ids—**not** raw secrets. When you log **HTTP headers** or **dict-like**
+metadata (for example **`Logger.info(..., extra={...})`**), run them through this package’s **redaction** helpers once
+implemented (**[docs/SPEC_STRUCTURED_LOGGING_REDACTION.md](docs/SPEC_STRUCTURED_LOGGING_REDACTION.md)**): defaults mask
+**`Authorization`**, **`Replayt-Signature`**, **`X-Signature*`**-family headers, cookies, and common token-like mapping
+keys; you can extend the sensitive-name lists for deployment-specific headers. **Do not** log the **raw body**, **full**
+signature header, **computed MAC**, or **HMAC secret** (same boundaries as
+**[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**).
+
 **Drop-in HTTP handler:** **`handle_lifecycle_webhook_post`** maps a POST, raw body, and header map to status **405** /
 **401** / **403** / **400** / **204** as in **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
 **MAC mismatch** uses **403**; missing or malformed **`Replayt-Signature`** uses **401**. Verification runs before
@@ -260,6 +269,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `replayt_lifecycle_webhooks.demo_webhook` | **`python -m replayt_lifecycle_webhooks.demo_webhook`**: signed POST to default **`/webhook`** URL |
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
+| `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L8** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (e.g. `REPLAYT_WEBHOOK_SIGNING.md`) |

@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** (phase **2**, backlog **Add structured logging helper that redacts sensitive keys by default** /
+  `fa75ecf3-a113-418e-99cc-aa0c31237eba`): normative contract for **stdlib** **`logging`**, **`[REDACTED]`** placeholder,
+  default sensitive **HTTP header** names (incl. **`X-Signature*`** prefix rule) and **mapping** keys, public API surface
+  (**`redact_headers`**, **`redact_mapping`**, structured **`extra`** helper), **package-owned** logging rules, and spec
+  checklists **G1–G4** / test rows **L1–L8** in **SPEC_AUTOMATED_TESTS**. Cross-links from **SPEC_WEBHOOK_FAILURE_RESPONSES**
+  (**F6**), **DESIGN_PRINCIPLES**, **MISSION**, **README** (**Production logging and redaction**), **SPEC_MINIMAL_HTTP_HANDLER**,
+  **SPEC_HTTP_SERVER_ENTRYPOINT**.
+
 - **`docs/SPEC_LOCAL_WEBHOOK_DEMO.md`** (phase **2**, backlog **Add a one-command local demo script for webhook delivery** /
   `ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`): normative contract for a **local** signed **POST** demo — primary
   **`python -m replayt_lifecycle_webhooks.demo_webhook`**, **v1** MAC alignment with **SPEC_WEBHOOK_SIGNATURE**, default
