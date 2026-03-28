@@ -362,7 +362,7 @@ Use with Spec gate and implementation phases. **JSON shape** rows **E1–E6**; *
 | E4 | **`summary`** is suitable for notifications (short, human-readable). | Review examples and any golden fixtures. |
 | E5 | Spec states **verification-before-JSON** and **prohibited content** (no secrets, no full prompts in required fields). | Review **this file** and **SPEC_WEBHOOK_SIGNATURE.md**. |
 | E6 | **replayt** core need not change for consumers to adopt this contract; drift from upstream product docs is called out in **CHANGELOG.md** when discovered. | Maintainer review alongside **SPEC_REPLAYT_DEPENDENCY.md**. |
-| E7 | **`event_id`** semantics align with **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** (stable per logical emission, dedupe, TTL guidance). | Doc review; tests **I3** when implemented. |
+| E7 | **`event_id`** semantics align with **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** (stable per logical emission, dedupe, TTL guidance). | Doc review; **pytest** **I3** / **I4** in **`tests/test_lifecycle_events.py`**. |
 
 ### Typed payloads (`0b929c17`)
 

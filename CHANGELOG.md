@@ -35,6 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   from **README** (**Troubleshooting**), **MISSION**, **DESIGN_PRINCIPLES**, **SPEC_WEBHOOK_SIGNATURE**,
   **SPEC_WEBHOOK_FAILURE_RESPONSES**, **REPLAYT_WEBHOOK_SIGNING**.
 
+- **`docs/EVENTS.md`** (**E7** verification row) and **`docs/SPEC_AUTOMATED_TESTS.md`** (traceability table, minimum coverage
+  item **2**, **Backlog `4280c054`** **I3**/**I4** table, **Related docs**): phase **5** architecture review so automated-test
+  docs match implemented **SPEC_DELIVERY_IDEMPOTENCY** coverage.
+
 - **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** (phase **2**, backlog **Add structured logging helper that redacts sensitive keys by default** /
   `fa75ecf3-a113-418e-99cc-aa0c31237eba`): normative contract for **stdlib** **`logging`**, **`[REDACTED]`** placeholder,
   default sensitive **HTTP header** names (incl. **`X-Signature*`** prefix rule) and **mapping** keys, public API surface
