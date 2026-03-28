@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`CHANGELOG.md`** (phase **5**, architect review, Mission Control backlog **Add optional docs/reference-documentation
+  snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): **Unreleased** notes for backlog **`eb884da9`** now describe
+  **RD1**–**RD8** enforcement and the **`2db687f4`** refinement (older bullets had drifted to **RD1**–**RD5** only).
+
 - **`tests/test_reference_documentation_workflow.py`**, **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**,
   **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**, **`CONTRIBUTING.md`** (phase **3**, builder, Mission Control backlog
   **Add optional docs/reference-documentation snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): **pytest** now
@@ -32,17 +36,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **`reference-documentation`** substring so merge gating cannot depend on that tree.
 
 - **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **3**, backlog **Add optional
-  reference-documentation snapshot workflow** / `eb884da9-5273-4ce0-b105-5130c6b1ac79`): acceptance **RD1**–**RD5** are
-  enforced by **`tests/test_reference_documentation_workflow.py`** (folder **README**, root **README** refresh notes,
+  reference-documentation snapshot workflow** / `eb884da9-5273-4ce0-b105-5130c6b1ac79`): **`tests/test_reference_documentation_workflow.py`**
+  now enforces **RD1**–**RD8** (baseline **RD1**–**RD5** from this backlog; **RD6**–**RD8** from refinement **`2db687f4`**, see bullets above)—folder **README**, root **README** refresh notes,
   **`.gitignore`** / **`git check-ignore`**, **CI** workflow must not reference **`docs/reference-documentation/`**, trace
-  table in **SPEC_AUTOMATED_TESTS**).
+  table in **SPEC_AUTOMATED_TESTS**, **Source and licensing** on committed excerpts, **§ Repeatable snapshot commands**, **README** / **CONTRIBUTING** small-clone copy).
 
 - **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/reference-documentation/README.md`**, **`README.md`** (project layout,
   **Reference documentation**), **`.gitignore`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**,
   **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **2**, backlog **Add optional reference-documentation snapshot workflow** /
   `eb884da9-5273-4ce0-b105-5130c6b1ac79`): normative optional **`docs/reference-documentation/`** workflow—committed
   excerpts vs gitignored **`_upstream_snapshot/`**, **how to refresh** (manual copy and optional future **`scripts/`**
-  helper), **CI** must not require upstream doc mirroring; acceptance **RD1**–**RD5**.
+  helper), **CI** must not require upstream doc mirroring; acceptance rows grew from **RD1**–**RD5** to **RD1**–**RD8** under **`2db687f4`** (see bullets above).
 
 - **`README.md`** (phase **3**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
   `23e2da29-8042-4721-a1eb-e44a2076273f`): operator block uses **`## Troubleshooting`**, **`## Approval webhook flow`**, and
