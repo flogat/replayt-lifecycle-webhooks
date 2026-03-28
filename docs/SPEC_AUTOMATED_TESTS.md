@@ -128,9 +128,9 @@ When **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** ships formatters in-tree, 
 **network-free** tests that satisfy **DG1**–**DG6** under **Backlog `069e0240`** below. Those tests **must not** replace
 items **1**–**3**.
 
-When **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** is in scope for backlog **`23e2da29`**, the
-suite **must** additionally include **network-free** tests that satisfy **OP1**–**OP8** under **Backlog `23e2da29`**
-below. Those tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
+Backlog **`23e2da29`** (**[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**) is covered by **network-free**
+**pytest** rows **OP1**–**OP8** under **Backlog `23e2da29`** below (**`tests/test_readme_operator_sections.py`**). Those
+tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
 
 ## Acceptance criteria (checklist)
 
