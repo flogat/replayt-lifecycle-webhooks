@@ -103,7 +103,7 @@ package.
   optional maintainer script under `scripts/` may be added later to automate copying from a path you configure; it will
   never be required for **CI** or `pytest`.
 
-Normative layout and acceptance checklist **RD1**–**RD8** (pytest enforces **RD1**–**RD5** today):
+Normative layout and acceptance checklist **RD1**–**RD8** (pytest enforces the full set via **`tests/test_reference_documentation_workflow.py`**):
 **[docs/SPEC_REFERENCE_DOCUMENTATION.md](docs/SPEC_REFERENCE_DOCUMENTATION.md)**.
 
 ## Quick start

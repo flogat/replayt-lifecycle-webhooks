@@ -9,13 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **`tests/test_reference_documentation_workflow.py`**, **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**,
+  **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**, **`CONTRIBUTING.md`** (phase **3**, builder, Mission Control backlog
+  **Add optional docs/reference-documentation snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): **pytest** now
+  covers **RD6**–**RD8** (committed excerpt **Source and licensing** content, **§ Repeatable snapshot commands** in the
+  normative spec, **README** / **CONTRIBUTING** refresh and repo-size copy); checklist tables and cross-links call out
+  **RD1**–**RD8** as automated.
+
 - **`docs/SPEC_REFERENCE_DOCUMENTATION.md`**, **`docs/reference-documentation/README.md`**,
   **`docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**,
   **`CONTRIBUTING.md`** (phase **2**, spec lead, Mission Control backlog **Add optional docs/reference-documentation
   snapshot workflow** / `2db687f4-23d2-4aff-8827-c3da11cdf283`): **when to refresh**, **licensing and attribution**
   (**RD6**), documented **git** / **curl** / **rsync** snapshot patterns (**RD7**), **default clone** / repo-size
-  expectations (**RD8**); **CONTRIBUTING.md** entry for the optional maintainer task; **pytest** still enforces **RD1**–**RD5**
-  only.
+  expectations (**RD8**); **CONTRIBUTING.md** entry for the optional maintainer task.
 
 - **`CHANGELOG.md`** (phase **6**, security review, backlog **Add optional reference-documentation snapshot workflow** /
   `eb884da9-5273-4ce0-b105-5130c6b1ac79`): reviewed `git diff master -- . ':!.orchestrator'` (**docs**, **`.gitignore`**,

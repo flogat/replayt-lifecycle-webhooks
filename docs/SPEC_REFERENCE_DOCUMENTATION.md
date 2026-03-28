@@ -2,7 +2,7 @@
 
 **Backlog (normative traceability):** Add optional reference-documentation snapshot workflow — Mission Control
 **`2db687f4-23d2-4aff-8827-c3da11cdf283`** (this refinement). Earlier traceability id **`eb884da9-5273-4ce0-b105-5130c6b1ac79`**
-names the same workflow where **pytest** rows **RD1**–**RD5** are defined.
+names the same workflow where **pytest** rows **RD1**–**RD8** are defined.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), contributors, agent workflows.
 
@@ -129,8 +129,7 @@ After any snapshot, **verify** `git status` does not list files under **`_upstre
 
 ## Acceptance (checklist)
 
-Use for Spec gate, Builder, and Tester sign-off. Rows **RD1**–**RD5** are enforced by **`pytest`** today; **RD6**–**RD8**
-are **spec / maintainer-review** until optional **pytest** extension lands.
+Use for Spec gate, Builder, and Tester sign-off. Rows **RD1**–**RD8** are enforced by **`pytest`** via **`tests/test_reference_documentation_workflow.py`**.
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
@@ -138,10 +137,10 @@ are **spec / maintainer-review** until optional **pytest** extension lands.
 | **RD2** | Root **`README.md`** **Reference documentation (optional)** section links **`docs/reference-documentation/README.md`** and this spec; includes a **how to refresh** note (manual copy into **`_upstream_snapshot/`** and/or optional **`scripts/`** helper). | **`pytest`** (same module) |
 | **RD3** | **`.gitignore`** ignores **`docs/reference-documentation/_upstream_snapshot/`** (entire subtree). | **`pytest`** (same module; **`git check-ignore -v`** on a path under that directory) |
 | **RD4** | **CI** (e.g. **`.github/workflows/ci.yml`**) does **not** require fetching or generating a large upstream documentation mirror under **`docs/reference-documentation/`**. | **`pytest`** (same module) |
-| **RD5** | **SPEC_AUTOMATED_TESTS.md** lists backlog **`eb884da9`** and **RD1**–**RD5** for traceability. | **`pytest`** (same module) |
-| **RD6** | Each committed excerpt under **`docs/reference-documentation/`** (except the folder **`README.md`**) includes **provenance** and **license/attribution** per **§ Licensing and attribution** (see **`REPLAYT_WEBHOOK_SIGNING.md`** as the reference shape). | Maintainer review / optional future **`pytest`** |
-| **RD7** | This spec documents **repeatable** manual **git** / **curl** / **rsync** (or equivalent) patterns for **`_upstream_snapshot/`** without requiring a repository script. | Maintainer review (**§ Repeatable snapshot commands**) |
-| **RD8** | **CONTRIBUTING.md** or root **README.md** states **when** to refresh, **default clone stays small**, and that bulk material belongs under the gitignored subtree — consistent with **§ Repository size expectations**. | Maintainer review |
+| **RD5** | **SPEC_AUTOMATED_TESTS.md** lists backlog **`eb884da9`** and **RD1**–**RD8** for traceability. | **`pytest`** (same module) |
+| **RD6** | Each committed excerpt under **`docs/reference-documentation/`** (except the folder **`README.md`**) includes **provenance** and **license/attribution** per **§ Licensing and attribution** (see **`REPLAYT_WEBHOOK_SIGNING.md`** as the reference shape). | **`pytest`** (same module) |
+| **RD7** | This spec documents **repeatable** manual **git** / **curl** / **rsync** (or equivalent) patterns for **`_upstream_snapshot/`** without requiring a repository script. | **`pytest`** (same module; **§ Repeatable snapshot commands**) |
+| **RD8** | **CONTRIBUTING.md** or root **README.md** states **when** to refresh, **default clone stays small**, and that bulk material belongs under the gitignored subtree — consistent with **§ Repository size expectations**. | **`pytest`** (same module) |
 
 ## Related docs
 

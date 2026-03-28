@@ -13,6 +13,6 @@ locked-down environments).
   **§ Repeatable snapshot commands**, **§ Licensing and attribution**).
 - **Folder guide:** **[docs/reference-documentation/README.md](docs/reference-documentation/README.md)**.
 - **Repo size:** Default clones stay **small**; do **not** commit **`_upstream_snapshot/`** or large mirrors elsewhere.
-  **CI** does not download upstream documentation trees (see acceptance **RD1**–**RD5** in the spec).
+  **CI** does not download upstream documentation trees (see acceptance **RD1**–**RD8** in the spec).
 
 You **do not** need to populate snapshots to build, test, or contribute code changes.
