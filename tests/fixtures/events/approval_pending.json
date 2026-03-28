@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "event_type": "replayt.lifecycle.approval.pending",
+  "occurred_at": "2026-03-28T15:00:00Z",
+  "event_id": "0e5f7i1h-3g34-7d8e-2f6g-444444444444",
+  "correlation": {
+    "run_id": "run_01jqapprovaldemo",
+    "workflow_id": "wf_release_train",
+    "approval_request_id": "apr_01jqexamplegate",
+    "deployment_id": "dep_prod_eu"
+  },
+  "summary": "Approval pending: Release train — production deploy step",
+  "detail": {
+    "step_name": "production_deploy",
+    "policy_hint": "change_advisory_board"
+  }
+}
