@@ -90,7 +90,8 @@ Failures from verification are **authentication / integrity** failures. When exp
 - Do **not** include the **raw secret**, the **full `Replayt-Signature` header value**, or the **computed MAC** in HTTP
   response bodies, client-facing error JSON, or **production** logs at default levels.
 - Exception messages raised by **`verify_lifecycle_webhook_signature`** are for **server-side** handling; map them to
-  **generic** client responses (e.g. `"invalid signature"` or empty body) rather than echoing internal exception text if
+  **generic** client responses (plain text, empty body, or the stable JSON envelope in
+  **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**) rather than echoing internal exception text if
   that text could reveal header fragments or digests.
 
 **Tests (phase 4):** where the suite asserts log or response behavior, use fixtures; no requirement to spin up a full HTTP server unless the project already does so for integration tests.
@@ -168,7 +169,7 @@ Use this list for Spec gate, Builder, and Tester sign-off.
   including **W3** verification paths; placeholder smoke tests forbidden.
 - **[README.md](../README.md)** — integrator entry and quick example.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON field contract and **`parse_lifecycle_webhook_event`** after verification (see **README** overview).
-- **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H7**.
+- **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H8**.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator-facing JSON error envelope, **`error`** codes, post-verify failures, replay/freshness notes for v1.
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — **replayt** version floor and bump policy.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — small public surfaces and explicit contracts.

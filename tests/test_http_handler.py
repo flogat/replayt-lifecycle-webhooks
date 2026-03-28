@@ -1,4 +1,4 @@
-"""Tests for minimal lifecycle HTTP handler (H1–H7; no network)."""
+"""Tests for minimal lifecycle HTTP handler (H1–H8; no network)."""
 
 from __future__ import annotations
 

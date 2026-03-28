@@ -70,8 +70,9 @@ These examples are **not** real traffic; digests and ids are placeholders.
 {"error":"invalid_json","message":"Request body is not valid UTF-8 JSON."}
 ```
 
-**Wrong HTTP method (405):** Prefer an empty body or a minimal plain-text **`Allow: POST`** line per server; if you use
-JSON for consistency, use:
+**Wrong HTTP method (405):** Custom integrators may use an empty body or minimal plain text (often with **`Allow: POST`**).
+**`handle_lifecycle_webhook_post`** returns JSON for every client error on this path, including **405**, for a single
+shape across statuses:
 
 ```json
 {"error":"method_not_allowed","message":"Only POST is supported for this endpoint."}
@@ -164,6 +165,6 @@ wrappers may still extend responses (for example **`request_id`**) per the optio
 ## Related docs
 
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — **401** / **403** policy, leakage rules, v1 MAC scope.
-- **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — reference handler, **H1–H7**, status table.
+- **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — reference handler, **H1–H8**, status table.
 - **[EVENTS.md](EVENTS.md)** — supported **`event_type`** values; unknown types after verify.
 - **[README.md](../README.md)** — integrator entry and operator runbook pointer.

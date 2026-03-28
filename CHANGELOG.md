@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **`unknown_event_type`**, **`replay_rejected`**, etc.), typical HTTP statuses, redacted examples, **v1** replay/timestamp
   scope, **what not to log or return**; README runbook table; cross-links from signature / minimal-handler / design
   principles; acceptance **F1–F5**; **Builder (phase 3)** aligned the reference handler JSON bodies with this spec.
+- Phase **5** architecture review (same backlog): **H1–H8** labels in **README**, **SPEC_MINIMAL_HTTP_HANDLER**,
+  **SPEC_AUTOMATED_TESTS**, **SPEC_WEBHOOK_SIGNATURE** (related docs + exception-to-response mapping), and
+  **SPEC_WEBHOOK_FAILURE_RESPONSES** (**405**: custom handlers may use empty/plain text; reference handler uses JSON for
+  all client errors); **`tests/test_http_handler.py`** module docstring; historical **CHANGELOG** rows under **0.1.0**
+  that listed **H1–H7** for the handler suite.
 - **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**, **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**,
   **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/EVENTS.md`** (phase **2**,
   backlog **Replace smoke-only test with real
@@ -90,7 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   request view → **405** / **401** / **403** / **400** / **204**), **`LifecycleWebhookHttpResult`**, and
   **`make_lifecycle_webhook_wsgi_app`** (stdlib WSGI). **401** for missing or malformed **`Replayt-Signature`**;
   **403** for well-formed MAC mismatch; verify-before-JSON ordering per **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**.
-  Tests cover **H1–H7** (including invalid signature with invalid JSON → **401/403**, not **400**).
+  Tests cover **H1–H8** (including invalid signature with invalid JSON → **401/403**, not **400**).
 
 ### Documentation
 
@@ -113,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   recommended env var (see README).
 - **README.md:** verification procedure link; **HTTP responses and logging** pointer; **`os.environ`** example for the
   recommended secret name.
-- **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`:** normative status table, public handler API, WSGI notes, acceptance rows **H1–H7**;
+- **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`:** normative status table, public handler API, WSGI notes, acceptance rows **H1–H8**;
   cross-links to the webhook signature spec.
 - **`docs/SPEC_WEBHOOK_SIGNATURE.md`:** **Related docs** link to the minimal HTTP handler spec.
 - **`docs/MISSION.md`:** skim pointer to **SPEC_MINIMAL_HTTP_HANDLER**.

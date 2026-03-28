@@ -56,7 +56,7 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 - Builds header names from **`HTTP_*`** keys using the usual underscore-to-hyphen mapping (e.g. **`HTTP_REPLAYT_SIGNATURE`** → **`Replayt-Signature`**). Non-**`str`** header values are skipped.
 - Does not implement chunked request bodies or request size limits; production deployments should enforce limits at the server or proxy.
 
-## Acceptance tests (H1–H7)
+## Acceptance tests (H1–H8)
 
 | ID | Criterion | Checked by |
 | -- | --------- | ---------- |
