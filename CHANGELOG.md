@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`tests/test_replayt_dependency.py`** (phase **3**, backlog **Declare replayt dependency range and compatibility matrix** /
+  `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`): asserts README **Compatibility matrix** pointer and dual-version issue reporting,
+  **DESIGN_PRINCIPLES** link to **SPEC_REPLAYT_DEPENDENCY**, and the spec **Compatibility matrix** section includes the
+  same **`replayt`** floor as **`pyproject.toml`**.
+
 ### Documentation
 
 - **`docs/MISSION.md`** (phase **2**, backlog **Finalize docs/MISSION.md and primary ecosystem pattern** /
