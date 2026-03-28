@@ -3,8 +3,10 @@
 ## Overview
 
 This project builds on **[replayt](https://pypi.org/project/replayt/)**. It declares a runtime dependency on
-**replayt `>=0.4.25`** (see `pyproject.toml`). Read **[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)**
-for positioning prompts, then **[docs/MISSION.md](docs/MISSION.md)** for scope and goals (stubs until you flesh them out).
+**replayt `>=0.4.25`** (see `pyproject.toml`). Formal contract, bump policy, and acceptance criteria:
+**[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Read
+**[docs/REPLAYT_ECOSYSTEM_IDEA.md](docs/REPLAYT_ECOSYSTEM_IDEA.md)** for positioning prompts, then
+**[docs/MISSION.md](docs/MISSION.md)** for scope and goals (stubs until you flesh them out).
 
 **Compatibility:** After `pip install -e .` (or `pip install -e ".[dev]"` when you work in this repo), check the installed **replayt** with either:
 
@@ -56,6 +58,7 @@ local tooling entries. Adapt or remove optional directories to match your teamâ€
 | `docs/REPLAYT_ECOSYSTEM_IDEA.md` | Positioning (core-gap / showcase / bridge / combinator prompts) |
 | `docs/MISSION.md` | Mission and scope |
 | `docs/DESIGN_PRINCIPLES.md` | Design and integration principles |
+| `docs/SPEC_REPLAYT_DEPENDENCY.md` | **replayt** pin: contract, checklist, CI expectations |
 | `docs/reference-documentation/` | Optional markdown snapshot for contributors (when present) |
 | `src/replayt_lifecycle_webhooks/` | Python package (import `replayt_lifecycle_webhooks`) |
 | `pyproject.toml` | Package metadata |
