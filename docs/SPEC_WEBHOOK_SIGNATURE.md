@@ -1,7 +1,7 @@
 # Spec: incoming webhook signature verification
 
-**Backlog:** Define signed webhook verification API with explicit consumer contract (`3d375c9a-f0d6-42be-b88c-bb25d61f5c50`).  
-**Prior:** Add copy-paste signature verification (`46f495d3-bf67-443b-859e-ebd9cb5ffbd6`).  
+**Backlog:** Implement HMAC (or documented) request signing verification (`35f984f8-67cc-48bf-9385-0ec73a054314`).  
+**Prior:** Define signed webhook verification API with explicit consumer contract (`3d375c9a-f0d6-42be-b88c-bb25d61f5c50`); copy-paste verification helper (`46f495d3-bf67-443b-859e-ebd9cb5ffbd6`).  
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators, maintainers.
 
 ## Problem
@@ -13,9 +13,13 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
 - Ship **one primary public helper** — **`verify_lifecycle_webhook_signature`** — plus minimal types and exceptions
   re-exported from the package, answering: “Does this raw request body match the signature, given the shared secret and
   relevant headers?”
+- Enforce a **single verification path** for authentic traffic: every accepted webhook must pass through this helper
+  (or logic that is **byte-for-byte equivalent** to this spec). Integrators must not add a parallel “trust JSON only”
+  path for the same endpoint.
 - Prefer **`hmac` / `hashlib` in the standard library** unless replayt’s documented algorithm requires otherwise.
-- **No framework** in scope for this backlog: no Starlette/FastAPI/Flask middleware as the *required* delivery path—only the verification primitive.
-- Publish an **explicit consumer contract**: required headers, body rules, **signing scheme version**, **clock skew / replay policy**, and **ordered verification steps** integrators can follow without reading implementation code.
+- **No framework** in scope for this backlog: no Starlette/FastAPI/Flask middleware as the *required* delivery path—only the verification primitive. Integrators **should** wrap the primitive in their HTTP stack so failures map to **401/403**
+  as below.
+- Publish an **explicit consumer contract**: required headers, body rules, **signing scheme version**, **clock skew / replay policy**, **secret configuration convention**, **HTTP error expectations**, and **ordered verification steps** integrators can follow without reading implementation code.
 
 ## Signing scheme version
 
@@ -36,7 +40,16 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
 | ---- | ----------- |
 | **Raw body** | **Bytes** exactly as read from the HTTP layer for the POST (or equivalent) **before** JSON parsing or other mutation. Any transformation (whitespace normalization, charset transcoding) **invalidates** the MAC unless upstream documents otherwise. |
 | **Header `Replayt-Signature`** | **Required** for v1. HTTP header names are case-insensitive; use spelling **`Replayt-Signature`** in documentation and in the package constant **`LIFECYCLE_WEBHOOK_SIGNATURE_HEADER`**. |
-| **Shared secret** | Configured out of band between sender and receiver. **UTF-8** encoding applies when the secret is provided as a Python `str` (see Python API below). |
+| **Shared secret** | Configured out of band between sender and receiver. **UTF-8** encoding applies when the secret is provided as a Python `str` (see Python API below). **Recommended:** load from a process environment variable (see **Secret configuration**). |
+
+**Secret configuration (operators / integrators)**
+
+- The library accepts the secret only as an argument to **`verify_lifecycle_webhook_signature`**; it does **not** read
+  environment variables itself.
+- **Recommended environment variable name:** **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** — shared secret as a string (UTF-8
+  when encoded for HMAC). Document this name in **README.md** so operators and platforms align on one convention.
+- **Operational hygiene:** inject the secret via your platform’s secret store or env; **do not** commit it, **do not**
+  print it in startup banners, and **do not** log it when loading configuration.
 
 **Header value format (v1)**
 
@@ -61,6 +74,26 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
 2. Read the **`Replayt-Signature`** header value as a string (your framework’s API may merge duplicates; if multiple values exist, behavior is **undefined** unless upstream specifies—prefer the single value replayt sends).
 3. Call **`verify_lifecycle_webhook_signature(secret=…, body=…, signature=…)`** (or equivalent logic per this spec) **before** parsing the body as JSON or acting on the event.
 4. On success, proceed; on failure, return **401** or **403** (or your policy) and **do not** treat the payload as authentic.
+
+### HTTP responses and logging (normative for integrators)
+
+Failures from verification are **authentication / integrity** failures. When exposing an HTTP webhook endpoint:
+
+| Outcome | Suggested HTTP status | Notes |
+| ------- | -------------------- | ----- |
+| Missing or empty signature header | **401 Unauthorized** | Request did not present verifiable credentials. |
+| Malformed signature value (not valid v1 hex / length) | **401 Unauthorized** | Treat as failed authentication; avoid distinguishing details that aid probing. |
+| Well-formed signature that does not match body/secret | **403 Forbidden** (or **401**) | Either is acceptable; pick one policy per deployment and stay consistent. |
+
+**Responses and logs must not leak secret material:**
+
+- Do **not** include the **raw secret**, the **full `Replayt-Signature` header value**, or the **computed MAC** in HTTP
+  response bodies, client-facing error JSON, or **production** logs at default levels.
+- Exception messages raised by **`verify_lifecycle_webhook_signature`** are for **server-side** handling; map them to
+  **generic** client responses (e.g. `"invalid signature"` or empty body) rather than echoing internal exception text if
+  that text could reveal header fragments or digests.
+
+**Tests (phase 4):** where the suite asserts log or response behavior, use fixtures; no requirement to spin up a full HTTP server unless the project already does so for integration tests.
 
 ## Upstream alignment (required before calling the work “done”)
 
@@ -89,8 +122,11 @@ If upstream prose is hard to find, capture the authoritative reference (URL, ver
 
 ### Cryptographic hygiene
 
-- Use **`hmac.compare_digest`** (or equivalent constant-time comparison) when comparing computed vs provided signatures.
+- Use **`hmac.compare_digest`** (or equivalent constant-time comparison) when comparing **equal-length** digest
+  **bytes** (compare the decoded octets from the header to the HMAC output, not hex strings in a way that shortcuts
+  constant-time properties).
 - Do **not** log the **raw secret** or full **computed** MAC in production paths; tests may use fixed fixtures.
+- Do **not** return secret or MAC material in HTTP responses; see **HTTP responses and logging** above.
 
 ### Dependencies
 
@@ -115,6 +151,9 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 | W5 | Implementation matches **replayt’s documented** signing rules; reference cited in docs or **reference-documentation**. | Maintainer review. |
 | W6 | User-visible API or behavior change reflected in **CHANGELOG.md** under **Unreleased** when implemented. | Review **CHANGELOG.md** at release. |
 | W7 | **Signing scheme v1** and **clock skew / replay policy** are documented in this spec and summarized in **REPLAYT_WEBHOOK_SIGNING.md**. | Review both files. |
+| W8 | **Single path:** Handlers do not accept the same URL with “unsigned JSON” as an alternate success path; verification runs before trusting payload. | Code review of example / integrator glue; optional test if the repo ships a sample handler. |
+| W9 | **HTTP safety:** On verification failure, integrator guidance documents **401** and/or **403** (per spec table) and **forbids** echoing secret, full signature header, or computed MAC in responses or production logs. | Review **README.md** + this spec; Tester may add a focused test if the repo exposes a reference HTTP wrapper. |
+| W10 | **Secret configuration:** **README.md** documents the recommended env var **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** (and that the library receives the secret only via the API). | Review **README.md**. |
 
 ## Suggested test fixtures (for Builder / Tester)
 

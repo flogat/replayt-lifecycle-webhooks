@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import json
+from unittest.mock import patch
 
 import pytest
 
@@ -106,3 +108,81 @@ def test_malformed_signature_wrong_digest_length() -> None:
 
 def test_header_constant_documents_wire_name() -> None:
     assert LIFECYCLE_WEBHOOK_SIGNATURE_HEADER == "Replayt-Signature"
+
+
+def test_compare_digest_used_for_success_path() -> None:
+    """MAC equality uses constant-time comparison on digest bytes (spec: cryptographic hygiene)."""
+    with patch.object(hmac, "compare_digest", wraps=hmac.compare_digest) as mock_compare:
+        verify_lifecycle_webhook_signature(
+            secret=_SECRET,
+            body=_BODY,
+            signature=_sign(_BODY),
+        )
+    mock_compare.assert_called_once()
+
+
+def test_failure_messages_do_not_contain_secret() -> None:
+    secret = "unique-webhook-secret-735b2c"
+    body = b'{"ok":true}'
+    sig = _sign(body, secret=secret)
+    failures: list[BaseException] = []
+    with pytest.raises(WebhookSignatureMissingError) as missing:
+        verify_lifecycle_webhook_signature(secret=secret, body=body, signature=None)
+    failures.append(missing.value)
+    with pytest.raises(WebhookSignatureFormatError) as bad_hex:
+        verify_lifecycle_webhook_signature(secret=secret, body=body, signature="sha256=zz")
+    failures.append(bad_hex.value)
+    with pytest.raises(WebhookSignatureMismatchError) as mismatch:
+        verify_lifecycle_webhook_signature(
+            secret=secret,
+            body=body,
+            signature=_sign(body, secret="other-secret"),
+        )
+    failures.append(mismatch.value)
+    tampered = bytearray(body)
+    tampered[0] ^= 0x01
+    with pytest.raises(WebhookSignatureMismatchError) as tampered_exc:
+        verify_lifecycle_webhook_signature(secret=secret, body=bytes(tampered), signature=sig)
+    failures.append(tampered_exc.value)
+    needle = secret.lower()
+    for err in failures:
+        assert needle not in str(err).lower()
+
+
+def test_mismatch_messages_do_not_echo_header_digest_hex() -> None:
+    """Failure text must stay generic (spec W9: do not leak computed MAC or full header value)."""
+    sig = _sign(_BODY)
+    hex_from_header = sig.removeprefix("sha256=").lower()
+    with pytest.raises(WebhookSignatureMismatchError) as excinfo:
+        verify_lifecycle_webhook_signature(
+            secret=_SECRET,
+            body=_BODY,
+            signature=_sign(_BODY, secret="different"),
+        )
+    assert hex_from_header not in str(excinfo.value).lower()
+
+    tampered = bytearray(_BODY)
+    tampered[-1] ^= 0xFF
+    with pytest.raises(WebhookSignatureMismatchError) as excinfo2:
+        verify_lifecycle_webhook_signature(
+            secret=_SECRET,
+            body=bytes(tampered),
+            signature=sig,
+        )
+    assert hex_from_header not in str(excinfo2.value).lower()
+
+
+def test_verify_before_json_single_path() -> None:
+    """Integrators should verify raw bytes before parsing (spec W8: no parallel unsigned trust path)."""
+    raw = _BODY
+    header = _sign(raw)
+    verify_lifecycle_webhook_signature(secret=_SECRET, body=raw, signature=header)
+    assert json.loads(raw.decode("utf-8"))["event"] == "run_finished"
+
+    bad = bytearray(raw)
+    bad[0] ^= 0x02
+    with pytest.raises(WebhookSignatureMismatchError):
+        verify_lifecycle_webhook_signature(secret=_SECRET, body=bytes(bad), signature=header)
+    # Tampered bytes must not be treated as authentic JSON for application logic.
+    with pytest.raises(json.JSONDecodeError):
+        json.loads(bytes(bad).decode("utf-8"))
