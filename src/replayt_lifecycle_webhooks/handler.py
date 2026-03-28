@@ -5,8 +5,12 @@ Status policy (see ``docs/SPEC_MINIMAL_HTTP_HANDLER.md``):
 - **405** — not POST (includes ``Allow: POST`` where applicable).
 - **401** — missing, empty, or malformed ``Replayt-Signature``.
 - **403** — well-formed signature that does not match body and secret.
-- **400** — verification passed but body is not valid UTF-8 JSON text.
-- **204** — accepted (empty body).
+- **400** — verification passed but body is not valid UTF-8 JSON text (or wrong top-level JSON type when replay/dedupe
+  hooks are enabled).
+- **422** — lifecycle validation, replay window, or duplicate policy (see optional **``dedup_store``** /
+  **``replay_policy``**).
+- **204** — accepted (empty body); duplicate **``event_id``** when **``dedup_store``** rejects a second claim also yields **204**
+  without calling **``on_success``**.
 
 Client errors (**405**, **401**, **403**, **400**) return a JSON body per
 ``docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`` (**``error``** + **``message``**) and
@@ -24,6 +28,15 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Any
 
+from pydantic import ValidationError
+
+from .events import parse_lifecycle_webhook_event
+from .replay_protection import (
+    LifecycleWebhookDedupStore,
+    LifecycleWebhookReplayPolicy,
+    ReplayFreshnessRejected,
+    ensure_occurred_at_within_replay_window,
+)
 from .signature import (
     LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
     WebhookSignatureFormatError,
@@ -95,6 +108,8 @@ def handle_lifecycle_webhook_post(
     body: bytes,
     headers: Mapping[str, str] | Iterable[tuple[str, str]],
     on_success: Callable[[Any], None] | None = None,
+    dedup_store: LifecycleWebhookDedupStore | None = None,
+    replay_policy: LifecycleWebhookReplayPolicy | None = None,
 ) -> LifecycleWebhookHttpResult:
     """Handle one lifecycle webhook HTTP request view (POST, raw body, headers).
 
@@ -102,6 +117,12 @@ def handle_lifecycle_webhook_post(
 
     **Order:** reject wrong method, then verify signature on raw ``body``, then UTF-8 decode and
     :func:`json.loads`. On verification failure, JSON is not parsed.
+
+    **Replay / dedupe (optional):** When ``dedup_store`` and/or ``replay_policy`` is set, the payload must be a JSON
+    object that :func:`replayt_lifecycle_webhooks.events.parse_lifecycle_webhook_event` accepts. Processing order is
+    freshness on ``occurred_at`` (if enabled in ``replay_policy``), then ``dedup_store.try_claim(event_id)``. A duplicate
+    ``event_id`` returns **204** without calling ``on_success``. When both are ``None``, behavior matches pre–replay-hook
+    releases: any JSON value is accepted and ``on_success`` receives the parsed value.
 
     **Raises:** This function does not raise for client errors; it returns 4xx
     :class:`LifecycleWebhookHttpResult` values with JSON bodies (see
@@ -155,6 +176,41 @@ def handle_lifecycle_webhook_post(
             message="Request body is not valid UTF-8 JSON.",
         )
 
+    if dedup_store is not None or replay_policy is not None:
+        if not isinstance(payload, dict):
+            return _error_result(
+                HTTPStatus.BAD_REQUEST,
+                error="invalid_payload_shape",
+                message="Valid JSON but not the expected top-level object for lifecycle events.",
+            )
+        try:
+            event = parse_lifecycle_webhook_event(payload)
+        except ValidationError:
+            return _error_result(
+                HTTPStatus.UNPROCESSABLE_ENTITY,
+                error="unknown_event_type",
+                message="Event type is not supported by this integration.",
+            )
+
+        if replay_policy is not None and replay_policy.check_occurred_at:
+            try:
+                ensure_occurred_at_within_replay_window(
+                    event.occurred_at,
+                    now=replay_policy.now(),
+                    max_event_age_seconds=replay_policy.max_event_age_seconds,
+                    max_future_skew_seconds=replay_policy.max_future_skew_seconds,
+                )
+            except ReplayFreshnessRejected:
+                return _error_result(
+                    HTTPStatus.UNPROCESSABLE_ENTITY,
+                    error="replay_rejected",
+                    message="Delivery is outside the accepted time window or was already processed.",
+                )
+
+        if dedup_store is not None:
+            if not dedup_store.try_claim(event.event_id):
+                return LifecycleWebhookHttpResult(HTTPStatus.NO_CONTENT, (), b"")
+
     if on_success is not None:
         on_success(payload)
 
@@ -182,6 +238,8 @@ def make_lifecycle_webhook_wsgi_app(
     secret: str | bytes,
     *,
     on_success: Callable[[Any], None] | None = None,
+    dedup_store: LifecycleWebhookDedupStore | None = None,
+    replay_policy: LifecycleWebhookReplayPolicy | None = None,
 ) -> Callable[[Mapping[str, Any], Callable[..., Any]], list[bytes]]:
     """Build a WSGI application that handles POST lifecycle webhooks.
 
@@ -222,6 +280,8 @@ def make_lifecycle_webhook_wsgi_app(
             body=raw,
             headers=hdrs,
             on_success=on_success,
+            dedup_store=dedup_store,
+            replay_policy=replay_policy,
         )
         status_enum = HTTPStatus(result.status)
         status_line = f"{result.status} {status_enum.phrase}"

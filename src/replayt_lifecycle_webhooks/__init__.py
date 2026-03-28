@@ -22,6 +22,13 @@ from .handler import (
     handle_lifecycle_webhook_post,
     make_lifecycle_webhook_wsgi_app,
 )
+from .replay_protection import (
+    InMemoryLifecycleWebhookDedupStore,
+    LifecycleWebhookDedupStore,
+    LifecycleWebhookReplayPolicy,
+    ReplayFreshnessRejected,
+    ensure_occurred_at_within_replay_window,
+)
 from .redaction import (
     DEFAULT_SENSITIVE_HEADER_NAMES,
     DEFAULT_SENSITIVE_MAPPING_KEYS,
@@ -53,7 +60,11 @@ __all__ = [
     "LifecycleCorrelation",
     "LifecycleWebhookEvent",
     "LIFECYCLE_WEBHOOK_SIGNATURE_HEADER",
+    "InMemoryLifecycleWebhookDedupStore",
+    "LifecycleWebhookDedupStore",
     "LifecycleWebhookHttpResult",
+    "LifecycleWebhookReplayPolicy",
+    "ReplayFreshnessRejected",
     "RunCompletedDetail",
     "RunCompletedEvent",
     "RunFailedDetail",
@@ -65,6 +76,7 @@ __all__ = [
     "WebhookSignatureMismatchError",
     "WebhookSignatureMissingError",
     "compute_lifecycle_webhook_signature_header",
+    "ensure_occurred_at_within_replay_window",
     "format_safe_webhook_log_extra",
     "handle_lifecycle_webhook_post",
     "make_lifecycle_webhook_wsgi_app",

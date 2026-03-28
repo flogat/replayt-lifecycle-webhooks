@@ -12,6 +12,8 @@ Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEB
 **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
 **Delivery retries and `event_id` idempotency:**
 **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**.
+**Replay protection** (freshness, optional wire headers, dedupe store hooks):
+**[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.
 Repository map and quick links:
 **[README.md](../README.md)**.
 
@@ -83,6 +85,9 @@ Integrators and operators are responsible for:
 - **Idempotent handling** — Assume **at-least-once** delivery; after verification, dedupe with **`event_id`** (and an
   idempotency store with an appropriate **TTL**) per **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** so
   retries do not double-charge approvals, tickets, or metrics.
+- **Replay and freshness** — After verification, constrain **stale** or **replayed** captures (payload **`occurred_at`**
+  vs receiver time, optional headers, pluggable store) per **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** in
+  addition to **`event_id`** dedupe.
 - **Failure mapping** — Map verification failures to **401/403** (or your policy) and **avoid leaking** the secret,
   full signature header, or computed MAC in responses or logs, per **SPEC_WEBHOOK_SIGNATURE**. For stable JSON **`error`**
   codes, example bodies, and post-verify failures (**unknown `event_type`**, replay windows), see
