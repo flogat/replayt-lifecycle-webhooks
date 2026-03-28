@@ -51,8 +51,9 @@ pip install -e ".[dev]"
 ## Verifying webhook signatures
 
 Verify the **raw request body** with your shared secret and the **`Replayt-Signature`** header before parsing JSON or
-running automation. Full contract:
-**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)** and
+running automation. Ordered steps for handlers:
+**[Verification procedure](docs/SPEC_WEBHOOK_SIGNATURE.md#verification-procedure-integrators)** in
+**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. Full contract detail also in
 **[docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)**.
 
 ```python
