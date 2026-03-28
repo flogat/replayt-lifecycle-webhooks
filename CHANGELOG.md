@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (**`pytest tests -q`**, equivalent **`python -m pytest tests -q`** in CI); minimum behavioral coverage for
   **`verify_lifecycle_webhook_signature`** and **`parse_lifecycle_webhook_event`**; checklist **A1–A5**; forbid
   smoke-only **`assert True`**; remove redundant **`tests/test_smoke.py`** when covered elsewhere.
+- **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **5**, architecture review, backlog
+  **Replace smoke-only test with real package behavior assertions** / `a91574f0-1e57-4b34-9922-763f92448a18`):
+  **SPEC_REPLAYT_DEPENDENCY** **Related docs** links **SPEC_AUTOMATED_TESTS**; **SPEC_AUTOMATED_TESTS** purpose paragraph
+  tightened for contributor-facing clarity.
 
 ### Removed
 

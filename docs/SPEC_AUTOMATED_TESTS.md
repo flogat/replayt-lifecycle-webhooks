@@ -5,9 +5,9 @@
 
 ## Purpose and normative status
 
-This document defines what the **pytest** suite must prove so **CI** is a **regression signal**, not a presence check. It
-implements **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** (**observable automation**, **explicit contracts**): failures
-in signature verification or JSON parsing must **break** automated tests, not pass via **`assert True`**.
+This document defines what the **pytest** suite must prove so **CI** fails when signature verification or JSON parsing
+regresses. It matches **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** (**observable automation**, **explicit contracts**):
+failures in those areas must **break** automated tests, not pass via **`assert True`**.
 
 Detailed matrices for each surface live in the feature specs; this file ties them to **one** CI command and **minimum**
 behavioral coverage.

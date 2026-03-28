@@ -80,6 +80,8 @@ Use this list for Spec gate and Builder sign-off. Rows **A5–A7** map to backlo
 ## Related docs
 
 - **[README.md](../README.md)** — integrator entry point.
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — **pytest** / CI entrypoint and minimum behavioral coverage for
+  verification and parsing (see matrix row notes on CI at pin time).
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — incoming webhook signature verification contract.
 - **[DEPENDENCY_AUDIT.md](DEPENDENCY_AUDIT.md)** — CI and accepted transitive risks.
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — explicit contracts and consumer-side maintenance.
