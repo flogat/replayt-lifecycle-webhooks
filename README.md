@@ -15,7 +15,7 @@ handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.
 **POST** on **`/webhook`** by default, **`GET /health`**. Details and acceptance **S1–S8**:
 **[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Reverse proxy / TLS** in front of that
 listener (raw POST body, limits, timeouts): contract **[docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**;
-operator guide **`docs/OPERATOR_REVERSE_PROXY.md`** when shipped (**OG1**–**OG8**). **Local signed demo POST** (one command,
+operator guide **[docs/OPERATOR_REVERSE_PROXY.md](docs/OPERATOR_REVERSE_PROXY.md)** (**OG1**–**OG8**). **Local signed demo POST** (one command,
 dev fixtures, same **v1** signing as verification): **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)**
 (checklist **D1–D9**). **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. **PM/support digest** (deterministic text + optional JSON
@@ -209,6 +209,10 @@ and an idempotency store whose **TTL** covers retries and approval windows. Full
 optional **`Replayt-*`** headers or a nonce) per **[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**.
 **Benign duplicates** (same **`event_id`**, idempotent **2xx**) differ from **policy rejects** (**422** /
 **`replay_rejected`**); map the latter using **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
+
+**Reverse proxy / TLS in front of the reference server:** Preserve the raw POST body, set sane body limits and timeouts,
+and avoid **`Transfer-Encoding`** pitfalls. Copy-paste **nginx** (or adapt for **Caddy**) patterns in
+**[docs/OPERATOR_REVERSE_PROXY.md](docs/OPERATOR_REVERSE_PROXY.md)**.
 
 **Where to look in logs:** Prefer structured **`extra=`** keys such as **`webhook_*`**, **`lifecycle_*`**, and
 **`error_code`**, with headers and dict values passed through **`replayt_lifecycle_webhooks.redaction`** as in

@@ -24,8 +24,8 @@ single entrypoint without making a heavy web stack **mandatory** for consumers w
 
 Production deployments usually place **nginx**, **Caddy**, or another reverse proxy in front of the process. **Normative**
 operator guidance (raw body preservation, body size limits, timeouts, **`Transfer-Encoding`** / buffering pitfalls, logging
-hygiene) lives in **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** and the shipped
-guide **`docs/OPERATOR_REVERSE_PROXY.md`** once backlog **`dc212184`** is implemented.
+hygiene) lives in **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** and
+**`docs/OPERATOR_REVERSE_PROXY.md`** (backlog **`dc212184`**).
 
 ## Stack choice (normative for Builder)
 
