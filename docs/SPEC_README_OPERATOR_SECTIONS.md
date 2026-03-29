@@ -13,8 +13,8 @@ It does **not** redefine **replayt** product semantics (when approvals fire upst
 upstream documentation for payload meaning.
 
 **Normative for Builder:** When this backlog is in scope, **`README.md`** **must** satisfy **§ Required sections** and
-**§ Content requirements** below. **§ Automated acceptance** maps to **pytest** rows **OP1**–**OP8** in
-**[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**.
+**§ Content requirements** below. **§ Automated acceptance** maps to **pytest** rows **OP1**–**OP9** in
+**[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP9** from backlog **`c631fe3f`**).
 
 **Non-goals for README prose:** Full **generic** HTTP framework tutorials, enterprise runbooks, or copying entire normative specs into
 the README—**link** to **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**,
@@ -189,8 +189,9 @@ maintainer-facing contract.
 
 ## Automated acceptance
 
-See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP1**–**OP8**). Implementations
-**must** use **network-free** tests that read **`README.md`** from disk (same pattern as **DG6**, **A2**/README checks).
+See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP1**–**OP9**; **OP9** is the
+**`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** link under **Verifying**, backlog **`c631fe3f`**). Implementations **must** use
+**network-free** tests that read **`README.md`** from disk (same pattern as **DG6**, **A2**/README checks).
 
 ## Related docs
 

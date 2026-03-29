@@ -1,7 +1,7 @@
 # Spec: integrator recipe — ASGI (FastAPI / Starlette) verified-first handler
 
 **Backlog:** Integrator recipe: FastAPI / Starlette verified-first handler  
-**Workflow id:** `c631fe3f-8a66-4a9d-a900-bab855860c7b` (phase **2** spec refinement; Builder authors the prose and code blocks in phase **3**).
+**Workflow id:** `c631fe3f-8a66-4a9d-a900-bab855860c7b` (phase **3** ships **§ Copy-paste examples** and README cross-link).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators using **FastAPI**, **Starlette**, or other **ASGI** stacks.
 
@@ -94,16 +94,114 @@ for logging header dicts.
 
 ## Copy-paste examples (normative shape)
 
-Until Builder phase **3** lands, this section is a **placeholder**. When complete, it **must** include:
+The snippets below are **documentation-only**: install **FastAPI** or **Starlette** in your app; this package does not add
+them as dependencies. Read the body as **`bytes`** first. Do **not** use **`await request.json()`**, **`Body(...)`**, or
+typed body parameters that run **before** raw bytes are read—those paths parse or buffer the stream and break the MAC over
+the wire octets. Verification order and header rules are in **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**.
+Stable **`error`** codes and safe JSON shapes for clients are in
+**[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
 
-1. **Framework:** **FastAPI** **or** **Starlette** (at least one; both preferred if maintainers agree on length).
-2. **Single POST route** (e.g. **`/webhook`**) that accepts **`application/json`** lifecycle payloads.
-3. **Explicit step:** `await request.body()` (or equivalent) **before** **`json.loads`** / **`parse_lifecycle_webhook_event`**.
-4. **Secret:** Load from **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** (or placeholder **`your-shared-secret`**) per **README** /
-   **SPEC_WEBHOOK_SIGNATURE**—**not** hard-coded real secrets.
-5. **401/403 mapping** with **generic** client bodies (link or abbreviated JSON per **SPEC_WEBHOOK_FAILURE_RESPONSES**).
-6. **Imports:** Only **public** API names (**`verify_lifecycle_webhook_signature`**, **`LIFECYCLE_WEBHOOK_SIGNATURE_HEADER`**,
-   **`parse_lifecycle_webhook_event`**, optional **`handle_lifecycle_webhook_post`**, **`LifecycleWebhookHttpResult`**).
+### Pattern A — FastAPI (`verify_lifecycle_webhook_signature`)
+
+```python
+import json
+import os
+
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
+
+from replayt_lifecycle_webhooks import (
+    LIFECYCLE_WEBHOOK_SIGNATURE_HEADER,
+    WebhookSignatureFormatError,
+    WebhookSignatureMismatchError,
+    WebhookSignatureMissingError,
+    parse_lifecycle_webhook_event,
+    verify_lifecycle_webhook_signature,
+)
+
+app = FastAPI()
+
+
+def _json_client_error(*, status_code: int, error: str, message: str) -> JSONResponse:
+    # Same stable ``error`` keys as SPEC_WEBHOOK_FAILURE_RESPONSES; do not echo secrets or signature values.
+    return JSONResponse(status_code=status_code, content={"error": error, "message": message})
+
+
+@app.post("/webhook")
+async def lifecycle_webhook(request: Request) -> Response:
+    raw_body = await request.body()
+    secret = os.environ["REPLAYT_LIFECYCLE_WEBHOOK_SECRET"]
+    signature = request.headers.get(LIFECYCLE_WEBHOOK_SIGNATURE_HEADER)
+
+    try:
+        verify_lifecycle_webhook_signature(secret=secret, body=raw_body, signature=signature)
+    except WebhookSignatureMissingError:
+        return _json_client_error(
+            status_code=401,
+            error="signature_required",
+            message="The Replayt-Signature header is missing or empty.",
+        )
+    except WebhookSignatureFormatError:
+        return _json_client_error(
+            status_code=401,
+            error="signature_malformed",
+            message="The signature header is not a valid v1 value.",
+        )
+    except WebhookSignatureMismatchError:
+        return _json_client_error(
+            status_code=403,
+            error="signature_mismatch",
+            message="Signature does not match the request body.",
+        )
+
+    payload = json.loads(raw_body.decode("utf-8"))
+    event = parse_lifecycle_webhook_event(payload)
+    _ = event  # handle the verified event (idempotency, side effects, etc.)
+    return Response(status_code=204)
+```
+
+### Pattern B — Starlette (`handle_lifecycle_webhook_post`)
+
+```python
+import os
+
+from starlette.applications import Starlette
+from starlette.requests import Request
+from starlette.responses import Response
+from starlette.routing import Route
+
+from replayt_lifecycle_webhooks import handle_lifecycle_webhook_post
+
+
+async def lifecycle_webhook(request: Request) -> Response:
+    raw_body = await request.body()
+    secret = os.environ["REPLAYT_LIFECYCLE_WEBHOOK_SECRET"]
+    result = handle_lifecycle_webhook_post(
+        secret=secret,
+        method=request.method,
+        body=raw_body,
+        headers=list(request.headers.items()),
+    )
+    return Response(
+        content=result.body,
+        status_code=result.status,
+        headers=dict(result.headers),
+    )
+
+
+app = Starlette(routes=[Route("/webhook", endpoint=lifecycle_webhook, methods=["POST"])])
+```
+
+**Checklist (AF1–AF4 recap):**
+
+1. **Framework:** **FastAPI** (Pattern A) and **Starlette** (Pattern B).
+2. **Single POST route** **`/webhook`** for **`application/json`** lifecycle payloads.
+3. **`await request.body()`** before **`json.loads`** / **`parse_lifecycle_webhook_event`** (Pattern A) or before the
+   handler glue reads the same **`bytes`** (Pattern B).
+4. **Secret:** **`os.environ["REPLAYT_LIFECYCLE_WEBHOOK_SECRET"]`**—no literal shared secrets in source.
+5. **401** / **403** for signature failures with **generic** JSON (**`error`** + **`message`** only); no secret, full
+   signature header, or MAC in the response.
+6. **Imports:** **SPEC_PUBLIC_API** symbols only from the package root (**`replayt_lifecycle_webhooks`**).
 
 ## Acceptance checklist (AF1–AF7)
 

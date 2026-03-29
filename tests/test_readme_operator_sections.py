@@ -1,4 +1,4 @@
-"""SPEC_README_OPERATOR_SECTIONS / SPEC_AUTOMATED_TESTS backlog 23e2da29 OP1–OP8."""
+"""SPEC_README_OPERATOR_SECTIONS / SPEC_AUTOMATED_TESTS backlog 23e2da29 OP1–OP9."""
 
 from __future__ import annotations
 
@@ -78,3 +78,9 @@ def test_op8_verifying_mentions_signature_check_path() -> None:
         or "replayt_lifecycle_webhooks.demo_webhook" in body
         or "python -m replayt_lifecycle_webhooks.demo_webhook" in body
     )
+
+
+def test_op9_verifying_links_integrator_asgi_spec() -> None:
+    """Backlog ``c631fe3f`` / SPEC_README_OPERATOR_SECTIONS — ASGI recipe link under Verifying."""
+    body = _h2_section(_readme_text(), "Verifying webhook signatures")
+    assert "docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md" in body
