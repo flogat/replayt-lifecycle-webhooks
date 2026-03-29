@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Optional pre-commit** (phase **3**, backlog **`c39b2a5f-a2f5-42a4-a5c2-a2b20989a31c` / *CONTRIBUTING: optional pre-commit config mirroring Ruff CI commands*):
+  root **`.pre-commit-config.yaml`** runs **ruff** **check** and **format `--check`** on **`src/`** and **`tests/`**, matching the **`lint`**
+  job in **`.github/workflows/ci.yml`**. **`CONTRIBUTING.md`** documents install, optional use, and CI as the authoritative command list.
+
 - **Packaging CI** (phase **3**, backlog **`78e3554b-2b50-4918-9859-85642ac1a84a` / *CI: `python -m build` + `twine check` on sdist/wheel*):
   **`.github/workflows/ci.yml`** adds a **`package`** job (**`rm -rf dist`**, **`python -m build`**, **`twine check dist/*`**).
   **`[project.optional-dependencies] dev`** includes **`build>=1.2.0`** and **`twine>=5.0.0`**. **`tests/test_packaging_layout.py`**

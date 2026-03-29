@@ -1,0 +1,13 @@
+# Optional local hooks — merge gate stays `.github/workflows/ci.yml` `lint` (ruff only; PC6).
+# When `pip install "ruff>=0.6.0"` / dev lower bound in `pyproject.toml` rises above this hook’s
+# bundled ruff, bump `rev:` to a matching astral-sh/ruff-pre-commit tag (PC2).
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.8
+    hooks:
+      - id: ruff-check
+        args: [src, tests]
+        pass_filenames: false
+      - id: ruff-format
+        args: [--check, src, tests]
+        pass_filenames: false
