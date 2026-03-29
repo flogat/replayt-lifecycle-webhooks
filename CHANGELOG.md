@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **Webhook failure canonical examples** (phase **2**, backlog **`70689a62-61d1-4f2a-9d32-e8e8eec27c88` / *Harden SPEC_WEBHOOK_FAILURE_RESPONSES with end-to-end examples*`): **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`** gains **§ Canonical end-to-end examples** (explicit anchor **`#canonical-end-to-end-examples`**) with one normative HTTP + JSON fixture per stable **`error`** code, including post-verify **`invalid_payload_shape`**, **`unknown_event_type`**, and **`replay_rejected`**; acceptance **FR1**–**FR5**; checklist **F2**/**F5** tightened. **`README.md`** **§ Troubleshooting** links that section for gateway / contract-test fixtures. **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`** and **`docs/SPEC_README_OPERATOR_SECTIONS.md`** cross-link the anchor; **`handler.py`** module docstring points integrators at the same anchor (**422** JSON errors called out).
+
 ### Added
 
 - **Replayt boundary guardrail tests** (phase **3**, builder, backlog **`2b5bb9f6-af49-4c68-a76f-132ec40769d5` / *Contract tests: replayt version bump guardrails*`): **`tests/test_replayt_boundary.py`** enforces **G1**–**G4**, **G6**, **G7** from **`docs/SPEC_REPLAYT_BOUNDARY_TESTS.md`** — required **`RunResult`**, **`RunFailed`**, **`ApprovalPending`** imports, **`replayt.__all__`** superset check, and failure text pointing at **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`CHANGELOG.md`**, and **`docs/SPEC_REPLAYT_BOUNDARY_TESTS.md`**. **README.md** (**Running tests**) notes **G3**/**G5** posture (no opt-in upstream **pytest** marker in-repo). **G5** (optional scheduled workflow): not added.

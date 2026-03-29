@@ -241,6 +241,10 @@ Checklist rows **A1–A5** (minimum verification / parsing), **R1–R5**, and **
 
 ## Troubleshooting
 
+**Stable response fixtures (gateways / contract tests):** Copy **HTTP status**, **`Content-Type`**, and compact JSON bodies
+from **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md § Canonical end-to-end examples](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md#canonical-end-to-end-examples)**
+— one normative example per stable **`error`** code (and **204** success described there as an empty body).
+
 **Wrong or rotated shared secret:** If the HMAC key on the receiver does not match the sender, verification fails with
 **`signature_mismatch`**. Use one secret out of band on both sides and roll receivers before retiring an old key.
 
