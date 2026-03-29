@@ -31,6 +31,10 @@
 - Subprocess integration test against the real **`python -m replayt_lifecycle_webhooks`** entrypoint
   (`83e07114-fbec-46ab-9944-d2aa3bca0024`) — checklist **SUB1**–**SUB8** under **§ Backlog `83e07114`** below;
   normative server contract **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**).
+- Optional structured diagnostics on **serve** / **handler** paths using **`redaction`** helpers
+  (`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`) — checklist **LG1–LG4** under **§ Backlog `0bab43f3`** below; normative
+  contract **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic
+  logging**); reference server rows **S10**–**S12** in **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -58,6 +62,7 @@ behavioral coverage.
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
+| Optional **serve** / **handler** diagnostic logging + redaction (**LG1–LG4**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic logging**); **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S10**–**S12**) |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
@@ -139,6 +144,11 @@ tests **must not** replace items **1**–**3**.
 When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** is implemented, the suite **must**
 additionally include **network-free** tests that satisfy checklist **L1–L9** under **Backlog `fa75ecf3`** below. Those
 tests **must not** replace items **1**–**3**.
+
+When backlog **`0bab43f3`** (optional **serve** / **handler** structured diagnostics) is implemented, the suite **must**
+additionally include **network-free** tests that satisfy checklist **LG1–LG4** under **§ Backlog `0bab43f3`** below. Those
+tests **must not** replace items **1**–**3**, **L1–L9**, or reference-server rows **S3**/**S4**/**S6**/**S9** where they
+already apply.
 
 When **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** is implemented, the suite **must** additionally include
 **network-free** tests that satisfy **RP4** and **RP5** under **Backlog `f9677140`** below (**RP5** may alias **I4**).
@@ -225,6 +235,24 @@ These extend **A1–A5**; they do not replace **A1–A5** or **R1–R5**.
 | L7 | **`extra_sensitive_keys`** causes a **non-default** mapping key to be redacted (lowercase comparison per spec). | Unit test |
 | L8 | At least one test uses **`caplog`**, a **`logging.Handler`**, or equivalent to capture formatted log output showing **`[REDACTED]`** for sensitive fields and **asserting the absence** of a representative **high-entropy secret substring** (for example a fake bearer token) in the captured text. | Unit test (e.g. **`tests/test_redaction.py`** or module name aligned with implementation) |
 | L9 | **Successful verified delivery** (**HTTP 204** path): captured log text **must not** contain a distinctive raw body substring from a request fixture (proving default logging does not echo the POST body). **`extra`** from **`format_safe_webhook_log_extra`** **must** include **`webhook_status_code`** **204**, **`webhook_headers`** with sensitive names redacted when headers were passed, **`webhook_body_bytes_len`**, and **`lifecycle_*`** keys per **§ Example: successful verified delivery** in **SPEC_STRUCTURED_LOGGING_REDACTION** (omit **`lifecycle_approval_request_id`** when absent). | **`tests/test_redaction.py`** — **`test_l9_success_verified_delivery_no_raw_body_in_logs`** |
+
+## Backlog `0bab43f3`: optional serve / handler structured diagnostics
+
+Checklist rows for **Serve path: optional structured logging hook using `redaction` helpers**
+(`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`). Normative contract: **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**
+**§ Optional diagnostic logging (serve and handler paths)**; reference server rows **S10**–**S12** in
+**[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**.
+
+These extend **A1–A5** and, when **L1–L9** are active, complement them; they do **not** replace **L1–L9**, **A1–A5**, or
+**R1–R5**. Tests **must** remain **network-free** (in-process **WSGI** / **`handle_lifecycle_webhook_post`** and/or
+**`caplog`** against the reference app factory).
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **LG1** | **Default off:** With diagnostics **disabled**, the suite **must not** observe **new** request-scoped structured log records attributable to this feature compared to the documented baseline (for example **no** records from the documented diagnostic logger(s) at **INFO** or below during representative **POST**/**GET** handling, or equivalent assertion defined by the implementation’s logging levels). | **`pytest`** (module name aligned with implementation, e.g. **`tests/test_serve_handler_logging.py`** or extension of **`tests/test_reference_server.py`**) |
+| **LG2** | **Opt-in:** With diagnostics **enabled**, at least one test captures log output (**`caplog`**, handler, or formatted line) showing **`[REDACTED]`** (or **`REDACTED_PLACEHOLDER`**) for **`Authorization`** and **`Replayt-Signature`** on a representative request that includes **`Bearer <high-entropy-secret>`** and a valid signature header; the **secret substring** and full signature digest **must not** appear in captured text. | **`pytest`** (same module family) |
+| **LG3** | **Opt-in success path:** Captured log text for a **204** success scenario **must not** contain a **distinctive** raw body substring present in the request fixture (same bar as **L9**—prove the **serve** / **handler** path does not echo the POST body). | **`pytest`** |
+| **LG4** | **Traceability:** The test module (or **pytest** **docstring** on the class/module enforcing **LG1**–**LG3**) **must** name **SPEC_STRUCTURED_LOGGING_REDACTION** and **§ Optional diagnostic logging** so reviewers link proof to the normative contract. | Code review |
 
 ## Backlog `069e0240`: PM/support event digest format
 
@@ -386,7 +414,8 @@ child) so the child does not need to print an OS-assigned port when **`--port 0`
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
-- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**.
+- **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**;
+  optional **serve** / **handler** diagnostics, **LG1–LG4** (**§ Optional diagnostic logging**).
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.
 - **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP8**.
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — operator reverse-proxy guide, **OG1**–**OG8**.

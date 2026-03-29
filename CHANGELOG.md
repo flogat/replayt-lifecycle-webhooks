@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **Optional serve / handler structured logging** (phase **2** spec, backlog **`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`** /
+  *Serve path: optional structured logging hook using `redaction` helpers*): **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**
+  adds **§ Optional diagnostic logging (serve and handler paths)** (default-off, stdlib **`logging`** and/or narrow callback,
+  **`format_safe_webhook_log_extra`** / **`redact_*`**, README discoverability, safe examples). **`docs/SPEC_HTTP_SERVER_ENTRYPOINT.md`**
+  adds configuration notes and acceptance **S10**–**S12**. **`docs/SPEC_AUTOMATED_TESTS.md`** adds backlog **`0bab43f3`** and
+  **pytest** rows **LG1–LG4**. Cross-links in **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`** and **`docs/DESIGN_PRINCIPLES.md`**.
+
 ### Tests
 
 - **Subprocess reference server** (backlog **`83e07114`**, phase **3**): **`tests/test_reference_server_subprocess.py`**

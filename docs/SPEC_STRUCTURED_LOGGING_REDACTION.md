@@ -5,6 +5,9 @@
 - Establish structured logging and redaction for webhook handling (`6ea52b2b-ff96-4511-a9f8-d5d9ed6d3711`).
 - Add structured logging helper that redacts sensitive keys by default (`fa75ecf3-a113-418e-99cc-aa0c31237eba`) — same
   implementation and **L1–L9** checklist; **`fa75ecf3`** remains the **SPEC_AUTOMATED_TESTS** anchor id.
+- Optional structured diagnostics on the **reference server** and **HTTP handler** paths using the same redaction helpers
+  (`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`) — normative **§ Optional diagnostic logging (serve and handler paths)** and
+  **pytest** rows **LG1–LG4** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (backlog **`0bab43f3`**).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), operators, integrators.
 
@@ -195,6 +198,68 @@ copies of header maps **must** use **`redact_headers`** (or a helper built on it
 If a file has **no** logging today, **do not** add noisy logs solely to satisfy this spec; when logging is added for
 diagnostics, it **must** follow this section.
 
+## Optional diagnostic logging (serve and handler paths)
+
+**Backlog:** **`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`** (*Serve path: optional structured logging hook using `redaction`
+helpers*). **Audience:** operators running **`python -m replayt_lifecycle_webhooks`**, integrators wrapping the WSGI stack,
+Builder (3), Tester (4).
+
+### Problem
+
+The reference server (**`replayt_lifecycle_webhooks.serve`**, **`__main__`**) and the minimal HTTP handler
+(**`replayt_lifecycle_webhooks.handler`**) are natural places to add request-scoped diagnostics. Without an explicit
+contract, ad-hoc **`print`** or **`logging`** can leak **raw bodies**, **signing material**, or **bearer** tokens. This
+section defines an **opt-in** path that **reuses** **`format_safe_webhook_log_extra`**, **`redact_headers`**, and
+**`redact_mapping`** so server and handler logs stay aligned with **§ Request logging and raw body** and **§ Example:
+successful verified delivery**.
+
+### Goals (normative)
+
+- **Default off:** With diagnostics **disabled**, behavior and observable output **must** match the pre-feature baseline
+  for webhook handling (no **new** request-scoped **`logging`** records; existing **startup** **`print`** in **`__main__`**
+  **may** remain). Operators who do not enable the feature see **no** extra log volume from per-request hooks.
+- **No new mandatory logging dependencies:** Use **stdlib** **`logging`** only; **do not** add third-party logging
+  libraries for this backlog.
+- **Redaction at the source:** Every **opt-in** diagnostic record **must** be built with **`format_safe_webhook_log_extra`**
+  and/or **`redact_headers`** / **`redact_mapping`** so sensitive header names and **`extra=`** keys follow **§ Default
+  sensitive header names** and **§ Default sensitive mapping keys**. **Do not** hand-assemble header dicts for log **`extra`**
+  without redaction.
+- **Documented configuration:** **README.md** (reference-server / operator section) **must** document **how** to enable
+  diagnostics (**environment variable** and/or **`python -m`** flag and/or keyword-only parameters on factories, at least
+  one combination that operators can discover without reading source). When multiple switches exist, document **precedence**
+  (for example flag overrides env).
+- **Optional narrow callback (Builder choice):** The implementation **may** expose an optional callable (for example
+  **`on_request_log: Callable[..., None] | None`**) that receives **only** data already safe per this spec (for example a
+  **`Mapping[str, Any]`** shaped like **`Logger.debug(..., extra=…)`** kwargs, **after** redaction). The callback **must
+  not** receive the raw POST body, unredacted signing headers, or the shared secret. If no callback is documented, **stdlib**
+  **`logging`** alone satisfies the backlog.
+- **Logger naming:** If using **`logging`**, use a **documented** logger name (recommended: child loggers under
+  **`replayt_lifecycle_webhooks`**, e.g. **`replayt_lifecycle_webhooks.serve`** / **`replayt_lifecycle_webhooks.handler`**)
+  so operators can attach handlers and levels without guessing.
+- **Correlation fields:** **`lifecycle_*`** keys in diagnostic **`extra`** **must** come **only** from **verified** parsed
+  payloads per **§ Request logging and raw body** (same rule as **§ Recommended structured field names**).
+
+### Non-goals
+
+- **Mandatory** request logging for all installs.
+- **Changing** HTTP status codes, JSON error bodies, or **SPEC_WEBHOOK_FAILURE_RESPONSES** mappings.
+- **Deep** JSON scrubbing of arbitrary payload fields (remains **§ Non-goals** for this package).
+
+### Documentation and examples (normative)
+
+- Any **README** or spec **example** that shows **enabled** diagnostics **must** use **synthetic** correlation ids, **fake**
+  **`[REDACTED]`** header values, and **must not** show real **HMAC** secrets, full **`Replayt-Signature`** digests, or raw
+  POST bodies. Prefer the same field names as **§ Example: successful verified delivery** where applicable.
+- **CHANGELOG.md** **Unreleased** **must** note the new opt-in switches and logger names when the feature ships.
+
+### Backlog acceptance mapping (`0bab43f3`)
+
+| Original backlog criterion | Normative location | Proof |
+| -------------------------- | ------------------- | ----- |
+| Documented optional logging configuration (**stdlib** **`logging`** or narrow callback) routing selected fields through existing redaction utilities | **§ Optional diagnostic logging (serve and handler paths)**; **SPEC_HTTP_SERVER_ENTRYPOINT** configuration; **README** | Doc review; **S10** |
+| Default behavior unchanged when disabled; no secret or raw body values in default log examples | **§ Optional diagnostic logging** (default off, example rules); **§ Request logging and raw body** | Doc review; **LG1**; example review |
+| Tests prove redaction on representative messages; references **SPEC_STRUCTURED_LOGGING_REDACTION** | **SPEC_AUTOMATED_TESTS** backlog **`0bab43f3`**, rows **LG1–LG4** | **`pytest`**; module docstring or comments cite this spec |
+
 **Integrators:** **README** **must** state that custom handlers should reuse the same helpers when logging request
 metadata (see **README** **§ Production logging and redaction**).
 
@@ -259,7 +324,8 @@ fields.
 ## Test acceptance (normative)
 
 Detailed checklist rows **L1–L9** live under backlog **`fa75ecf3`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**.
-Summary:
+Rows **LG1–LG4** (optional **serve** / **handler** diagnostics, backlog **`0bab43f3`**) live in the same file and **must**
+cite this spec in test module docstrings or comments. Summary:
 
 - Capture output with **`caplog`**, a **`logging.Handler`**, or equivalent — **no** network.
 - Prove **`Authorization`** (e.g. **`Bearer s3cr3t`**) and **`Replayt-Signature`** do not leak literal secrets.
@@ -267,6 +333,8 @@ Summary:
 - Prove shallow **`redact_mapping`** for at least one **`token`**, **`secret`**, or **`api_key`** key.
 - Prove **L9**: success-path **`extra`** (or formatted log line) matches **§ Example: successful verified delivery** for
   required keys and **excludes** raw body substrings.
+- Prove **LG1–LG4**: opt-out baseline, opt-in redaction, no raw body echo, traceability to this document (**§ Optional
+  diagnostic logging**).
 
 ## Spec acceptance (checklist)
 
@@ -278,6 +346,7 @@ Summary:
 | G3 | **README** documents production logging expectations and links here. | Review **README.md** |
 | G4 | **SPEC_WEBHOOK_FAILURE_RESPONSES** cross-links here from logging guidance. | Review **SPEC_WEBHOOK_FAILURE_RESPONSES** |
 | G5 | **MISSION** and **DESIGN_PRINCIPLES** state the logging convention and link here (story AC: helper or convention in mission/design docs). | Review **MISSION.md**, **DESIGN_PRINCIPLES.md** |
+| G6 | Backlog **`0bab43f3`**: **§ Optional diagnostic logging (serve and handler paths)** and **SPEC_AUTOMATED_TESTS** **LG1–LG4** trace optional **serve** / **handler** diagnostics to this spec. | Review this file and **SPEC_AUTOMATED_TESTS** |
 
 ## Related docs
 
