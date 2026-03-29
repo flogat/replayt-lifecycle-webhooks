@@ -79,7 +79,8 @@ Rows **H9**–**H12** match **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION
 ## Related docs
 
 - **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — optional **reference server**: one documented
-  **`python -m` / CLI** command, **POST** route, **`GET /health`**, optional-deps posture, acceptance **S1–S8**.
+  **`python -m` / CLI** command, **POST** route, **`GET /health`**, optional-deps posture, acceptance **S1–S13**.
+- **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** — compact **route / status** matrix for the reference listener (backlog **`b4c68e50`**).
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI **`pytest`** entrypoint; suite must cover verification (and
   parsing where handler tests apply), not placeholder smoke tests.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification procedure, **401/403** guidance, v1 header format.

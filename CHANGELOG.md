@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Route map doc guards** (phase **3**, backlog **`b4c68e50-04df-4149-b9b5-f5d6280b38cc` / *Docs: machine-readable route/status map for the reference HTTP server*):
+  **`tests/test_reference_http_server_route_map_doc.py`** enforces **RM1**–**RM4** from **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`**
+  (canonical table content, **`README.md`** link, alignment with **`replayt_lifecycle_webhooks.serve`** defaults). **`docs/SPEC_AUTOMATED_TESTS.md`**
+  (**§ Backlog `b4c68e50`**) and **`README.md`** (**Running tests**) name the module.
+
 - **SPEC_WEBHOOK_FAILURE_RESPONSES** — **§ Fuzz / property tests**: exception expectations for optional **Hypothesis**
   **PF5**–**PF8** coverage and HTTP **`error`** mapping; **PF9** handler fuzzing noted as omitted in the current suite
   (phase **5** / architect review, backlog **`dcffe5d5`**).
@@ -36,6 +41,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **`tests/test_serve_handler_logging.py`** satisfies **LG1**–**LG4** in **`docs/SPEC_AUTOMATED_TESTS.md`**.
 
 ### Documentation
+
+- **Reference HTTP server route/status matrix** (phase **2** spec, backlog **`b4c68e50-04df-4149-b9b5-f5d6280b38cc` / *Docs: machine-readable route/status map for the reference HTTP server*):
+  new **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`** (canonical **path / method / HTTP status** table, defaults, links to
+  **SPEC_WEBHOOK_FAILURE_RESPONSES** and **SPEC_WEBHOOK_SIGNATURE**); **`README.md`**, **MISSION**, **DESIGN_PRINCIPLES**,
+  **SPEC_HTTP_SERVER_ENTRYPOINT** (**S13**), **SPEC_README_OPERATOR_SECTIONS**, **SPEC_MINIMAL_HTTP_HANDLER**,
+  **SPEC_LOCAL_WEBHOOK_DEMO**, and **SPEC_AUTOMATED_TESTS** (**§ Backlog `b4c68e50`**, **RM1**–**RM7**) updated for
+  cross-links and acceptance traceability.
 
 - **Packaging gate wording** (phase **5** architect review, backlog **`78e3554b-2b50-4918-9859-85642ac1a84a` / *CI: `python -m build` + `twine check` on sdist/wheel*):
   **`docs/MISSION.md`** success metric now describes the live **`package`** job and **pytest** layout checks; **`README.md`**
