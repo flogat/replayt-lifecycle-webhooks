@@ -11,6 +11,8 @@ expectations: **[docs/MISSION.md](docs/MISSION.md)**. It declares a runtime depe
 **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)**. Webhook signature verification contract and
 acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. **Optional minimal HTTP POST
 handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
+**Optional metrics hooks** (keyword-only **`metrics=`**, stdlib reference types; no mandatory **Prometheus** / **OTel**):
+**[docs/SPEC_METRICS_HOOKS.md](docs/SPEC_METRICS_HOOKS.md)** (**M1**–**M8**).
 **Reference HTTP server** (stdlib **WSGI**, no extra install): primary command **`python -m replayt_lifecycle_webhooks`**,
 **POST** on **`/webhook`** by default, **`GET /health`**. Compact **path / method / status** matrix for gateways and mocks:
 **[docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**. Details and acceptance **S1–S13**:
@@ -475,6 +477,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
 | `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L9** |
+| `docs/SPEC_METRICS_HOOKS.md` | Optional **`LifecycleWebhookMetrics`** / **`metrics=`** contract; verify vs handler timing; tests **M1**–**M8** (backlog **`42b8d5a9`**) |
 | `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP9** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, **`event_id`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |

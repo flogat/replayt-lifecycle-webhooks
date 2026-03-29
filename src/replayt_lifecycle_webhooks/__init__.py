@@ -24,6 +24,12 @@ from .handler import (
     handle_lifecycle_webhook_post,
     make_lifecycle_webhook_wsgi_app,
 )
+from .metrics import (
+    InMemoryLifecycleWebhookMetrics,
+    LifecycleWebhookMetrics,
+    LifecycleWebhookVerifyOutcome,
+    NullLifecycleWebhookMetrics,
+)
 from .replay_protection import (
     InMemoryLifecycleWebhookDedupStore,
     LifecycleWebhookDedupStore,
@@ -59,6 +65,10 @@ __all__ = [
     "WebhookSignatureMissingError",
     "compute_lifecycle_webhook_signature_header",
     "verify_lifecycle_webhook_signature",
+    "LifecycleWebhookVerifyOutcome",
+    "LifecycleWebhookMetrics",
+    "NullLifecycleWebhookMetrics",
+    "InMemoryLifecycleWebhookMetrics",
     "SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS",
     "LIFECYCLE_WEBHOOK_EVENT_TYPES",
     "LifecycleCorrelation",

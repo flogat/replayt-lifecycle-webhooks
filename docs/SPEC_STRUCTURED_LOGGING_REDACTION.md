@@ -8,6 +8,9 @@
 - Optional structured diagnostics on the **reference server** and **HTTP handler** paths using the same redaction helpers
   (`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`) — normative **§ Optional diagnostic logging (serve and handler paths)** and
   **pytest** rows **LG1–LG4** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (backlog **`0bab43f3`**).
+- Optional metrics callbacks for verify / handler outcomes (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — **§ Metrics and
+  observability callbacks**; **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**; **pytest** rows **M1**–**M8** in
+  **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (backlog **`42b8d5a9`**).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), operators, integrators.
 
@@ -197,6 +200,18 @@ copies of header maps **must** use **`redact_headers`** (or a helper built on it
 
 If a file has **no** logging today, **do not** add noisy logs solely to satisfy this spec; when logging is added for
 diagnostics, it **must** follow this section.
+
+## Metrics and observability callbacks
+
+**Backlog:** **`42b8d5a9-a246-4c47-b167-f39ac371789e`**. Normative API and timing rules: **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**.
+
+Optional **`LifecycleWebhookMetrics`** hooks record **coarse** verification outcomes and HTTP results. They are **not** a
+logging API, but they share the **same hygiene bar** as **§ Request logging and raw body**: callback arguments **must not**
+include raw POST bodies, the shared **HMAC** secret, the full **`Replayt-Signature`** header value, or computed **MAC**
+digests. Prefer **bounded** outcome strings and stable **`error_code`** values; if an integrator forwards protocol fields
+into **logs** or **metric labels**, apply the same redaction and cardinality discipline as elsewhere in this spec.
+
+**Proof:** **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `42b8d5a9`**, row **M6** (and related rows).
 
 ## Optional diagnostic logging (serve and handler paths)
 
