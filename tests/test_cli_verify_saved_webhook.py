@@ -13,7 +13,9 @@ from pathlib import Path
 
 import pytest
 
-from replayt_lifecycle_webhooks.signature import compute_lifecycle_webhook_signature_header
+from replayt_lifecycle_webhooks.signature import (
+    compute_lifecycle_webhook_signature_header,
+)
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _RUN_STARTED = _REPO_ROOT / "tests" / "fixtures" / "events" / "run_started.json"
@@ -94,9 +96,7 @@ def test_vw3_fixture_file_valid_signature_ok_stdout() -> None:
 def test_vw4_wrong_signature_exit_one_no_secret_or_mac_leak() -> None:
     """VW4: MAC failure → 1; stderr must not contain secret or full expected digest hex."""
     body = _RUN_STARTED.read_bytes()
-    good = compute_lifecycle_webhook_signature_header(
-        secret=_SECRET_VW4, body=body
-    )
+    good = compute_lifecycle_webhook_signature_header(secret=_SECRET_VW4, body=body)
     wrong = "sha256=" + "0" * 64
     assert wrong != good
     proc = _run_verify(
@@ -162,9 +162,7 @@ def test_vw7_public_api_table_documents_verify() -> None:
         (["--signature", "sha256=" + "g" * 64, str(_RUN_STARTED)], 1),
     ],
 )
-def test_verify_argparse_or_format_errors(
-    extra_args: list[str], expect: int
-) -> None:
+def test_verify_argparse_or_format_errors(extra_args: list[str], expect: int) -> None:
     """Missing BODY → 2; invalid hex with body → 1."""
     env = {"REPLAYT_LIFECYCLE_WEBHOOK_SECRET": "x"}
     proc = _run_verify(*extra_args, env=env)
@@ -189,4 +187,3 @@ def test_signature_file_trailing_newline_stripped() -> None:
         os.unlink(sig_path)
     assert proc.returncode == 0
     assert proc.stdout == "ok\n"
-
