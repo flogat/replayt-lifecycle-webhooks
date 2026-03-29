@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **CI / ruff format** (phase **8**, backlog **`d10cf76f-e11e-4674-9d81-6d06899b4a64` / *Reference SQLite-backed idempotency store for event_id*`): **`tests/test_sqlite_idempotency_store.py`** reformatted so **`ruff format --check`** passes on the **lint** matrix (**3.11**–**3.13**); no test behavior change.
+
 ### Added
 
 - **SQLite reference idempotency store** (phase **3**, backlog **`d10cf76f-e11e-4674-9d81-6d06899b4a64` / *Reference SQLite-backed idempotency store for event_id*`): **`SqliteLifecycleWebhookDedupStore`** in **`src/replayt_lifecycle_webhooks/sqlite_idempotency.py`** (stdlib **`sqlite3`** only; injectable **`now`**, **`connect_timeout`**, **WAL**, thread **`Lock`** around a shared connection). Re-exported from the package root after **`InMemoryLifecycleWebhookDedupStore`**. Tests: **`tests/test_sqlite_idempotency_store.py`** (**SQ1**–**SQ4**). **`docs/SPEC_PUBLIC_API.md`**, **`docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md`**, **`docs/SPEC_DELIVERY_IDEMPOTENCY.md`**, **`docs/SPEC_REPLAY_PROTECTION.md`**, **`README.md`**.

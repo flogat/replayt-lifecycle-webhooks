@@ -10,7 +10,10 @@ from datetime import datetime, timezone
 from http import HTTPStatus
 from pathlib import Path
 
-from replayt_lifecycle_webhooks import SqliteLifecycleWebhookDedupStore, handle_lifecycle_webhook_post
+from replayt_lifecycle_webhooks import (
+    SqliteLifecycleWebhookDedupStore,
+    handle_lifecycle_webhook_post,
+)
 from replayt_lifecycle_webhooks.signature import LIFECYCLE_WEBHOOK_SIGNATURE_HEADER
 
 _FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures" / "events"
@@ -67,7 +70,9 @@ def test_sq3_concurrent_try_claim_single_winner(tmp_path: Path) -> None:
     assert results.count(False) == n - 1
 
 
-def test_sq4_handler_duplicate_post_sqlite_dedup_on_success_once(tmp_path: Path) -> None:
+def test_sq4_handler_duplicate_post_sqlite_dedup_on_success_once(
+    tmp_path: Path,
+) -> None:
     """**SQ4:** two **``handle_lifecycle_webhook_post``** calls, same **``event_id``**, SQLite **``dedup_store``** → **204** twice; **``on_success``** once."""
     raw = (_FIXTURES_DIR / "run_started.json").read_bytes()
     header = _sign(raw)
