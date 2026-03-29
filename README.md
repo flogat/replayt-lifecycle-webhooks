@@ -13,7 +13,9 @@ acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNA
 handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
 **Reference HTTP server** (stdlib **WSGI**, no extra install): primary command **`python -m replayt_lifecycle_webhooks`**,
 **POST** on **`/webhook`** by default, **`GET /health`**. Details and acceptance **S1–S8**:
-**[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Local signed demo POST** (one command,
+**[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Reverse proxy / TLS** in front of that
+listener (raw POST body, limits, timeouts): contract **[docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**;
+operator guide **[docs/OPERATOR_REVERSE_PROXY.md](docs/OPERATOR_REVERSE_PROXY.md)** (**OG1**–**OG8**). **Local signed demo POST** (one command,
 dev fixtures, same **v1** signing as verification): **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)**
 (checklist **D1–D9**). **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. **PM/support digest** (deterministic text + optional JSON
@@ -207,6 +209,10 @@ and an idempotency store whose **TTL** covers retries and approval windows. Full
 optional **`Replayt-*`** headers or a nonce) per **[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**.
 **Benign duplicates** (same **`event_id`**, idempotent **2xx**) differ from **policy rejects** (**422** /
 **`replay_rejected`**); map the latter using **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md)**.
+
+**Reverse proxy / TLS in front of the reference server:** Preserve the raw POST body, set sane body limits and timeouts,
+and avoid **`Transfer-Encoding`** pitfalls. Copy-paste **nginx** (or adapt for **Caddy**) patterns in
+**[docs/OPERATOR_REVERSE_PROXY.md](docs/OPERATOR_REVERSE_PROXY.md)**.
 
 **Where to look in logs:** Prefer structured **`extra=`** keys such as **`webhook_*`**, **`lifecycle_*`**, and
 **`error_code`**, with headers and dict values passed through **`replayt_lifecycle_webhooks.redaction`** as in
@@ -411,6 +417,8 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H12** |
 | `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S8** |
+| `docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md` | Normative contract for **`docs/OPERATOR_REVERSE_PROXY.md`**: nginx/Caddy-style proxy, raw body, limits, timeouts; **pytest** **OG1**–**OG8** |
+| `docs/OPERATOR_REVERSE_PROXY.md` | Operator guide: reverse proxy in front of **`python -m replayt_lifecycle_webhooks`** (**OG1**–**OG8**; backlog **`dc212184`**) |
 | `docs/SPEC_LOCAL_WEBHOOK_DEMO.md` | Local demo: one command POSTs signed fixtures to default listener; acceptance **D1–D9** |
 | `replayt_lifecycle_webhooks.demo_webhook` | **`python -m replayt_lifecycle_webhooks.demo_webhook`**: signed POST to default **`/webhook`** URL |
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |

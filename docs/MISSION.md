@@ -7,6 +7,7 @@ live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
 **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**, the optional HTTP helper spec
 **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**, and the optional **reference server** contract
 **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (one documented start command when implemented).
+**Reverse proxy / TLS** in front of the reference server (raw body, limits, timeouts): **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; operator guide **[OPERATOR_REVERSE_PROXY.md](OPERATOR_REVERSE_PROXY.md)**.
 Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
 **Structured logging** with default **redaction** for sensitive headers and metadata:
 **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
