@@ -150,8 +150,8 @@ Integrators and operators are responsible for:
 - **Packaging gate (PyPI readiness)** — **CI** runs **`python -m build`** and **`twine check`** on the **sdist** and **wheel**
   (**job `package`** in **`.github/workflows/ci.yml`**; backlog **`78e3554b`**). The **pytest** suite checks **declared package data**
   per **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `78e3554b`** (**PK1**–**PK7**). **PEP 561** marker
-  **`py.typed`** and optional static typing expectations are specified under **§ Backlog `2ec2c21c`** (**TP1**–**TP6**) once
-  that backlog is implemented (**SPEC_PUBLIC_API.md**, **§ Static typing (PEP 561)**). This catches broken metadata or missing
+  **`py.typed`** and optional static typing expectations are specified under **§ Backlog `2ec2c21c`** (**TP1**–**TP6**);
+  integrator summary: **SPEC_PUBLIC_API.md**, **§ Static typing (PEP 561)**. This catches broken metadata or missing
   distribution files **before** a release tag.
 - **Releases and versioning** — Public API and dependency contract changes are tracked under **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)** as declared in **`CHANGELOG.md`**; cutting a release means updating the version in **`pyproject.toml`**, grouping **Unreleased** notes into a dated section, and publishing to PyPI (or the project’s canonical index) per maintainer practice. Integrators rely on the **replayt** lower bound and changelog for upgrade safety (**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**).
 - **CHANGELOG.md** records user-visible API and dependency changes under **Unreleased** (or the releasing section) per

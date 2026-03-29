@@ -68,9 +68,9 @@ The following **import paths** are **internal implementation** until **1.0.0** (
 
 ## Static typing (PEP 561)
 
-**Purpose:** Integrators using **pyright**, **mypy**, or other **PEP 484**-aware tools should be able to treat this distribution as a **typed** dependency once **`py.typed`** ships (**[PEP 561](https://peps.python.org/pep-0561/)**).
+**Purpose:** Integrators using **pyright**, **mypy**, or other **PEP 484**-aware tools can treat this distribution as a **typed** dependency: releases ship an **empty** **`py.typed`** marker per **[PEP 561](https://peps.python.org/pep-0561/)**.
 
-**Shipment:** After backlog **`2ec2c21c`** is implemented, releases **must** include an **empty** **`py.typed`** marker inside the **wheel** and **sdist** at **`replayt_lifecycle_webhooks/py.typed`** (see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `2ec2c21c`**, **TP1**–**TP3**). Until then, consumers should assume **partial** / **untyped** packaging for the distribution.
+**Shipment:** Releases **must** include that marker inside the **wheel** and **sdist** at **`replayt_lifecycle_webhooks/py.typed`** (mechanical bar: **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `2ec2c21c`**, **TP1**–**TP3**).
 
 **Supported typing surface:** Type checkers **should** be pointed at the **same** import paths as **§ Supported import paths**—the package root and **`replayt_lifecycle_webhooks.events`**. Maintainers **aim** for accurate annotations on **public** symbols listed in **`__all__`** (and the **`events`** submodule **`__all__`**). **Internal** modules listed in **§ Unsupported imports** are **not** a supported typing contract: annotations there may be incomplete or churn without a deprecation cycle.
 
@@ -122,9 +122,9 @@ At **1.0.0**, tighten policy as maintainers document (this spec should gain a **
 | **API1** | **Supported public imports** are exactly those documented in **§ Supported import paths** (package root table + **`events`** submodule rule). |
 | **API2** | **Internal** modules are listed in **§ Unsupported imports**; integrator docs and **README** do not encourage deep imports from them. |
 | **API3** | **Deprecation policy** states **minimum** wait (**one minor 0.x** after deprecating release) and **CHANGELOG** requirements (**Deprecated** section + migration + removal tracking). |
-| **TYP1** | **§ Static typing (PEP 561)** states that **`py.typed`** shipment is **required** after backlog **`2ec2c21c`** and names **SPEC_AUTOMATED_TESTS** **TP1**–**TP3** as the mechanical bar. |
+| **TYP1** | **§ Static typing (PEP 561)** states that **`py.typed`** shipment is **required** and names **SPEC_AUTOMATED_TESTS** **TP1**–**TP3** (backlog **`2ec2c21c`**) as the mechanical bar. |
 | **TYP2** | Supported **typing** surface matches **supported imports** (package root + **`events`**); **internal** modules are explicitly **not** a typing stability contract. |
-| **TYP3** | **CHANGELOG** records typing posture when **`py.typed`** ships (**SPEC_AUTOMATED_TESTS** **TP6**). |
+| **TYP3** | **CHANGELOG** records typing posture for **`py.typed`** shipment (**SPEC_AUTOMATED_TESTS** **TP6**). |
 
 ## Related documentation
 

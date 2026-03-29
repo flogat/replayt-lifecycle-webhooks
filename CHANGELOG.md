@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 
 - **PEP 561 / typing spec** (phase **2**, backlog **`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb` / *Packaging: ship `py.typed` and optional static typing gate*`):
-  **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `2ec2c21c`** (**TP1**–**TP6**); **`docs/SPEC_PUBLIC_API.md`** adds **§ Static typing (PEP 561)** and acceptance **TYP1**–**TYP3**; **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`CONTRIBUTING.md`** cross-link the backlog. **Builder** phase is expected to add **`py.typed`**, **`pyproject.toml`** package-data, **pytest** **sdist**/**wheel** assertions, optional type-check wiring, and a user-facing **CHANGELOG** bullet per **TP6**.
+  **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `2ec2c21c`** (**TP1**–**TP6**); **`docs/SPEC_PUBLIC_API.md`** adds **§ Static typing (PEP 561)** and acceptance **TYP1**–**TYP3**; **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`CONTRIBUTING.md`** cross-link the backlog.
 
 ### Changed
 
@@ -30,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   contract. Phase **3** adds the checker, tests, and CI wiring (see **Added** below).
 
 ### Added
+
+- **PEP 561 `py.typed` and optional `pyright` CI** (phase **3**, backlog **`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb` / *Packaging: ship `py.typed` and optional static typing gate*`):
+  empty **`src/replayt_lifecycle_webhooks/py.typed`**, **`[tool.setuptools.package-data]`** listing for the marker, and
+  **`tests/test_packaging_layout.py`** checks that **wheel** and **sdist** include **`replayt_lifecycle_webhooks/py.typed`** (**TP1**–**TP3**).
+  **`.github/workflows/ci.yml`** adds a non-blocking **`typing`** job (**`continue-on-error: true`**) running **pyright** on the package
+  root and **`events`** modules (**TP4**–**TP5**). **`CONTRIBUTING.md`** documents the local **pyright** command. Integrators get a typed
+  package per **SPEC_PUBLIC_API** **§ Static typing (PEP 561)**; CI does not type-check every internal module.
 
 - **`pip-audit` suppression alignment** (phase **3**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
   automate pip-audit ignore review reminders*`): **`scripts/pip_audit_suppression_alignment.py`** compares **`supply-chain`**
