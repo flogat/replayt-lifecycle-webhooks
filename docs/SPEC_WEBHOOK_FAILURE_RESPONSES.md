@@ -127,6 +127,27 @@ correct.
 | **Operator runbooks** | Still document **`replay_rejected`** (or **`stale_delivery`** as an alias code **only if** you document both as equivalent) for **your** deduplication store, **`event_id`** replay windows, **`occurred_at`** freshness, or **future** upstream timestamp headers. Dedupe keys and TTL: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; freshness parameters and hooks: **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**. |
 | **If upstream adds a signed timestamp later** | Update **SPEC_WEBHOOK_SIGNATURE**, **REPLAYT_WEBHOOK_SIGNING.md**, and this file; add tests with injected clocks; map wire failures to **`replay_rejected`** or a dedicated stable code (e.g. **`timestamp_skew`**) in a minor release. |
 
+## Fuzz / property tests
+
+Optional **Hypothesis** tests (**PF1**–**PF10**, backlog **`dcffe5d5`**, **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**) call
+**`verify_lifecycle_webhook_signature`** and **`parse_lifecycle_webhook_event`** directly. They assert **Python** exception
+types, not HTTP responses.
+
+**Verifier (`verify_lifecycle_webhook_signature`):** For bounded generated **`secret`**, **`body`**, and **`signature`**, the
+function returns **`None`** or raises **only** **`WebhookSignatureMissingError`**, **`WebhookSignatureFormatError`**, or
+**`WebhookSignatureMismatchError`**. Map those to **`signature_required`**, **`signature_malformed`**, and
+**`signature_mismatch`** (and **401** / **403**) per the tables above when you build HTTP responses.
+
+**Parser (`parse_lifecycle_webhook_event`):** For bounded JSON-shaped **`dict`** inputs, the function returns a supported
+lifecycle model or raises **only** **`pydantic.ValidationError`**. For **non-**`dict` **`data`**, it raises **`TypeError`**
+only (see the function docstring). Map validation failures to **`unknown_event_type`**, **`invalid_payload_shape`**, or
+your chosen **400** / **422** policy per **§ Semantics after verification**.
+
+**Handler fuzzing (**PF9**):** If property tests exercise **`handle_lifecycle_webhook_post`** or
+**`make_lifecycle_webhook_wsgi_app`**, outcomes **must** match **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**
+ordering and the stable **`error`** codes in this spec for the branches under test. The current optional suite omits **PF9**
+and stays on verify + parse only.
+
 ## What not to log or return (normative)
 
 Do **not** include any of the following in **HTTP response bodies**, **client-facing error JSON**, or **production**
