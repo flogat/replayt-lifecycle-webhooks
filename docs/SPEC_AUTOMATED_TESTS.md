@@ -3,7 +3,8 @@
 **Backlogs (normative traceability):**
 
 - Replace smoke-only test with real package behavior assertions (`a91574f0-1e57-4b34-9922-763f92448a18`).
-- Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+- Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** (**R1–R5**).
+- Contract tests: replayt version bump guardrails (`2b5bb9f6-af49-4c68-a76f-132ec40769d5`) — checklist **G1–G7** in **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**; **§ Backlog `2b5bb9f6`** below.
 - Replace scaffold smoke tests with unit and boundary coverage (`2b4c6927-573a-463c-b59f-f2f91dfb6381`) — rows **A6–A10** under **Backlog `2b4c6927`** below.
 - Local demo webhook POST (`ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`) — checklist **D1–D9** in **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
 - Structured logging with default sensitive-key redaction (`fa75ecf3-a113-418e-99cc-aa0c31237eba`; workflow
@@ -22,6 +23,8 @@
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
   checklist **OP1**–**OP9** under **Backlog `23e2da29`** below (**OP9** from backlog **`c631fe3f`**); normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
+- Coordinated security disclosure and root **`SECURITY.md`** (`87e7edae-033d-45af-87fc-066fca51db96`) — checklist **SEC1**–**SEC9**
+  under **§ Backlog `87e7edae`** below; normative contract **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**.
 - Integrator **ASGI** verified-first recipe (`c631fe3f-8a66-4a9d-a900-bab855860c7b`) — checklist **AF1**–**AF7** in
   **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** below
   (**pytest** for **AF1**–**AF6**; **AF7** review).
@@ -61,8 +64,14 @@
   **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** (**§ Static typing (PEP 561)**).
 - Optional metrics hooks for verify / handler outcomes (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — checklist **M1**–**M8**
   under **§ Backlog `42b8d5a9`** below; normative contract **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**.
+<<<<<<< HEAD
 - SQLite reference idempotency store for **`event_id`** (`d10cf76f-e11e-4674-9d81-6d06899b4a64`) — checklist **SQ1**–**SQ7**
   under **§ Backlog `d10cf76f`** below; normative contract **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
+=======
+- Performance regression guard for **`verify_lifecycle_webhook_signature`** hot path (`1b3df584-4ac8-4f16-99cf-c14404c7692a`) —
+  checklist **PG1**–**PG8** under **§ Backlog `1b3df584`** below; normative context **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**
+  (**§ Performance regression guard**).
+>>>>>>> master
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -89,14 +98,16 @@ behavioral coverage.
 | Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
 | Optional **SQLite** dedupe store (**SQ1**–**SQ7**), when implemented | **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**; **§ Backlog `d10cf76f`** below |
 | **replayt** dependency / doc contract (**A1**–**A10**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
-| **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
+| **`replayt` import / API stability at the dependency seam** (**R1–R5**, **G1–G7**) | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | Optional **serve** / **handler** diagnostic logging + redaction (**LG1–LG4**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic logging**); **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S10**–**S12**) |
 | Optional verify / handler **metrics** callbacks (**M1**–**M8**), when implemented | **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**; **§ Backlog `42b8d5a9`** below |
+| Optional **verify** hot-path **performance** guard (**PG1**–**PG8**), non-default in CI | **§ Backlog `1b3df584`** below; **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** (**§ Performance regression guard**) |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
+| Root **`SECURITY.md`** disclosure policy + **README** / **CONTRIBUTING** cross-links (**SEC1**–**SEC9**) | **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**; **§ Backlog `87e7edae`** |
 | ASGI (**FastAPI** / **Starlette**) verified-first integrator guide (**AF1**–**AF7**) | **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
@@ -128,6 +139,10 @@ behavioral coverage.
 
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
+
+- **Performance timing tests** (**§ Backlog `1b3df584`**, **PG1**–**PG8**) **must not** run as part of merge-blocking
+  **`pytest`** unless the workflow explicitly opts in with **documented** loose thresholds (maintainer choice). Default
+  **`pytest tests -q`** stays **green** on shared CI runners without flaky wall-clock failures.
 
 - **Ruff** (**`ruff check`**, **`ruff format --check`**) is specified under **§ Backlog `5a3f5a7f`** and implemented in
   **`.github/workflows/ci.yml`** (**`lint`** job). **Removing** or **weakening** those steps requires updating this
@@ -164,7 +179,8 @@ The suite **must** include **network-free** **pytest** tests that fail when the 
    apply, the same module also holds duplicate-delivery fixture checks and the signed duplicate-**POST** dedupe pattern.
    Existing coverage is expected under **`tests/test_lifecycle_events.py`** and **`tests/fixtures/events/`**.
 3. **Replayt boundary (dependency seam)** — At least one module **imports `replayt`** and asserts **documented** public
-   symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+   symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** (**R1–R5**).
+   Backlog **`2b5bb9f6`** adds **G1–G7** guardrails in the same file (**`__all__` superset**, actionable failure text, network-free default, contributor docs for markers/workflows).
    This is **in addition to** items **1** and **2**, not a substitute. Existing **`tests/test_replayt_dependency.py`** work
    counts toward the **version / pyproject** story only when combined with those **import** checks (same module or a
    dedicated **`tests/test_replayt_boundary.py`**).
@@ -230,10 +246,15 @@ tests **must not** replace items **1**–**4** in **§ Minimum behavioral covera
 **CHANGELOG.md** and this document record a deliberate policy change, **default** **`pytest tests -q`** and merge-blocking
 **CI** **must** remain **green** on an install that does **not** include **Hypothesis** (skip, marker exclusion, or equivalent).
 
+**Optional** hot-path **performance** checks (**PG1**–**PG8**, **§ Backlog `1b3df584`**) **complement** **A2** and **§ Minimum
+behavioral coverage** item **1**; they **must not** replace **W3** or correctness tests. They are **off** merge-blocking **CI**
+by default (marker exclusion, env gate, or **`scripts/`**-only harness).
+
 ## Acceptance criteria (checklist)
 
 Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows **R1–R5** in
-**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** cover backlog **`d9d6b302`**.
+**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** cover backlog **`d9d6b302`**. Rows **G1–G7** in the
+same document cover backlog **`2b5bb9f6`** (*Contract tests: replayt version bump guardrails*).
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
@@ -242,6 +263,24 @@ Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows
 | A3 | **pytest** exercises **`parse_lifecycle_webhook_event`** (or the handler’s verify-then-parse path) on valid and invalid lifecycle JSON per **EVENTS.md** **T3–T5**. | **`pytest tests -q`**; review **`tests/test_lifecycle_events.py`** / fixtures |
 | A4 | CI runs **`pytest tests -q`** or **`python -m pytest tests -q`** (optional extra flags) against **`tests/`**. | Review **`.github/workflows/ci.yml`** |
 | A5 | Doc or contract changes to the CI command or minimum coverage appear under **CHANGELOG.md** **Unreleased** when user-visible to contributors. | Release hygiene |
+
+## Backlog `2b5bb9f6`: replayt version bump guardrails
+
+Checklist rows for **Contract tests: replayt version bump guardrails**
+(`2b5bb9f6-af49-4c68-a76f-132ec40769d5`). Normative detail and failure-message rules live in
+**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** (**§ Version bump guardrails**). These extend **R1–R5**;
+they do not replace them. Maintainer bump flow when tests fail: **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
+**§ When boundary or guardrail tests fail**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| G1 | Required **`replayt`** symbols and **`__all__` superset** per **SPEC_REPLAYT_BOUNDARY_TESTS** **G1**. | **`tests/test_replayt_boundary.py`** |
+| G2 | Actionable failure text per **SPEC_REPLAYT_BOUNDARY_TESTS** **§ Failure messages**. | Code review; forced failure stderr |
+| G3 | Network-free default **`pytest`** for guardrail tests. | Code review |
+| G4 | **README** / **CONTRIBUTING** documents full vs focused runs and any opt-in upstream marker. | **README.md** (**Running tests**) |
+| G5 | Optional upstream workflow is non-merge-blocking and documented, or docs state absence. | **README**; workflows |
+| G6 | Explicit **`assert`** / **`pytest.fail`** with messages (**G6**). | **`tests/test_replayt_boundary.py`** |
+| G7 | Guardrails co-located with **R1** in **`tests/test_replayt_boundary.py`**. | Module layout |
 
 ## Backlog `2b4c6927`: smoke replacement and module imports
 
@@ -256,6 +295,17 @@ boundary rows **R1–R5**.
 | A8 | Unknown **`event_type`** is rejected during parsing (**T4** family). | **`tests/test_lifecycle_events.py`** — **`test_parse_rejects_unknown_event_type`** |
 | A9 | After verify, the success path invokes the caller hook (**H7**). | **`tests/test_http_handler.py`** — **`test_on_success_called_after_verify`** |
 | A10 | Tests **`import`** **`replayt_lifecycle_webhooks.signature`**, **`replayt_lifecycle_webhooks.handler`**, and **`replayt_lifecycle_webhooks.events`** directly (not only the package root), and exercise **`replayt_lifecycle_webhooks.serve`** where the reference server is in tree. | Search **`tests/`**; **`tests/test_reference_server.py`** for **serve** |
+
+## Backlog `70689a62`: canonical webhook failure examples (fixtures)
+
+Checklist rows for **Harden SPEC_WEBHOOK_FAILURE_RESPONSES with end-to-end examples**
+(`70689a62-61d1-4f2a-9d32-e8e8eec27c88`). Normative HTTP + JSON surface:
+**[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** (**§ Canonical end-to-end examples**).
+These complement **H8** message checks in **`tests/test_http_handler.py`**; they do not replace **H8**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| FR5 | Committed **`tests/fixtures/webhook_failure_responses/*.json`** stay byte-identical to **`handle_lifecycle_webhook_post`** error bodies (compact JSON, no trailing newline) and cover every stable **`error`** code in that folder. | **`tests/test_webhook_failure_response_fixtures.py`** |
 
 ## Backlog `4280c054`: delivery idempotency (`event_id`)
 
@@ -521,6 +571,29 @@ between consecutive **`## `** headings so each row scopes content to the right s
 | **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
 | **OP9** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** (backlog **`c631fe3f`**). | **`pytest`** (same module) |
 
+## Backlog `87e7edae`: coordinated security disclosure (`SECURITY.md`)
+
+Checklist rows for **SECURITY.md and coordinated disclosure process**
+(`87e7edae-033d-45af-87fc-066fca51db96`). Normative contract:
+**[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)** (**SC1**–**SC11**). These rows are **documentation**
+acceptance; they **do not** replace signature, parsing, boundary, or **pytest** minima in **§ Minimum behavioral coverage**.
+
+Implement **network-free** assertions by reading **`SECURITY.md`**, **`README.md`**, and **`CONTRIBUTING.md`** from disk
+(prefer a dedicated module such as **`tests/test_security_disclosure_doc.py`**). Matching is **case-insensitive** where
+noted below.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **SEC1** | Repository root **`SECURITY.md`** exists (same directory as **`README.md`**). | **`pytest`** |
+| **SEC2** | **`SECURITY.md`** contains a level-1 markdown heading (line starts with **`# `**) whose title includes **`security`** (substring match). | **`pytest`** |
+| **SEC3** | **`SECURITY.md`** contains a **`## `** heading line that includes **`in scope`** (substring match). | **`pytest`** |
+| **SEC4** | **`SECURITY.md`** contains a **`## `** heading line that includes **`out of scope`** (substring match) **and** body text (full file) mentions **`replayt`** (case-insensitive). | **`pytest`** |
+| **SEC5** | **`SECURITY.md`** mentions **`acknowledg`** **or** **`business day`** **or** **`72`** (case-insensitive) — response-expectations prose per **SC6**. | **`pytest`** |
+| **SEC6** | **`SECURITY.md`** contains **`mailto:`** **or** (**`github`** **and** **`security`** substrings, case-insensitive) — reporting channel per **SC4**. | **`pytest`** |
+| **SEC7** | **`SECURITY.md`** links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** **or** **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** **or** **`docs/DESIGN_PRINCIPLES.md`** (path substring as written for repo-relative markdown links). | **`pytest`** |
+| **SEC8** | Root **`README.md`** contains a markdown link with target **`SECURITY.md`** or **`./SECURITY.md`** (substring **`](SECURITY.md)`** or **`](./SECURITY.md)`**). | **`pytest`** |
+| **SEC9** | **`CONTRIBUTING.md`** contains a markdown link to **`docs/SPEC_SECURITY_DISCLOSURE.md`** **and** names **`SECURITY.md`** as repository-root policy (plain text or markdown link). | **`pytest`** |
+
 ## Backlog `c631fe3f`: integrator ASGI verified-first recipe
 
 Checklist rows for **Integrator recipe: FastAPI / Starlette verified-first handler**
@@ -746,6 +819,39 @@ Optional: run a single module while iterating:
 ```bash
 pytest tests/test_property_fuzz_signature.py -q
 pytest tests/test_property_fuzz_parse.py -q
+```
+
+## Backlog `1b3df584`: verify hot-path performance regression guard
+
+Checklist rows for **Performance regression guard for signature verification hot path**
+(`1b3df584-4ac8-4f16-99cf-c14404c7692a`). **Scope:** **`tests/`** and/or **`scripts/`** only — **no** change to
+**`verify_lifecycle_webhook_signature`** semantics, wire format, or public contract (**[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**).
+**Goal:** catch accidental **large** slowdowns in the **success-path** verify loop (integrators may verify at high QPS); **not**
+micro-benchmark noise on shared CI.
+
+### Posture vs default CI
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PG1** | **Non-default:** Merge-blocking **`lint`** / **`test`** jobs **do not** require timing assertions on **`verify_lifecycle_webhook_signature`**. Implement **one** of: **`pytest -m "not perf_hotpath"`** in CI while the marker exists; **no** collection of perf tests unless an env var (e.g. **`RUN_PERF_HOTPATH=1`**) is set; perf lives only under **`scripts/`** with **no** **`pytest`** import; or equivalent documented in this section and **README.md** once shipped. | Workflow YAML + **README**; code review |
+| **PG2** | **Opt-in surface:** Ship **either** (a) **`pytest`** tests behind a registered marker **`perf_hotpath`** in **`pyproject.toml`** **`[tool.pytest.ini_options] markers`**, **or** (b) a **`scripts/`** **stdlib-only** helper (or both). Every timed **`pytest`** item uses **`@pytest.mark.perf_hotpath`**. Docstring or module comment ties rows to this backlog id. | **`pytest --markers`**; code review |
+| **PG3** | **Fixed inputs:** Use **deterministic** **`secret`** (**`str` or `bytes`**, UTF-8 when **`str`**) and **`body: bytes`** at **fixed** length(s) documented here (recommended: **one** representative size **≤ 64 KiB**, e.g. **4 KiB** or **16 KiB** buffer of stable octets — **JSON-shaped** body not required; opaque bytes are fine). Build a **valid** v1 **`Replayt-Signature`** value for that pair using **`compute_lifecycle_webhook_signature_header`** in setup **or** a committed header string (same rules as **A6** / golden vectors). | Code review |
+| **PG4** | **Hot path under test:** Time the **success** path only: **`verify_lifecycle_webhook_signature(secret=…, body=…, signature=…)`** completes **without** raising. Default **`metrics=None`** unless the Builder documents a separate row comparing **`metrics`** disabled vs enabled (optional). | Code review |
+| **PG5** | **Warm-up:** Before collecting samples, run **at least one** untimed iteration (or discard first **N** timed samples) so one-off allocation / import effects do not dominate. | Code review |
+| **PG6** | **Egregious-only thresholds:** Any **assertion** on wall time **must** target **order-of-magnitude** regressions, not percent-level drift. **Preferred:** compare median (or trimmed mean) cost of **PG4** to a **same-interpreter, same-run** **stdlib** control — e.g. **`hmac.new(key, body, hashlib.sha256).digest()`** (or equivalent minimal HMAC over the **same** key material and body) — and require **`t_verify ≤ K × t_hmac`** for a **documented** **`K`** large enough to absorb parsing / **`compare_digest`** overhead but **small enough** to catch accidental **≥~10×** inflation vs that ratio’s expected range (Builder documents **`K`** and rationale in the test module or this section). **Alternative:** env-gated baseline file + **≥~10×** slowdown check documented for **manual** / scheduled workflows only (**PG1** still satisfied). | Code review |
+| **PG7** | **Noise hygiene:** Timed sections **must not** include **sleep**, **subprocess**, **network**, or **disk I/O**. Prefer **`time.perf_counter()`** (or **`timeit`** for scripts). Document in **README** that laptops and CI VMs vary; contributors treat failures as **investigate**, not **block merge**, unless an opt-in job is added. | Code review |
+| **PG8** | **Contributor docs:** **README.md** (**Running tests**) lists copy-paste commands (install deps unchanged — **no** new mandatory deps for this backlog). Example pattern: **`pytest tests -m perf_hotpath -q`** **or** **`python scripts/<name>.py`** when **`scripts/`** is the harness. | Doc review |
+
+### Contributor commands (normative examples)
+
+Exact module names are **Builder-chosen**; replace placeholders after implementation:
+
+```bash
+# If pytest-marked (opt-in; not merge-blocking by default):
+pytest tests -m perf_hotpath -q
+
+# If a script is provided:
+python scripts/benchmark_verify_lifecycle_webhook_signature.py
 ```
 
 ## Backlog `bea2900c`: pip-audit suppression alignment and review reminders

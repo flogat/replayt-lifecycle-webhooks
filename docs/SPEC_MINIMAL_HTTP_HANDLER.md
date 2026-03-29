@@ -31,9 +31,11 @@ Handled in order: method check → signature verification → UTF-8 decode → J
 
 **H5 (ordering):** If verification fails, the implementation must **not** return **400** for JSON errors. Garbage bodies with missing or wrong MAC must yield **401** or **403**, not **400**.
 
-**Response bodies (4xx / 405):** **`handle_lifecycle_webhook_post`** returns JSON per
+**Response bodies (4xx / 405 / 422):** **`handle_lifecycle_webhook_post`** returns JSON per
 **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** with
 **`Content-Type: application/json; charset=utf-8`**, **`error`**, and **`message`**. **204** success responses have an empty body.
+Canonical status + body fixtures for each code: **SPEC_WEBHOOK_FAILURE_RESPONSES** **§ Canonical end-to-end examples**
+(anchor **`#canonical-end-to-end-examples`**).
 
 ## Public API (Python)
 
