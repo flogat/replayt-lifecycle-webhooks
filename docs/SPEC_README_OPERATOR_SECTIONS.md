@@ -174,7 +174,7 @@ examples.
 
 - **Never** document real shared secrets, bearer tokens, or live **`Replayt-Signature`** values. Use obvious placeholders
   (**`your-shared-secret`**, **`<signature-header-value>`**).
-- Code blocks **must not** echo **SPEC_WEBHOOK_FAILURE_RESPONSES** “safe example” signature fragments if those examples use
+- Code blocks **must not** echo **SPEC_WEBHOOK_FAILURE_RESPONSES** example **`Replayt-Signature`** values when those examples use
   distinctive hex patterns—prefer ellipses or generic placeholders in README-only snippets.
 - Align with **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** **LLM / demos** and **MISSION** redaction expectations for
   anything resembling production logs.

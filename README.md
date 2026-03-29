@@ -481,7 +481,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_LOCAL_WEBHOOK_DEMO.md` | Local demo: one command POSTs signed fixtures to default listener; acceptance **D1–D9** |
 | `replayt_lifecycle_webhooks.demo_webhook` | **`python -m replayt_lifecycle_webhooks.demo_webhook`**: signed POST to default **`/webhook`** URL |
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |
-| `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
+| `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; canonical end-to-end examples; logging boundaries |
 | `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L9** |
 | `docs/SPEC_METRICS_HOOKS.md` | Optional **`LifecycleWebhookMetrics`** / **`metrics=`** contract; verify vs handler timing; tests **M1**–**M8** (backlog **`42b8d5a9`**) |
 | `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP9** |
