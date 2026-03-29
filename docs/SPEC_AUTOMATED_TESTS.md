@@ -23,6 +23,8 @@
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
   checklist **OP1**–**OP9** under **Backlog `23e2da29`** below (**OP9** from backlog **`c631fe3f`**); normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
+- Coordinated security disclosure and root **`SECURITY.md`** (`87e7edae-033d-45af-87fc-066fca51db96`) — checklist **SEC1**–**SEC9**
+  under **§ Backlog `87e7edae`** below; normative contract **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**.
 - Integrator **ASGI** verified-first recipe (`c631fe3f-8a66-4a9d-a900-bab855860c7b`) — checklist **AF1**–**AF7** in
   **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** below
   (**pytest** for **AF1**–**AF6**; **AF7** review).
@@ -95,6 +97,7 @@ behavioral coverage.
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
+| Root **`SECURITY.md`** disclosure policy + **README** / **CONTRIBUTING** cross-links (**SEC1**–**SEC9**) | **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**; **§ Backlog `87e7edae`** |
 | ASGI (**FastAPI** / **Starlette**) verified-first integrator guide (**AF1**–**AF7**) | **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
@@ -528,6 +531,29 @@ between consecutive **`## `** headings so each row scopes content to the right s
 | **OP7** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** with fragment **`#verification-procedure-integrators`** (substring match). | **`pytest`** |
 | **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
 | **OP9** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** (backlog **`c631fe3f`**). | **`pytest`** (same module) |
+
+## Backlog `87e7edae`: coordinated security disclosure (`SECURITY.md`)
+
+Checklist rows for **SECURITY.md and coordinated disclosure process**
+(`87e7edae-033d-45af-87fc-066fca51db96`). Normative contract:
+**[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)** (**SC1**–**SC11**). These rows are **documentation**
+acceptance; they **do not** replace signature, parsing, boundary, or **pytest** minima in **§ Minimum behavioral coverage**.
+
+Implement **network-free** assertions by reading **`SECURITY.md`**, **`README.md`**, and **`CONTRIBUTING.md`** from disk
+(prefer a dedicated module such as **`tests/test_security_disclosure_doc.py`**). Matching is **case-insensitive** where
+noted below.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **SEC1** | Repository root **`SECURITY.md`** exists (same directory as **`README.md`**). | **`pytest`** |
+| **SEC2** | **`SECURITY.md`** contains a level-1 markdown heading (line starts with **`# `**) whose title includes **`security`** (substring match). | **`pytest`** |
+| **SEC3** | **`SECURITY.md`** contains a **`## `** heading line that includes **`in scope`** (substring match). | **`pytest`** |
+| **SEC4** | **`SECURITY.md`** contains a **`## `** heading line that includes **`out of scope`** (substring match) **and** body text (full file) mentions **`replayt`** (case-insensitive). | **`pytest`** |
+| **SEC5** | **`SECURITY.md`** mentions **`acknowledg`** **or** **`business day`** **or** **`72`** (case-insensitive) — response-expectations prose per **SC6**. | **`pytest`** |
+| **SEC6** | **`SECURITY.md`** contains **`mailto:`** **or** (**`github`** **and** **`security`** substrings, case-insensitive) — reporting channel per **SC4**. | **`pytest`** |
+| **SEC7** | **`SECURITY.md`** links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** **or** **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** **or** **`docs/DESIGN_PRINCIPLES.md`** (path substring as written for repo-relative markdown links). | **`pytest`** |
+| **SEC8** | Root **`README.md`** contains a markdown link with target **`SECURITY.md`** or **`./SECURITY.md`** (substring **`](SECURITY.md)`** or **`](./SECURITY.md)`**). | **`pytest`** |
+| **SEC9** | **`CONTRIBUTING.md`** contains a markdown link to **`docs/SPEC_SECURITY_DISCLOSURE.md`** **and** names **`SECURITY.md`** as repository-root policy (plain text or markdown link). | **`pytest`** |
 
 ## Backlog `c631fe3f`: integrator ASGI verified-first recipe
 

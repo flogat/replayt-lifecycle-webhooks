@@ -58,6 +58,16 @@ Cross-cutting README rule for **Docs: machine-readable route/status map for the 
 | ---------------- | ---------------------------- |
 | README cross-link to the route / status matrix | **§ Content requirements** — **Reference server route map link** |
 
+## Backlog acceptance mapping (`87e7edae`)
+
+Cross-cutting README rule for **SECURITY.md and coordinated disclosure process**
+(`87e7edae-033d-45af-87fc-066fca51db96`). Normative policy and checklist **SC1**–**SC11** live in
+**[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**.
+
+| Source criterion | Where addressed in this spec |
+| ---------------- | ---------------------------- |
+| README link to root **`SECURITY.md`** (GitHub security policy surface) | **§ Content requirements** — **Security reporting link** |
+
 ## Backlog acceptance mapping (`c631fe3f`)
 
 Cross-cutting README rule for **Integrator recipe: FastAPI / Starlette verified-first handler**
@@ -126,6 +136,15 @@ paragraph **or** inside **`## Troubleshooting`** or **`## Verifying webhook sign
 canonical **path / method / HTTP status** table for the **`python -m replayt_lifecycle_webhooks`** listener; use it for
 gateway policy, mocks, and allowlists instead of duplicating the full matrix in **`README.md`**.
 
+### Security reporting link (backlog `87e7edae`)
+
+When **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)** is in scope (backlog
+**`87e7edae-033d-45af-87fc-066fca51db96`**), **`README.md`** **must** include a markdown link to **`SECURITY.md`**
+(repository root; target written as **`SECURITY.md`** or **`./SECURITY.md`** in the link) in the **Overview** paragraph
+**or** inside **`## Troubleshooting`** **or** **`## Verifying webhook signatures`**, so **GitHub** readers and operators can
+find the coordinated disclosure channel without opening **CONTRIBUTING.md**. Full policy text lives in **`SECURITY.md`**;
+**do not** paste the entire reporting procedure into **`README.md`**.
+
 ### `## Approval webhook flow`
 
 The section **must**:
@@ -192,8 +211,9 @@ maintainer-facing contract.
 ## Automated acceptance
 
 See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP1**–**OP9**; **OP9** is the
-**`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** link under **Verifying**, backlog **`c631fe3f`**). Implementations **must** use
-**network-free** tests that read **`README.md`** from disk (same pattern as **DG6**, **A2**/README checks).
+**`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** link under **Verifying**, backlog **`c631fe3f`**) and **Backlog
+`87e7edae`** (**SEC8** — **`SECURITY.md`** link from **`README.md`**). Implementations **must** use **network-free** tests
+that read **`README.md`** from disk (same pattern as **DG6**, **A2**/README checks).
 
 ## Related docs
 
@@ -205,3 +225,4 @@ See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.m
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator error catalog.
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local signed POST command (**D1**–**D9**).
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — reverse proxy guide contract (**OG1**–**OG8**).
+- **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)** — root **`SECURITY.md`** disclosure policy (**SC1**–**SC11**); **README** link **SEC8**.

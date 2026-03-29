@@ -22,6 +22,8 @@ Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEB
 **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)**.
 **PM/support lifecycle digests** (fixed English lines and **`digest/1`** record from parsed events; **DG0**–**DG6**):
 **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**.
+**Coordinated security disclosure** (root **`SECURITY.md`** policy, scope vs upstream **replayt**, reporting channel):
+**[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**.
 Repository map and quick links:
 **[README.md](../README.md)**.
 
