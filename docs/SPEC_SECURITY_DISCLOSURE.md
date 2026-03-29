@@ -1,9 +1,9 @@
 # Spec: coordinated security disclosure (`SECURITY.md`)
 
 **Backlog:** SECURITY.md and coordinated disclosure process  
-**Workflow id:** `87e7edae-033d-45af-87fc-066fca51db96` (phase **2** spec refinement; Builder adds root **`SECURITY.md`**, **`README.md`** / **`CONTRIBUTING.md`** links, and **pytest** rows **SEC1**–**SEC9** in phase **3**).
+**Workflow id:** `87e7edae-033d-45af-87fc-066fca51db96` (phase **2** spec; phase **3** shipped root **`SECURITY.md`**, **`README.md`** / **`CONTRIBUTING.md`** links, and **`tests/test_security_disclosure_doc.py`** for **SEC1**–**SEC9**).
 
-**Audience:** Spec gate (2b), Builder (3), Tester (4), security researchers, enterprise adopters, maintainers.
+**Audience:** Spec gate (2b), Builder (3), Tester (4), Architect / Design gate (5 / 5b), security researchers, enterprise adopters, maintainers.
 
 ## Purpose and normative status
 
