@@ -1,6 +1,6 @@
 # Spec: public Python API surface and deprecation policy
 
-**Backlogs (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). **PEP 561** / static typing expectations for integrators (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) — **§ Static typing (PEP 561)** and **TYP1**–**TYP3** below. Optional metrics hooks (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** and **SPEC_AUTOMATED_TESTS** **M1**–**M8**.
+**Backlogs (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). **PEP 561** / static typing expectations for integrators (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) — **§ Static typing (PEP 561)** and **TYP1**–**TYP3** below. Optional metrics hooks (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** and **SPEC_AUTOMATED_TESTS** **M1**–**M8**. SQLite reference **`LifecycleWebhookDedupStore`** (`d10cf76f-e11e-4674-9d81-6d06899b4a64`) — **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**; **§ Planned: SQLite reference idempotency store** below.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), downstream library authors, maintainers.
 
@@ -37,6 +37,10 @@ The authoritative list of **public** names is the package **`__all__`** in **`sr
 | Redaction / logging helpers | `DEFAULT_SENSITIVE_HEADER_NAMES`, `DEFAULT_SENSITIVE_MAPPING_KEYS`, `REDACTED_PLACEHOLDER`, `redact_headers`, `redact_mapping`, `format_safe_webhook_log_extra` |
 
 **Acceptance (Builder / CI):** **`__all__`** lists **exactly** the names in the table above in **table order** (Version row, then Signature, Metrics, Events / parsing, HTTP handler, Replay protection, Redaction / logging helpers). **`tests/test_public_api.py`** checks both the set and this order.
+
+### Planned: SQLite reference idempotency store (backlog `d10cf76f`)
+
+When **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** is implemented (**SQ6**), insert **`SqliteLifecycleWebhookDedupStore`** into the **Replay protection** cell **immediately after** **`InMemoryLifecycleWebhookDedupStore`** (comma-separated, same row), extend package root **`__all__`** and **`tests/test_public_api.py`** **`_PACKAGE_ROOT_EXPORT_ORDER`** in that position, and add **CHANGELOG** **Added**. Until then the name is **not** supported for import.
 
 ### Secondary: `replayt_lifecycle_webhooks.events`
 
@@ -132,5 +136,6 @@ At **1.0.0**, tighten policy as maintainers document (this spec should gain a **
 
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — principles **explicit contracts**, **small public surfaces**, **consumer-side maintenance**.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — stability at the **`replayt`** dependency seam (orthogonal to *this* package’s export surface).
-- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**; backlog **`2ec2c21c`** maps **TP1**–**TP6** for **`py.typed`** and optional typing gate; backlog **`42b8d5a9`** maps **M1**–**M8** for optional metrics hooks.
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**; backlog **`2ec2c21c`** maps **TP1**–**TP6** for **`py.typed`** and optional typing gate; backlog **`42b8d5a9`** maps **M1**–**M8** for optional metrics hooks; backlog **`d10cf76f`** maps **SQ6** to **`__all__`** / **`test_public_api.py`** when **SPEC_SQLITE_IDEMPOTENCY_STORE** ships.
+- **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** — **`SqliteLifecycleWebhookDedupStore`** (planned export until **SQ6**).
 - **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** — optional verify / handler metrics extension point (backlog **`42b8d5a9`**).

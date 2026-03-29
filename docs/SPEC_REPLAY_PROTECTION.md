@@ -1,6 +1,6 @@
 # Spec: replay protection and idempotency hooks for deliveries
 
-**Backlog:** Add replay protection and idempotency hooks for deliveries (`f9677140-0803-41c7-9d1c-82fc85f25f8d`).  
+**Backlogs:** Add replay protection and idempotency hooks for deliveries (`f9677140-0803-41c7-9d1c-82fc85f25f8d`); **SQLite reference idempotency store** (`d10cf76f-e11e-4674-9d81-6d06899b4a64`) — **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.  
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators, operators.
 
 ## Purpose
@@ -118,7 +118,8 @@ The store answers: **“May this integrator-defined key cause side effects right
 | ---- | ----------- |
 | **Protocol / ABC** | Expose a **`typing.Protocol`** (or abstract base) **`LifecycleWebhookDedupStore`** documenting **`try_claim`**. |
 | **`InMemoryLifecycleWebhookDedupStore`** | Concrete implementation backed by a **`dict`** (or similar) with **configurable TTL**, suitable for **unit tests** and **examples**. **Must** allow **injectable time** for deterministic expiry tests. |
-| **Mandatory dependency** | **No** new **mandatory** third-party dependencies for the store contract; **stdlib** only for the in-memory type. |
+| **`SqliteLifecycleWebhookDedupStore`** | **When implemented** (backlog **`d10cf76f`**): optional **filesystem** store using **stdlib** **`sqlite3`**, same **`try_claim`** / TTL semantics, **injectable time**, documented locking / **WAL** notes. Normative: **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (**SQ1**–**SQ7**). |
+| **Mandatory dependency** | **No** new **mandatory** third-party dependencies for the store contract; **stdlib** only for the in-memory type and the SQLite reference type. |
 
 ## Optional HTTP handler integration
 
@@ -164,5 +165,6 @@ Maps to backlog acceptance: *documented strategy*, *code path rejects or de-dupl
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verify before JSON; v1 MAC does not include timestamps.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — **`replay_rejected`**, logging boundaries.
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — **`handle_lifecycle_webhook_post`** status table.
+- **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** — optional **SQLite** **`SqliteLifecycleWebhookDedupStore`** (**SQ1**–**SQ7**).
 - **[EVENTS.md](EVENTS.md)** — **`occurred_at`**, **`event_id`** envelope.
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI invariants; backlog **`f9677140`** rows **RP4**–**RP5**.

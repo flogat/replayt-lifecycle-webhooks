@@ -61,6 +61,8 @@
   **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** (**§ Static typing (PEP 561)**).
 - Optional metrics hooks for verify / handler outcomes (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — checklist **M1**–**M8**
   under **§ Backlog `42b8d5a9`** below; normative contract **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**.
+- SQLite reference idempotency store for **`event_id`** (`d10cf76f-e11e-4674-9d81-6d06899b4a64`) — checklist **SQ1**–**SQ7**
+  under **§ Backlog `d10cf76f`** below; normative contract **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -85,6 +87,7 @@ behavioral coverage.
 | Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
+| Optional **SQLite** dedupe store (**SQ1**–**SQ7**), when implemented | **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**; **§ Backlog `d10cf76f`** below |
 | **replayt** dependency / doc contract (**A1**–**A10**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
@@ -206,6 +209,10 @@ When **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** is implemented, 
 **network-free** tests that satisfy **RP4** and **RP5** under **Backlog `f9677140`** below (**RP5** may alias **I4**).
 Those tests **must not** replace items **1**–**3**.
 
+When **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** is implemented (backlog **`d10cf76f`**), the
+suite **must** additionally include **network-free** tests that satisfy **SQ1**–**SQ7** under **§ Backlog `d10cf76f`**
+below. Those tests **must not** replace items **1**–**4** or **RP4**/**RP5**.
+
 When **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** ships formatters in-tree, the suite **must** additionally include
 **network-free** tests that satisfy **DG1**–**DG6** under **Backlog `069e0240`** below. Those tests **must not** replace
 items **1**–**3**.
@@ -273,6 +280,23 @@ These extend **A1–A5** and **§ Minimum behavioral coverage** item **2**; they
 |---|-----------|--------------|
 | RP4 | At least one **network-free** test: valid MAC, parsed payload, **`occurred_at`** outside configured freshness window → **`replay_rejected`** (or equivalent) and **no** spurious side effects. | **`tests/test_replay_protection.py`** — **`test_rp4_stale_occurred_at_valid_mac_replay_rejected_no_on_success`**; **`tests/test_http_handler.py`** — **`test_h8_error_messages_match_failure_response_spec`** (**`replay_rejected`** copy) |
 | RP5 | At least one **network-free** test: same **`event_id`** delivered twice with valid MACs → idempotent side effects. | **`tests/test_lifecycle_events.py`** — **`test_i4_duplicate_signed_post_idempotent_side_effects_pattern`**; **`tests/test_replay_protection.py`** — **`test_rp5_dedup_store_second_post_204_without_on_success`** |
+
+## Backlog `d10cf76f`: SQLite reference idempotency store
+
+Checklist rows for **Reference SQLite-backed idempotency store for `event_id`**
+(`d10cf76f-e11e-4674-9d81-6d06899b4a64`). Normative contract:
+**[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**. These extend **A1–A5**, **H10**, and **RP5**; they
+do **not** replace **RP4**, **I3**/**I4**, or **R1–R5**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| SQ1 | **Duplicate key** — Two **`try_claim`** calls with the same **`key`** before expiry → first **`True`**, second **`False`**. | **`pytest`**, no network (implementation module TBD, e.g. **`tests/test_sqlite_idempotency_store.py`**) |
+| SQ2 | **Expiry** — After advancing injected clock past TTL, **`try_claim`** for the same **`key`** returns **`True`** again. | **`pytest`**, no network |
+| SQ3 | **Concurrency / locking** — Per **SPEC_SQLITE_IDEMPOTENCY_STORE** **§ Concurrency and SQLite locking**: either a **network-free** threaded **`pytest`** or a **`pytest`** that asserts required docstring substrings (**`timeout`**, **`locked`**, **`WAL`** or **`journal_mode`**). | **`pytest`** |
+| SQ4 | **Handler integration** — Two **`handle_lifecycle_webhook_post`** calls with SQLite **`dedup_store`**, same **`event_id`**, valid MACs → **204** both times; **`on_success`** once. | **`pytest`**, no network |
+| SQ5 | **README** links **SPEC_SQLITE** from the idempotency / **`dedup_store`** area; copy-paste normative example in **SPEC_SQLITE** **§ Wiring** (README may mirror when stable). | Doc review |
+| SQ6 | **`SqliteLifecycleWebhookDedupStore`** in package root **`__all__`**, **SPEC_PUBLIC_API** table (replacing **§ Planned**), **`tests/test_public_api.py`** order tuple, **CHANGELOG** **Added**. | **`pytest`** + doc review |
+| SQ7 | **No new mandatory PyPI dependencies** for this feature (**`sqlite3`** stdlib only). | **`pyproject.toml`** review |
 
 ## Backlog `fa75ecf3`: structured logging and redaction
 
@@ -756,6 +780,7 @@ shelling out.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
+- **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** — optional **SQLite** **`LifecycleWebhookDedupStore`**, **SQ1**–**SQ7**.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**;
   optional **serve** / **handler** diagnostics, **LG1–LG4** (**§ Optional diagnostic logging**).
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.

@@ -27,7 +27,9 @@ identifiers or sender-controlled text that is **not suitable for external sharin
 **Fields and artifacts not suitable for external sharing** before publishing to untrusted channels. **Delivery retries, duplicate POSTs, and `event_id`**
 idempotency:** **[docs/SPEC_DELIVERY_IDEMPOTENCY.md](docs/SPEC_DELIVERY_IDEMPOTENCY.md)**. **Replay protection** (freshness
 on **`occurred_at`**, clock skew, optional wire headers, pluggable dedupe store contract, test rows **RP4**/**RP5**):
-**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**. Informative **JSON Schema** mirror (**Draft-07**):
+**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**. **Optional SQLite idempotency store** (reference
+**`dedup_store`**, backlog **`d10cf76f`**): **[docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md](docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
+Informative **JSON Schema** mirror (**Draft-07**):
 **[docs/schemas/lifecycle_webhook_payload-1-0.schema.json](docs/schemas/lifecycle_webhook_payload-1-0.schema.json)**.
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
 entrypoint:** **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**. **Public Python API** (`__all__`, supported
@@ -383,7 +385,10 @@ log.debug("headers=%s", redact_headers(request_headers))
 **401** / **403** / **400** / **422** / **204** as in **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
 **MAC mismatch** uses **403**; missing or malformed **`Replayt-Signature`** uses **401**. Verification runs before
 **`json.loads`**. Optional **`dedup_store`** and **`replay_policy`** implement **`event_id`** dedupe and **`occurred_at`**
-freshness after verify (**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**).
+freshness after verify (**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**). For a **filesystem** reference
+store (stdlib **SQLite** only, optional—**not** required for other deployments), see
+**[docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md](docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (acceptance **SQ1**–**SQ7**; wiring
+example in that spec).
 
 **Callable (any framework):** pass method, raw body bytes, and headers (names are matched case-insensitively):
 
@@ -482,6 +487,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, **`event_id`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |
+| `docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md` | Optional **SQLite** **`LifecycleWebhookDedupStore`** for **`event_id`**; handler wiring; concurrency notes; **SQ1**–**SQ7** (backlog **`d10cf76f`**) |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |
 | `docs/SPEC_REFERENCE_DOCUMENTATION.md` | Optional **`docs/reference-documentation/`** workflow: what to commit, local `_upstream_snapshot/`, CI hygiene, licensing, snapshot commands; **RD1**–**RD8** |
 | `CONTRIBUTING.md` | Contributor entry; optional reference-documentation snapshot task (links **SPEC_REFERENCE_DOCUMENTATION**) |

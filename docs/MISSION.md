@@ -18,6 +18,8 @@ Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEB
 **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**.
 **Replay protection** (freshness, optional wire headers, dedupe store hooks):
 **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.
+**Optional SQLite idempotency store** (reference **`event_id`** persistence, **SQ1**–**SQ7**):
+**[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
 **Public Python import surface** and **deprecation** policy (**`__all__`**, internal modules, **CHANGELOG** alignment):
 **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)**.
 **PM/support lifecycle digests** (fixed English lines and **`digest/1`** record from parsed events; **DG0**–**DG6**):

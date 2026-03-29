@@ -1,6 +1,6 @@
 # Spec: delivery guarantees, `event_id`, and consumer idempotency
 
-**Backlogs:** Specify idempotency and replay-safe delivery semantics (`4280c054-4193-4754-8e4c-1da320975fac`); **replay protection hooks** (`f9677140-0803-41c7-9d1c-82fc85f25f8d`) — see **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.  
+**Backlogs:** Specify idempotency and replay-safe delivery semantics (`4280c054-4193-4754-8e4c-1da320975fac`); **replay protection hooks** (`f9677140-0803-41c7-9d1c-82fc85f25f8d`) — see **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**; **SQLite reference idempotency store** (`d10cf76f-e11e-4674-9d81-6d06899b4a64`) — **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.  
 **Audience:** Spec gate (2b), Builder (3), Tester (4), integrators, operators.
 
 ## Purpose
@@ -122,6 +122,7 @@ silently.
 | **Normative docs** (this file + **EVENTS.md** cross-links) | **Done** (phase **2** spec) | — |
 | **Fixtures / synthetic examples** use **distinct** **`event_id`** per **distinct** logical event in examples | **Done** (examples in **EVENTS.md**) | Duplicate-delivery pair: **`run_started.json`** / **`run_started_redelivery.json`** (same bytes, same **`event_id`**) under **`tests/fixtures/events/`** and packaged **`replayt_lifecycle_webhooks/fixtures/events/`**. |
 | **Automated tests** assert **`event_id`** uniqueness rules per logical event in fixtures | **Done** (phase **3**) | **`tests/test_lifecycle_events.py`** (**I3**, **I4**); see **Acceptance criteria** below. |
+| **SQLite reference `LifecycleWebhookDedupStore`** (optional persistence) | **Pending** (phase **3**) | Backlog **`d10cf76f`**; normative contract **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (**SQ1**–**SQ7**). |
 | **Upstream replayt** HTTP emitter guarantees | **Out of scope** for this repo | Track in **CHANGELOG** / **SPEC_REPLAYT_DEPENDENCY** when discovered. |
 
 ## Acceptance criteria (Builder / Tester)
@@ -140,6 +141,7 @@ Use with Spec gate and later phases.
 - **[EVENTS.md](EVENTS.md)** — envelope fields, **`event_type`** registry, **`schema_version`**.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness (**`occurred_at`**), clock skew, optional headers,
   dedupe store protocol, test rows **RP4**/**RP5**.
+- **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** — optional **SQLite** reference store for **`event_id`** (**SQ1**–**SQ7**).
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification before JSON; v1 MAC scope (no wire timestamp).
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — **`replay_rejected`**, logging **`event_id`** safely.
 - **[README.md](../README.md)** — operator entry and troubleshooting.
