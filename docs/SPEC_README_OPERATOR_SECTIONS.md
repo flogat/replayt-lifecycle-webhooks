@@ -48,6 +48,16 @@ Cross-cutting README rule for **Operator guide: reverse proxy in front of refere
 | ---------------- | ---------------------------- |
 | README cross-link to operator reverse-proxy guide | **§ Content requirements** — **Reverse proxy operator guide link** |
 
+## Backlog acceptance mapping (`b4c68e50`)
+
+Cross-cutting README rule for **Docs: machine-readable route/status map for the reference HTTP server**
+(`b4c68e50-04df-4149-b9b5-f5d6280b38cc`). Normative matrix and acceptance **RM1**–**RM7** live in
+**[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**.
+
+| Source criterion | Where addressed in this spec |
+| ---------------- | ---------------------------- |
+| README cross-link to the route / status matrix | **§ Content requirements** — **Reference server route map link** |
+
 ## Required sections (`README.md`)
 
 Use these **exact markdown headings** (level-2 `## …`) so doc-guard tests and readers can rely on stable anchors:
@@ -94,6 +104,15 @@ proxy guide backlog **`dc212184-8c0d-4ee6-90de-e0d50c370f6f`**), **`README.md`**
 **`docs/OPERATOR_REVERSE_PROXY.md`** (path as written from the repository root) inside **`## Troubleshooting`** **or**
 **`## Verifying webhook signatures`**. **Do not** paste full proxy configs into **`README.md`**—the guide file holds the
 snippet.
+
+### Reference server route map link (backlog `b4c68e50`)
+
+When **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** is in scope (backlog
+**`b4c68e50-04df-4149-b9b5-f5d6280b38cc`**), **`README.md`** **must** include a markdown link to
+**`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`** (path as written from the repository root) in the **Overview** quick-link
+paragraph **or** inside **`## Troubleshooting`** or **`## Verifying webhook signatures`**. The linked spec holds the
+canonical **path / method / HTTP status** table for the **`python -m replayt_lifecycle_webhooks`** listener; use it for
+gateway policy, mocks, and allowlists instead of duplicating the full matrix in **`README.md`**.
 
 ### `## Approval webhook flow`
 
@@ -157,6 +176,8 @@ See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.m
 
 ## Related docs
 
+- **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** — canonical reference-server **HTTP**
+  matrix (**RM1**–**RM7**); README link requirement **§ Reference server route map link**.
 - **[README.md](../README.md)** — target document for Builder.
 - **[EVENTS.md](EVENTS.md)** — approval and run **`event_type`** registry and **`correlation`** fields.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — signing and verification procedure.

@@ -122,7 +122,8 @@ locally**), matching **SPEC_HTTP_SERVER_ENTRYPOINT**’s “one primary command�
 ## Related docs
 
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — **v1** MAC and header rules.
-- **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — reference server defaults and **S1–S8**.
+- **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — reference server defaults and **S1–S13**.
+- **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** — canonical **HTTP** matrix aligned with default **`/webhook`** / **`/health`** (**RM1**–**RM7**).
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — **POST** behavior expected at the default path.
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint; **D7** coverage expectations.
 - **[EVENTS.md](EVENTS.md)** — payload field semantics (informative for fixture choice).

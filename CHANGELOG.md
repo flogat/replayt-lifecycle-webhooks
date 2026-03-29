@@ -37,6 +37,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **Reference HTTP server route/status matrix** (phase **2** spec, backlog **`b4c68e50-04df-4149-b9b5-f5d6280b38cc` / *Docs: machine-readable route/status map for the reference HTTP server*):
+  new **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`** (canonical **path / method / HTTP status** table, defaults, links to
+  **SPEC_WEBHOOK_FAILURE_RESPONSES** and **SPEC_WEBHOOK_SIGNATURE**); **`README.md`**, **MISSION**, **DESIGN_PRINCIPLES**,
+  **SPEC_HTTP_SERVER_ENTRYPOINT** (**S13**), **SPEC_README_OPERATOR_SECTIONS**, **SPEC_MINIMAL_HTTP_HANDLER**,
+  **SPEC_LOCAL_WEBHOOK_DEMO**, and **SPEC_AUTOMATED_TESTS** (**§ Backlog `b4c68e50`**, **RM1**–**RM7**) updated for
+  cross-links and acceptance traceability.
+
 - **Packaging gate wording** (phase **5** architect review, backlog **`78e3554b-2b50-4918-9859-85642ac1a84a` / *CI: `python -m build` + `twine check` on sdist/wheel*):
   **`docs/MISSION.md`** success metric now describes the live **`package`** job and **pytest** layout checks; **`README.md`**
   lists the **`package`** step alongside **ruff** and **pytest** in the CI summary.

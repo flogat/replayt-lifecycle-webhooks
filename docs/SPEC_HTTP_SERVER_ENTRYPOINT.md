@@ -53,7 +53,7 @@ script) if **README** labels one as **primary** and **`pyproject.toml`** lists b
 | **Documented command** | **`python -m <module>`** and/or **`console_scripts`** entry defined in **`pyproject.toml`**; README shows the **same** command operators should use in docs and runbooks. |
 | **Bind address** | Configurable **host** and **port** with **documented defaults** (suggested defaults: host **`127.0.0.1`**, port **`8000`** for local use; production examples may show **`0.0.0.0`** behind a proxy). |
 | **Webhook route** | **POST** requests that carry lifecycle deliveries **must** use a **single documented default path** (recommended: **`/`** or **`/webhook`**—pick one per implementation and do not change without **CHANGELOG** + spec update). If the CLI accepts a path override, defaults **must** remain stable. **Package default (backlog `2cf0f4fb`):** **`/webhook`**. |
-| **Handler semantics** | **POST** handling **must** match **SPEC_MINIMAL_HTTP_HANDLER** (statuses **405** / **401** / **403** / **400** / **204**, JSON error bodies per **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** where that spec applies). |
+| **Handler semantics** | **POST** handling **must** match **SPEC_MINIMAL_HTTP_HANDLER** (statuses **405** / **401** / **403** / **400** / **422** / **204**, JSON error bodies per **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** where that spec applies). |
 
 ## Health / readiness
 
@@ -111,10 +111,12 @@ When this backlog is implemented:
 | **S10** | **Optional structured webhook diagnostics** (backlog **`0bab43f3`**): **README** documents how to enable and disable the feature, which **logger** name(s) to configure, and points to **SPEC_STRUCTURED_LOGGING_REDACTION** (**§ Optional diagnostic logging**). Examples with logging enabled use **safe** placeholders (no real secrets, no raw body, no full signature lines). | Doc review |
 | **S11** | Same backlog: **`pytest`** satisfies **LG1–LG4** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `0bab43f3`**), proving redaction and **default-off** behavior on representative **POST** paths (in-process **WSGI** and/or subprocess server—**at least one** path **must** cover the reference server stack). | **`pytest`** |
 | **S12** | Same backlog: implementation builds log **`extra`** with **`format_safe_webhook_log_extra`** / **`redact_*`** per **SPEC_STRUCTURED_LOGGING_REDACTION**; **no** new mandatory third-party logging packages. | Code review; **`pyproject.toml`** |
+| **S13** | **Gateway / operator matrix** (backlog **`b4c68e50`**): integrator-facing **Markdown** table of paths, methods, default bind values, and success/error statuses lives in **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**; **`README.md`** links to it per that spec; rows **RM1**–**RM7** there. | Doc review |
 
 ## Related docs
 
-- **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — handler and WSGI factory; status table **H1–H8**.
+- **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** — single canonical **route / HTTP status** matrix for gateways and mocks (**RM1**–**RM7**; backlog **`b4c68e50`**).
+- **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — handler and WSGI factory; status table **H1–H12**.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — JSON **`error`** codes for client failures.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification and integrator logging rules.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction when server or handler code logs headers or metadata.

@@ -12,7 +12,8 @@ expectations: **[docs/MISSION.md](docs/MISSION.md)**. It declares a runtime depe
 acceptance checklist: **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. **Optional minimal HTTP POST
 handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
 **Reference HTTP server** (stdlib **WSGI**, no extra install): primary command **`python -m replayt_lifecycle_webhooks`**,
-**POST** on **`/webhook`** by default, **`GET /health`**. Details and acceptance **S1–S8**:
+**POST** on **`/webhook`** by default, **`GET /health`**. Compact **path / method / status** matrix for gateways and mocks:
+**[docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**. Details and acceptance **S1–S13**:
 **[docs/SPEC_HTTP_SERVER_ENTRYPOINT.md](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**. **Reverse proxy / TLS** in front of that
 listener (raw POST body, limits, timeouts): contract **[docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**;
 operator guide **[docs/OPERATOR_REVERSE_PROXY.md](docs/OPERATOR_REVERSE_PROXY.md)** (**OG1**–**OG8**). **Local signed demo POST** (one command,
@@ -459,7 +460,8 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / **ruff** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H12** |
-| `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S8** |
+| `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S13** |
+| `docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md` | Gateway-oriented **path / method / HTTP status** matrix; backlog **`b4c68e50`**, acceptance **RM1**–**RM7** |
 | `docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md` | Normative contract for **`docs/OPERATOR_REVERSE_PROXY.md`**: nginx/Caddy-style proxy, raw body, limits, timeouts; **pytest** **OG1**–**OG8** |
 | `docs/OPERATOR_REVERSE_PROXY.md` | Operator guide: reverse proxy in front of **`python -m replayt_lifecycle_webhooks`** (**OG1**–**OG8**; backlog **`dc212184`**) |
 | `docs/SPEC_LOCAL_WEBHOOK_DEMO.md` | Local demo: one command POSTs signed fixtures to default listener; acceptance **D1–D9** |

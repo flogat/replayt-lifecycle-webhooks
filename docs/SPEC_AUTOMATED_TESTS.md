@@ -41,6 +41,10 @@
   section.
 - Property-based fuzzing for **`parse_lifecycle_webhook_event`** and signature verification
   (`dcffe5d5-7f7c-4585-aca0-a882653f20dd`) — checklist **PF1**–**PF10** under **§ Backlog `dcffe5d5`** below.
+- Reference HTTP server **route / HTTP status** matrix for gateways (`b4c68e50-04df-4149-b9b5-f5d6280b38cc`) —
+  checklist **RM1**–**RM7** in **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**;
+  **README** link rule in **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **SPEC_HTTP_SERVER_ENTRYPOINT**
+  **S13**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -57,7 +61,8 @@ behavioral coverage.
 | ----- | -------------- |
 | Signature verification behavior and **W** rows | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** |
 | Optional HTTP handler status codes (**H1–H12**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
-| Reference HTTP server entrypoint (**S1–S9**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
+| Reference HTTP server entrypoint (**S1–S13**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
+| Reference server **HTTP surface** matrix for gateways (**RM1**–**RM7**), documentation | **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**; **§ Backlog `b4c68e50`** below |
 | Operator reverse-proxy guide (**OG1–OG8**) | **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; **§ Backlog `dc212184`** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
@@ -457,6 +462,27 @@ child) so the child does not need to print an OS-assigned port when **`--port 0`
 | **SUB6** | **CI posture:** passes on **`ubuntu-latest`** (or the project’s canonical Linux CI image) **without** Docker, systemd user services, or other **extra** daemons—only the spawned **`python`** process and loopback HTTP. | **`.github/workflows/ci.yml`** + green run |
 | **SUB7** | If the test is marked **`@pytest.mark.slow`** or conditionally skipped, **this document** states the fact under this table (reason: wall-clock, platform, and so on) and **either** (a) default **`pytest tests -q`** / CI still collects it, **or** (b) CI runs an explicit command that includes the marker (for example **`pytest tests -q -m slow`**) so the subprocess harness is **not** silently dropped. **Preferred default:** keep it in the main collection if runtime stays small. | Doc + workflow review |
 | **SUB8** | **`README.md`** (**Running tests**) **or** this section names the module (or marker) contributors use to run only this integration test when debugging (**`pytest … <path> -q`** or **`-k`** / **`-m`** as implemented). | **`README.md`** **Running tests** → **`pytest tests/test_reference_server_subprocess.py -q`** |
+
+## Backlog `b4c68e50`: reference HTTP server route / status matrix (documentation)
+
+Checklist rows for **Docs: machine-readable route/status map for the reference HTTP server**
+(`b4c68e50-04df-4149-b9b5-f5d6280b38cc`). **Normative contract:**
+**[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**. **README** placement rule:
+**[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** (**§ Reference server route map link**). **Traceability**
+on the entrypoint spec: **S13** in **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**.
+
+**Scope:** **Documentation only**—no new Python runtime API. **Verification** is **documentation review** for **RM1**–**RM7**
+unless maintainers later add an optional **pytest** doc guard (not required for this backlog).
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **RM1** | Canonical **Markdown** table includes **`POST /webhook`** and **`GET /health`**. | Doc review (**SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP**) |
+| **RM2** | Table documents default **bind host**, **port**, and **`/webhook`** path consistent with **SPEC_HTTP_SERVER_ENTRYPOINT**. | Doc review |
+| **RM3** | Table links **SPEC_WEBHOOK_FAILURE_RESPONSES** and **SPEC_WEBHOOK_SIGNATURE** for webhook errors and signing policy. | Doc review |
+| **RM4** | **`README.md`** links **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`**. | Doc review |
+| **RM5** | **SPEC_README_OPERATOR_SECTIONS** records the backlog mapping and README requirement. | Doc review |
+| **RM6** | **SPEC_HTTP_SERVER_ENTRYPOINT** and **SPEC_AUTOMATED_TESTS** (this section) reference the route map for discoverability. | Doc review |
+| **RM7** | **No new runtime API** beyond documentation and cross-links. | Doc review |
 
 ## Backlog `78e3554b`: sdist / wheel build and `twine check` (CI)
 
