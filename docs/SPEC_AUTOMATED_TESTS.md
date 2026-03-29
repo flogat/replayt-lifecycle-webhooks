@@ -18,6 +18,7 @@
 - Add replayt dependency declaration and compatibility matrix stub (`8b16060d-f6e6-4111-bed2-4978b965ff52`) — **SPEC_REPLAYT_DEPENDENCY** matrix (**Python** / CI-tested columns), **A8**, stub checklist when **`replayt`** is absent from **`pyproject.toml`**.
 
 - Run **ruff** in CI for fast lint (and optionally format) feedback (`5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`) — checklist **RF1**–**RF5** under **Backlog `5a3f5a7f`** below.
+- Optional **pre-commit** mirroring CI **ruff** invocations (`c39b2a5f-a2f5-42a4-a5c2-a2b20989a31c`) — checklist **PC1**–**PC7** under **Backlog `c39b2a5f`** below.
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
   checklist **OP1**–**OP8** under **Backlog `23e2da29`** below; normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
@@ -67,6 +68,7 @@ behavioral coverage.
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | Optional **serve** / **handler** diagnostic logging + redaction (**LG1–LG4**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic logging**); **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S10**–**S12**) |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
+| Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
@@ -94,6 +96,9 @@ behavioral coverage.
   **`.github/workflows/ci.yml`** (**`lint`** job). **Removing** or **weakening** those steps requires updating this
   document, **README.md** (if contributor commands change), and **CHANGELOG.md** when the change is user-visible to
   contributors.
+
+- **Optional pre-commit** (local only; **not** a merge gate) is specified under **§ Backlog `c39b2a5f`**. It must stay
+  aligned with the **`lint`** job; it does **not** replace **RF1**/**RF2**.
 
 ## Prohibited patterns
 
@@ -318,8 +323,43 @@ runs on the same triggers and fails the workflow.
 | **RF1** | CI runs **`ruff check`** (non-zero exit on violations) on pushes and pull requests targeting **`master`** or **`mc/**`**, using **`.github/workflows/ci.yml`** (and any other merge-blocking workflow on those branches, if added later). | **`tests/test_ci_ruff_wiring.py`**; review **`.github/workflows/ci.yml`**; optional CI log from a branch that violates **ruff** |
 | **RF2** | Optional but **recommended:** CI also runs **`ruff format --check`** with the same install posture and trigger surface as **RF1**. If maintainers omit it initially, note that under **CHANGELOG.md** **Unreleased** (**Documentation** or **Changed**) so the gap is explicit. | **`tests/test_ci_ruff_wiring.py`**; review workflow + **CHANGELOG.md** |
 | **RF3** | **`pyproject.toml`** contains a minimal **`[tool.ruff]`** section **when** Ruff defaults are insufficient for this tree (for example **`target-version`** alignment with **`requires-python`**, **`line-length`**, or **`extend-exclude`** for generated paths). If defaults are sufficient, the section may be absent; the **Builder** commit message or **CHANGELOG** should make that choice obvious to reviewers. | Review **`pyproject.toml`** |
-| **RF4** | **README.md** documents local **`ruff check`** in at least one line (for example near **Running tests**). If **`ruff format --check`** is enabled in CI, mention **`ruff format`** for contributors too. **CONTRIBUTING.md** may link or defer to **README.md** for **`ruff`** commands as long as contributors can discover them from the repo root docs. | Doc review |
+| **RF4** | **README.md** documents local **`ruff check`** in at least one line (for example near **Running tests**). If **`ruff format --check`** is enabled in CI, mention **`ruff format`** for contributors too. **CONTRIBUTING.md** may link or defer to **README.md** for **`ruff`** commands as long as contributors can discover them from the repo root docs. When backlog **`c39b2a5f`** ships, **CONTRIBUTING.md** must also meet **PC1**–**PC7** (**§ Backlog `c39b2a5f`**). | Doc review |
 | **RF5** | Wiring **ruff** into CI is recorded under **CHANGELOG.md** **Unreleased** when the change is user-visible to contributors (typical **Added** or **Changed**). | Release hygiene |
+
+## Backlog `c39b2a5f`: optional **pre-commit** mirroring CI **ruff**
+
+Checklist rows for **CONTRIBUTING: optional pre-commit config mirroring Ruff CI commands**
+(`c39b2a5f-a2f5-42a4-a5c2-a2b20989a31c`). These **extend** **RF1**–**RF5** (local ergonomics only); they do **not** add a
+new CI gate or change the merge-blocking **ruff** story unless **maintainers** explicitly adopt **`pre-commit`** in
+workflows (out of scope for this backlog).
+
+**Authoritative invocation** (must stay in sync with **`.github/workflows/ci.yml`** **`lint`** job unless this spec and
+**CHANGELOG.md** record a deliberate change):
+
+1. **`pip install "ruff>=0.6.0"`** (CI install step; local **pre-commit** must use **ruff** satisfying the same lower
+   bound—see **PC2**).
+2. **`ruff check src tests`**
+3. **`ruff format --check src tests`**
+
+**Deliverable shape:** **Preferred:** committed **`.pre-commit-config.yaml`** at the repository root. **Acceptable
+alternative:** **CONTRIBUTING.md** contains a **copy-paste** fenced **YAML** block under a dedicated heading so
+contributors can create **`.pre-commit-config.yaml`** locally without committing it; prose must warn that the snippet
+must stay aligned with **§ Authoritative invocation** above (same **`src` `tests`** path list and format **check**, not
+auto-format-on-commit, unless maintainers later choose otherwise in **CI** first).
+
+**Hook semantics:** Any **ruff format** step wired through **pre-commit** must be **check-only** (**`--check`** or
+equivalent) so local hooks match CI (**`ruff format --check`**) and do not silently rewrite files unless the project
+first changes CI to allow auto-format (which would require updating **RF2**, this section, and **CHANGELOG.md**).
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PC1** | **`.pre-commit-config.yaml`** exists at repo root **or** **CONTRIBUTING.md** provides an equivalent snippet (see **Deliverable shape**). The configured hooks, taken together, run the equivalent of **`ruff check src tests`** and **`ruff format --check src tests`** (same path arguments as the **`lint`** job **Ruff check** / **Ruff format** steps). | Doc review; optional **`pytest`** on YAML / **CONTRIBUTING** text (**Builder** / **Tester** discretion) |
+| **PC2** | **Ruff** version policy matches CI and **`pyproject.toml`** **`[project.optional-dependencies] dev`**: the hook environment installs **ruff** satisfying **`ruff>=0.6.0`**. If using **`astral-sh/ruff-pre-commit`**, **`rev:`** must point to a tag whose bundled **ruff** meets that bound; **CONTRIBUTING** or a YAML comment must instruct maintainers to raise **`rev:`** when the CI/dev lower bound increases. | Doc review; compare **`rev:`** / **`additional_dependencies`** to **`ci.yml`** and **`pyproject.toml`** |
+| **PC3** | **CONTRIBUTING.md** documents installing **`pre-commit`** (for example **`pip install pre-commit`** or **dev** extra if the project adds it—**do not** make **`pre-commit`** a runtime dependency of the package) and running **`pre-commit install`** so hooks run on commit. | Doc review |
+| **PC4** | **CONTRIBUTING.md** states that **pre-commit** is **optional** and that contributors may submit changes without installing hooks (drive-by patches); **RF1**/**RF2** remain enforced by **GitHub Actions**. | Doc review |
+| **PC5** | **CONTRIBUTING.md** names **`.github/workflows/ci.yml`** (**`lint`** job) as the **source of truth** for **ruff** commands and version floor, so prose does not drift from CI. Duplicating the exact shell lines is allowed **only** alongside that link or as a short quote labeled as mirroring CI. | Doc review |
+| **PC6** | **CI invariant:** **`.github/workflows/ci.yml`** does **not** gain a required step that runs **`pre-commit run`** as a substitute for the existing **`ruff`** steps; the **`lint`** job keeps the **`pip install "ruff>=0.6.0"`** + **`ruff check`** + **`ruff format --check`** pattern (or its documented successor). | Review workflow diff |
+| **PC7** | When the feature ships, **CHANGELOG.md** **Unreleased** notes the optional **pre-commit** path for contributors (**Added** or **Changed**, per project convention). | Release hygiene |
 
 ## Backlog `23e2da29`: README operator sections
 
