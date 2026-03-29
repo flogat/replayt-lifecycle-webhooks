@@ -223,6 +223,11 @@ pytest tests -m replayt_boundary -q                                         # re
 pytest tests/test_reference_server_subprocess.py -q                         # reference server via python -m; loopback POST
 ```
 
+**Property / fuzz tests (optional, backlog `dcffe5d5`):** install **`[property]`** (adds **Hypothesis**), then run
+**`pytest tests -m property_fuzz -q`**. Without that extra, **`tests/test_property_fuzz_signature.py`** and
+**`tests/test_property_fuzz_parse.py`** skip at import (**`pytest.importorskip`**), so the default suite stays lean.
+Normative rows **PF1**–**PF10**: **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `dcffe5d5`**).
+
 Checklist rows **A1–A5** (minimum verification / parsing) and **R1–R5** (replayt boundary): **SPEC_AUTOMATED_TESTS** and
 **SPEC_REPLAYT_BOUNDARY_TESTS**.
 

@@ -39,6 +39,8 @@
 - **SDist / wheel build + `twine check`** in CI (`78e3554b-2b50-4918-9859-85642ac1a84a`) — checklist **PK1**–**PK7** under
   **§ Backlog `78e3554b`** below; normative **distribution contract** (package data, conditional **`py.typed`**) in that
   section.
+- Property-based fuzzing for **`parse_lifecycle_webhook_event`** and signature verification
+  (`dcffe5d5-7f7c-4585-aca0-a882653f20dd`) — checklist **PF1**–**PF10** under **§ Backlog `dcffe5d5`** below.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -73,6 +75,7 @@ behavioral coverage.
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
 | **SDist / wheel** build, **`twine check`**, declared package data, conditional **`py.typed`** | **§ Backlog `78e3554b`** below (**PK1**–**PK7**) |
+| Optional **Hypothesis** fuzzing for verify + parse (no default install) | **§ Backlog `dcffe5d5`** below (**PF1**–**PF10**) |
 
 ## CI entrypoint (invariant)
 
@@ -174,6 +177,12 @@ tests **must not** replace items **1**–**4** in **§ Minimum behavioral covera
 Backlog **`dc212184`** (**[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**) is covered by **network-free**
 **pytest** rows **OG1**–**OG8** under **Backlog `dc212184`** below (**`tests/test_operator_reverse_proxy_doc.py`**). Those
 tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
+
+When backlog **`dcffe5d5`** is implemented, the repository **may** ship **optional** **Hypothesis**-backed tests that
+satisfy **PF1**–**PF10** under **§ Backlog `dcffe5d5`** below. Those tests **complement** **A2**, **A3**, and **§ Minimum
+behavioral coverage** items **1**–**2**; they **must not** replace them. Unless **CHANGELOG.md** and this document record a
+deliberate policy change, **default** **`pytest tests -q`** and merge-blocking **CI** **must** remain **green** on an
+install that does **not** include **Hypothesis** (skip, marker exclusion, or equivalent).
 
 ## Acceptance criteria (checklist)
 
@@ -488,6 +497,63 @@ already installed from **`pip install -e ".[dev]"`** unless **`pyproject.toml`**
 | **PK7** | **`CONTRIBUTING.md`** documents the **same** local commands (clean **`dist/`**, **`python -m build`**, **`twine check dist/*`**) **or** explicitly points to this section as the canonical copy-paste block. | Doc review |
 
 **Equivalence:** **`python -m build`** (no extra flags) is the **default** normative command. **`python -m build --sdist --wheel`** is an acceptable **documented** equivalent if maintainers prefer explicit formats.
+
+## Backlog `dcffe5d5`: property-based fuzzing (parse + signature)
+
+Checklist rows for **Tests: property-based fuzzing for event parse and signature edge cases**
+(`dcffe5d5-7f7c-4585-aca0-a882653f20dd`). **Scope:** tests + optional dependency metadata; **minimal** production code
+changes only for **demonstrated** defects (crashes, unintended exception types). **Normative mapping** from verifier /
+parser signals to HTTP JSON **`error`** codes (when the reference handler is in play): **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**
+(**§ Fuzz / property tests**).
+
+These extend **A2** / **A3** and **§ Minimum behavioral coverage** items **1**–**2**; they do **not** replace **A1**–**A5**,
+**A6**–**A10**, **R1**–**R5**, or explicit fixture-driven cases under **EVENTS.md** **T3**–**T5**.
+
+### Dependency and collection posture
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PF1** | **`pyproject.toml`** declares **Hypothesis** only under **`[project.optional-dependencies]`** (preferred: a dedicated extra, e.g. **`property`**, listing **`hypothesis>=6.0`** or a maintainer-chosen floor). **`pip install -e .`** **must not** install it. Bundling into **`dev`** is **acceptable** only if **PF3** still guarantees a **Hypothesis-free** default **CI** graph **or** CI uses an explicit **`-m`** / path filter that **never** collects these tests without the extra—**prefer** a dedicated extra so **`pip install -e ".[dev]"`** stays aligned with **ruff** / **pytest** without forcing fuzz deps. | **`pyproject.toml`**; **`pip install -e .`** dependency tree review |
+| **PF2** | Register a **`pytest` marker** (name **`property_fuzz`**) in **`pyproject.toml`** **`[tool.pytest.ini_options] markers`** with a one-line description pointing to this section. **Every** Hypothesis-backed test in this backlog uses **`@pytest.mark.property_fuzz`**. | **`pytest --markers`**; code review |
+| **PF3** | **Default** **`pytest tests -q`** passes **without** **Hypothesis** installed: use **`pytest.importorskip("hypothesis")`** (module or test scope), **`@pytest.mark.skipif`**, or CI **`addopts`** / workflow **`pytest -m "not property_fuzz"`**—**pick one** strategy, document it here and in **README.md** (**Running tests** → **Focused runs**). | Local **`pytest`** in a clean env; CI workflow review |
+| **PF4** | **Documented opt-in command** for maintainers (copy-paste in this section **and** **README.md**): install the extra, then run **only** the marked suite, e.g. **`pip install -e ".[property]"`** (if the extra is named **`property`**) then **`pytest tests -m property_fuzz -q`**. | Doc review |
+
+**PF3 implementation:** **`tests/test_property_fuzz_signature.py`** and **`tests/test_property_fuzz_parse.py`** call **`pytest.importorskip("hypothesis")`** at **module** import time so the whole module is skipped when **Hypothesis** is absent. **CI** installs **`[dev]`** only (not **`[property]`**), so the default graph stays **Hypothesis-free** while **`pytest tests -q`** remains green.
+
+### Behavioral contracts (Hypothesis on)
+
+Strategies **must** stay **finite** and **size-bounded** (depth, string length, collection sizes) so CI / local runs complete
+predictably. Prefer **`hypothesis.strategies.recursive`** / **`dictionaries`** with **`max_size`** and **`text`**
+**`max_size`** aligned with realistic POST bodies (tens of KiB at most unless a documented stress mode is separate).
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PF5** | **Signature:** For generated **`secret`** (**`text` / `binary`**, bounded), **`body: bytes`** (bounded length), and **`signature: str \| None`** (bounded string including empty / whitespace / random ASCII), **`verify_lifecycle_webhook_signature`** either returns **`None`** or raises **only** **`WebhookSignatureMissingError`**, **`WebhookSignatureFormatError`**, or **`WebhookSignatureMismatchError`** (from **`replayt_lifecycle_webhooks.signature`**). **No** other **`BaseException`** may propagate. | **`pytest`** — e.g. **`tests/test_property_fuzz_signature.py`** or agreed module name |
+| **PF6** | **Parse:** For generated **`dict`** objects (JSON-object-shaped, bounded), **`parse_lifecycle_webhook_event`** either returns a **`LifecycleWebhookEvent`** union member per **EVENTS.md** or raises **only** **`pydantic.ValidationError`**. **No** other **`BaseException`** may propagate. | **`pytest`** (same module family or split file) |
+| **PF7** | **Parse type guard:** At least one property or example table covers **`parse_lifecycle_webhook_event`** with **non-**`dict` **`data`** (**`TypeError`** only, per public docstring). | **`pytest`** |
+| **PF8** | **Signing interop:** Whenever the strategy builds **`signature`** with **`compute_lifecycle_webhook_signature_header`** for the same **`secret`** and **`body`**, **`verify_lifecycle_webhook_signature`** **succeeds** (nested **`given`** / **`data.draw`** composite is fine). | **`pytest`** |
+| **PF9** | **Handler (optional):** If tests call **`handle_lifecycle_webhook_post`** (or **`make_lifecycle_webhook_wsgi_app`**
+  adapter) with generated wire inputs, outcomes **must** match **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**
+  ordering and **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** stable **`error`** codes for the
+  branches exercised (**no** **5xx** from malformed client data alone). This row is **optional** if the Builder limits fuzzing
+  to **PF5**–**PF8** only—state the choice in the test module docstring. | **`pytest`**; code review |
+| **PF10** | **Hypothesis settings:** Use explicit **`@settings`** (**`max_examples`** documented, **`deadline=None`** or a generous bound for CI CPU variance) so flakes are rare; avoid **`HealthCheck.all()`** suppression unless justified in a comment. | Code review |
+
+### Contributor commands (normative examples)
+
+Adjust the extra name if **`pyproject.toml`** uses something other than **`property`**:
+
+```bash
+pip install -e ".[property]"
+pytest tests -m property_fuzz -q
+```
+
+Optional: run a single module while iterating:
+
+```bash
+pytest tests/test_property_fuzz_signature.py -q
+pytest tests/test_property_fuzz_parse.py -q
+```
 
 ## Related docs
 

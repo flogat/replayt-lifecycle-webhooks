@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Property / fuzz tests** (phase **3**, backlog **`dcffe5d5-7f7c-4585-aca0-a882653f20dd` / *Tests: property-based fuzzing for event parse and signature edge cases*):
+  optional **`[project.optional-dependencies] property`** (**`hypothesis>=6.0`**), **`property_fuzz`** **pytest** marker, and
+  **`tests/test_property_fuzz_signature.py`** / **`tests/test_property_fuzz_parse.py`** (**PF1**–**PF8**, **PF10**; **PF9** handler fuzzing omitted by choice). Modules use **`pytest.importorskip("hypothesis")`** so **`pip install -e ".[dev]"`** stays **Hypothesis-free**. **`docs/SPEC_AUTOMATED_TESTS.md`** documents the **PF3** strategy.
+
 - **Optional pre-commit** (phase **3**, backlog **`c39b2a5f-a2f5-42a4-a5c2-a2b20989a31c` / *CONTRIBUTING: optional pre-commit config mirroring Ruff CI commands*):
   root **`.pre-commit-config.yaml`** runs **ruff** **check** and **format `--check`** on **`src/`** and **`tests/`**, matching the **`lint`**
   job in **`.github/workflows/ci.yml`**. **`CONTRIBUTING.md`** documents install, optional use, and CI as the authoritative command list.
