@@ -6,6 +6,7 @@
 - **Declare replayt dependency range and compatibility matrix** — `1a14a01a-e6be-4f3f-b270-68f57fbbe0e4` (range, matrix, upper-bound policy, justified floor, integrator reporting).
 - **Pin replayt and document a minimum supported version** — `e65371ff-be0f-4dfb-ad57-9cdef4ecc8fc` (original pin / floor contract).
 - **CI: run pytest and ruff on Python 3.11 (minimum supported)** — `6cd22a7b-72bc-4d34-ba7c-a6878b68907d` (matrix or equivalent for **`lint`** + **`test`**; matrix text in this spec; **§ Backlog `6cd22a7b`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**).
+- **CI: expand Python interpreter matrix beyond 3.12** — `8e58aa9c-0d62-4649-852a-766babcd8218` (**3.13** on merge-blocking **`lint`** + **`test`** alongside **3.11**/**3.12**; matrix/README/**CONTRIBUTING** alignment; skip documentation—**§ Backlog `8e58aa9c`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**; checklist **A11**–**A14** below).
 
 **Audience:** Spec gate (2b), Builder (3), integrators, maintainers.
 
@@ -47,6 +48,11 @@ Without a declared, **justified** **replayt** dependency range and a **published
   - **Recommended:** Keep **3.12** as an additional matrix axis (or equivalent second job) for **`lint`** and **`test`** so newer CPython behavior stays exercised. If maintainers drop **3.12** from those jobs, record the decision under **`CHANGELOG.md`**, update the **compatibility matrix** “CI-tested Python” text, and ensure **README** compatibility lines stay truthful.
   - **`package`** and **`supply-chain`** **should not** be matrixed across Python minors for this backlog (“without duplicating unrelated work”): use **one** interpreter per job (current tree: **3.12**) unless a future backlog requires otherwise. The **compatibility matrix** **Notes** column must state that packaging / **`pip-audit`** run on that single version.
   - **`[tool.ruff] target-version`** (currently **`py311`**) must stay aligned with the **lowest** supported minor; **ruff** running under **3.12** still targets **`py311`** syntax rules by configuration.
+- **Python 3.13 on merge-blocking `lint` + `test` (normative for backlog `8e58aa9c`):**
+  - **`lint`** and **`test`** **must** each include **`"3.13"`** in **`strategy.matrix.python-version`** (or an equivalent documented **`actions/setup-python`** input) **in addition to** **3.11** ( **`requires-python` floor**, backlog **`6cd22a7b`**) **and** **3.12** (recommended interstitial minor already in CI).
+  - **Rationale:** **`requires-python >=3.11`** allows installs on **CPython 3.13**; exercising only through **3.12** leaves the newest supported line unproven by **ruff** and **`pytest`**, which weakens the honesty of broad Python support claims in this matrix and **`README.md`**.
+  - **Latency / PR feedback:** Keep **`fail-fast: false`** on **`lint`** and **`test`** (or equivalent) so one failing minor does not cancel sibling matrix legs early. If maintainers ever mark some matrix legs as non-required in branch protection, **this spec**, **workflow YAML comments**, and **`CHANGELOG.md`** **must** record which minors are merge-blocking so the matrix does not over-claim coverage.
+  - **Out of scope for this backlog:** Matrixing **`package`**, **`supply-chain`**, or **`typing`** across Python minors; the **Notes** column below continues to name the single interpreter those jobs use unless a later backlog changes that.
 
 ## When `replayt` is not listed in `pyproject.toml` yet (stub / pre-coupling)
 
@@ -75,7 +81,7 @@ Once **`replayt`** is declared, remove or rewrite the **no runtime coupling** wo
 
 | replayt-lifecycle-webhooks | Supported replayt (declared in `pyproject.toml` for that release) | Python (`requires-python`) | CI-tested Python | Notes |
 | -------------------------- | ----------------------------------------------------------------- | -------------------------- | ---------------- | ----- |
-| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.11** and **3.12** for **`lint`** + **`test`** (matrix; see **§ CI**); **`package`** + **`supply-chain`** on **3.12** only (single interpreter; not matrixed per backlog `6cd22a7b`) | Merge-blocking **ruff** and **pytest** jobs exercise the **`requires-python` floor** and **3.12** on each trigger. Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
+| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.11**, **3.12**, and **3.13** for **`lint`** + **`test`** (matrix; see **§ CI**, backlog **`8e58aa9c`**); **`package`** + **`supply-chain`** on **3.12** only (single interpreter; not matrixed per backlog `6cd22a7b`) | Merge-blocking **ruff** and **pytest** jobs exercise **3.11**, **3.12**, and **3.13** on each trigger. Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
 
 **Integrator expectation:** Install this package from PyPI (or a fork) and let the resolver pick **replayt** consistent with the row for your **replayt-lifecycle-webhooks** version. If you pin **replayt** independently, ensure it still satisfies the declared range; otherwise signature or payload assumptions may not match what this repo tests.
 
@@ -86,7 +92,7 @@ Once **`replayt`** is declared, remove or rewrite the **no runtime coupling** wo
 
 ## Acceptance criteria (checklist)
 
-Use this list for Spec gate and Builder sign-off. Rows **A5–A7** map to backlog **Declare replayt dependency range and compatibility matrix** (`1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`). Row **A8** maps to backlog **Add replayt dependency declaration and compatibility matrix stub** (`8b16060d-f6e6-4111-bed2-4978b965ff52`). Rows **A9–A10** map to backlog **CI: run pytest and ruff on Python 3.11** (`6cd22a7b-72bc-4d34-ba7c-a6878b68907d`).
+Use this list for Spec gate and Builder sign-off. Rows **A5–A7** map to backlog **Declare replayt dependency range and compatibility matrix** (`1a14a01a-e6be-4f3f-b270-68f57fbbe0e4`). Row **A8** maps to backlog **Add replayt dependency declaration and compatibility matrix stub** (`8b16060d-f6e6-4111-bed2-4978b965ff52`). Rows **A9–A10** map to backlog **CI: run pytest and ruff on Python 3.11** (`6cd22a7b-72bc-4d34-ba7c-a6878b68907d`). Rows **A11–A14** map to backlog **CI: expand Python interpreter matrix beyond 3.12** (`8e58aa9c-0d62-4649-852a-766babcd8218`).
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
@@ -100,6 +106,10 @@ Use this list for Spec gate and Builder sign-off. Rows **A5–A7** map to backlo
 | A8 | **Compatibility matrix** lists **declared Python** (`requires-python`) and **CI-tested Python** (workflow file), and the Notes (or CI note) explain **replayt** resolution vs the lower bound. | Matrix + `.github/workflows/ci.yml` + `pyproject.toml`. |
 | A9 | **`lint`** and **`test`** jobs in **`.github/workflows/ci.yml`** run on **Python 3.11** (numeric **`3.11`** in **`actions/setup-python`** or equivalent). Each job’s full step list (ruff + pytest + existing **`test`** prerequisites) runs on that interpreter. | Workflow review; CI logs for a **`mc/**` or **`master`** PR. |
 | A10 | **`package`** and **`supply-chain`** remain **single-interpreter** jobs unless a separate backlog matrixes them; the matrix **Notes** name which minors **packaging** / **`pip-audit`** use. **A8** stays consistent with the workflow. | Workflow + matrix **Notes**. |
+| A11 | **`lint`** and **`test`** jobs each list **`3.13`** in **`strategy.matrix.python-version`** (string form consistent with **3.11**/**3.12** entries) while retaining **3.11** and **3.12**. | Workflow YAML + CI logs |
+| A12 | Every **`lint`** matrix leg runs the same **ruff** steps; every **`test`** matrix leg runs the same **`pytest`** and install validation steps as **3.11**/**3.12** legs (full step lists, not a reduced smoke subset). | Workflow YAML + CI logs |
+| A13 | After **A11** is satisfied, this **compatibility matrix** **CI-tested Python** column lists **3.11**, **3.12**, and **3.13** for **`lint`** + **`test`**, and **`README.md`** / **`CONTRIBUTING.md`** prose that names matrix minors matches **`.github/workflows/ci.yml`**. | Doc diff vs workflow |
+| A14 | Any interpreter-conditioned **`skip`** / **`xfail`** / **`skipif`** introduced or relied on for **3.13** is documented under **SPEC_AUTOMATED_TESTS** **§ Interpreter-conditioned skips** (or **CI** YAML **`Reason:`** comments naming backlog **`8e58aa9c`**) per **CI5**. | Code + **SPEC_AUTOMATED_TESTS** |
 
 ## Non-goals (this backlog)
 

@@ -43,26 +43,28 @@ def _ci_workflow_dict() -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def test_ci_lint_job_matrix_includes_python_311_and_312() -> None:
-    """CI1 + SPEC_REPLAYT_DEPENDENCY A9: lint runs on requires-python floor and recommended minor."""
+def test_ci_lint_job_matrix_includes_python_311_312_and_313() -> None:
+    """CI1 + SPEC_REPLAYT_DEPENDENCY A9/A11: lint runs on floor, 3.12, and 3.13 (backlog 8e58aa9c)."""
     wf = _ci_workflow_dict()
     matrix = wf["jobs"]["lint"]["strategy"]["matrix"]
     versions = matrix["python-version"]
     assert "3.11" in versions
     assert "3.12" in versions
+    assert "3.13" in versions
     text = (_repo_root() / ".github" / "workflows" / "ci.yml").read_text(
         encoding="utf-8"
     )
     assert "${{ matrix.python-version }}" in text
 
 
-def test_ci_test_job_matrix_includes_python_311_and_312() -> None:
-    """CI2 + SPEC_REPLAYT_DEPENDENCY A9: test runs on 3.11 and recommended 3.12."""
+def test_ci_test_job_matrix_includes_python_311_312_and_313() -> None:
+    """CI2 + SPEC_REPLAYT_DEPENDENCY A9/A11: test runs on 3.11, 3.12, and 3.13 (backlog 8e58aa9c)."""
     wf = _ci_workflow_dict()
     matrix = wf["jobs"]["test"]["strategy"]["matrix"]
     versions = matrix["python-version"]
     assert "3.11" in versions
     assert "3.12" in versions
+    assert "3.13" in versions
 
 
 @pytest.mark.parametrize("job", ("package", "supply-chain"))

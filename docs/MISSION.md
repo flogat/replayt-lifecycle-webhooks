@@ -139,7 +139,7 @@ Integrators and operators are responsible for:
 
 ## Success metrics (v0.x)
 
-- **Automated tests** (e.g. **pytest**) and **ruff** lint/format checks (**`src/`**, **`tests/`**, see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **RF1**–**RF5**) run in **CI** on every change workflow the project uses; merge-blocking **`lint`** and **`test`** jobs **must** exercise the **`requires-python` floor (3.11)** per **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** and **SPEC_AUTOMATED_TESTS** **§ Backlog `6cd22a7b`**. The suite **must** cover
+- **Automated tests** (e.g. **pytest**) and **ruff** lint/format checks (**`src/`**, **`tests/`**, see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **RF1**–**RF5**) run in **CI** on every change workflow the project uses; merge-blocking **`lint`** and **`test`** jobs **must** exercise the **`requires-python` floor (3.11)** per **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** and **SPEC_AUTOMATED_TESTS** **§ Backlog `6cd22a7b`**, and **must** add **CPython 3.13** to those matrices per **SPEC_REPLAYT_DEPENDENCY** **§ CI** (backlog **`8e58aa9c`**, **SPEC_AUTOMATED_TESTS** **§ Backlog `8e58aa9c`**) so open-ended **`requires-python`** support stays CI-backed above **3.12**. The suite **must** cover
   claimed verification behavior, dependency contract checks, and spec-driven acceptance where implemented—**green CI** is part
   of “done.” It **must** also include **replayt** boundary coverage (**`import replayt`**, documented symbols **R1–R5**) per
   **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** in addition to **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**
