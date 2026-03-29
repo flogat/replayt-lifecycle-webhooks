@@ -418,7 +418,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H12** |
 | `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S8** |
 | `docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md` | Normative contract for **`docs/OPERATOR_REVERSE_PROXY.md`**: nginx/Caddy-style proxy, raw body, limits, timeouts; **pytest** **OG1**–**OG8** |
-| `docs/OPERATOR_REVERSE_PROXY.md` | Operator guide: reverse proxy in front of **`python -m replayt_lifecycle_webhooks`** (**Builder**; backlog **`dc212184`**) |
+| `docs/OPERATOR_REVERSE_PROXY.md` | Operator guide: reverse proxy in front of **`python -m replayt_lifecycle_webhooks`** (**OG1**–**OG8**; backlog **`dc212184`**) |
 | `docs/SPEC_LOCAL_WEBHOOK_DEMO.md` | Local demo: one command POSTs signed fixtures to default listener; acceptance **D1–D9** |
 | `replayt_lifecycle_webhooks.demo_webhook` | **`python -m replayt_lifecycle_webhooks.demo_webhook`**: signed POST to default **`/webhook`** URL |
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |

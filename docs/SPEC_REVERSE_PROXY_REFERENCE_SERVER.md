@@ -105,4 +105,4 @@ when the backlog is active (**Troubleshooting** or **Verifying webhook signature
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — retries and **`event_id`**.
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — WSGI app semantics behind the server.
 - **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator headings and reverse-proxy link rule.
-- **[README.md](../README.md)** — project layout entry once the guide ships.
+- **[README.md](../README.md)** — project layout lists the guide; **Troubleshooting** links **`docs/OPERATOR_REVERSE_PROXY.md`** (**OG8**).

@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   points at the shipped guide without a future-tense backlog clause. **`tests/test_operator_reverse_proxy_doc.py`**
   enforces **OG1**–**OG8**.
 
+- **Reverse proxy docs** (phase **5** architecture review, same backlog): **`docs/MISSION.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`README.md`**
+  project layout, and **`docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md`** now describe the shipped guide without “when shipped” /
+  **Builder**-pending wording.
+
 - **Reverse proxy in front of the reference HTTP server** (phase **2** spec, backlog **`dc212184-8c0d-4ee6-90de-e0d50c370f6f`** /
   *Operator guide: reverse proxy in front of reference WSGI server*): new **`docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md`**
   (normative contract for the operator guide and **OG1**–**OG8**). Cross-links and traceability in
