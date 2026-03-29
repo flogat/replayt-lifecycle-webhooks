@@ -52,4 +52,5 @@ pythonpath = ["scripts"]
 markers = [
   "replayt_boundary: replayt import seam, required symbols, __all__ superset (SPEC_REPLAYT_BOUNDARY_TESTS R1, G1–G7).",
   "property_fuzz: optional Hypothesis fuzzing for verify/parse (SPEC_AUTOMATED_TESTS § Backlog dcffe5d5, PF1–PF10).",
+  "perf_hotpath: optional verify wall-time vs stdlib HMAC ratio (SPEC_AUTOMATED_TESTS § Backlog 1b3df584, PG1–PG8).",
 ]

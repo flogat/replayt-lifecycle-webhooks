@@ -64,6 +64,9 @@
   **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** (**§ Static typing (PEP 561)**).
 - Optional metrics hooks for verify / handler outcomes (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — checklist **M1**–**M8**
   under **§ Backlog `42b8d5a9`** below; normative contract **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**.
+- Performance regression guard for **`verify_lifecycle_webhook_signature`** hot path (`1b3df584-4ac8-4f16-99cf-c14404c7692a`) —
+  checklist **PG1**–**PG8** under **§ Backlog `1b3df584`** below; normative context **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**
+  (**§ Performance regression guard**).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -94,6 +97,7 @@ behavioral coverage.
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | Optional **serve** / **handler** diagnostic logging + redaction (**LG1–LG4**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic logging**); **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S10**–**S12**) |
 | Optional verify / handler **metrics** callbacks (**M1**–**M8**), when implemented | **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**; **§ Backlog `42b8d5a9`** below |
+| Optional **verify** hot-path **performance** guard (**PG1**–**PG8**), non-default in CI | **§ Backlog `1b3df584`** below; **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** (**§ Performance regression guard**) |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
@@ -129,6 +133,10 @@ behavioral coverage.
 
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
+
+- **Performance timing tests** (**§ Backlog `1b3df584`**, **PG1**–**PG8**) **must not** run as part of merge-blocking
+  **`pytest`** unless the workflow explicitly opts in with **documented** loose thresholds (maintainer choice). Default
+  **`pytest tests -q`** stays **green** on shared CI runners without flaky wall-clock failures.
 
 - **Ruff** (**`ruff check`**, **`ruff format --check`**) is specified under **§ Backlog `5a3f5a7f`** and implemented in
   **`.github/workflows/ci.yml`** (**`lint`** job). **Removing** or **weakening** those steps requires updating this
@@ -227,6 +235,10 @@ tests **must not** replace items **1**–**4** in **§ Minimum behavioral covera
 **A2**, **A3**, and **§ Minimum behavioral coverage** items **1**–**2**; they **must not** replace them. Unless
 **CHANGELOG.md** and this document record a deliberate policy change, **default** **`pytest tests -q`** and merge-blocking
 **CI** **must** remain **green** on an install that does **not** include **Hypothesis** (skip, marker exclusion, or equivalent).
+
+**Optional** hot-path **performance** checks (**PG1**–**PG8**, **§ Backlog `1b3df584`**) **complement** **A2** and **§ Minimum
+behavioral coverage** item **1**; they **must not** replace **W3** or correctness tests. They are **off** merge-blocking **CI**
+by default (marker exclusion, env gate, or **`scripts/`**-only harness).
 
 ## Acceptance criteria (checklist)
 
@@ -780,6 +792,39 @@ Optional: run a single module while iterating:
 ```bash
 pytest tests/test_property_fuzz_signature.py -q
 pytest tests/test_property_fuzz_parse.py -q
+```
+
+## Backlog `1b3df584`: verify hot-path performance regression guard
+
+Checklist rows for **Performance regression guard for signature verification hot path**
+(`1b3df584-4ac8-4f16-99cf-c14404c7692a`). **Scope:** **`tests/`** and/or **`scripts/`** only — **no** change to
+**`verify_lifecycle_webhook_signature`** semantics, wire format, or public contract (**[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**).
+**Goal:** catch accidental **large** slowdowns in the **success-path** verify loop (integrators may verify at high QPS); **not**
+micro-benchmark noise on shared CI.
+
+### Posture vs default CI
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PG1** | **Non-default:** Merge-blocking **`lint`** / **`test`** jobs **do not** require timing assertions on **`verify_lifecycle_webhook_signature`**. Implement **one** of: **`pytest -m "not perf_hotpath"`** in CI while the marker exists; **no** collection of perf tests unless an env var (e.g. **`RUN_PERF_HOTPATH=1`**) is set; perf lives only under **`scripts/`** with **no** **`pytest`** import; or equivalent documented in this section and **README.md** once shipped. | Workflow YAML + **README**; code review |
+| **PG2** | **Opt-in surface:** Ship **either** (a) **`pytest`** tests behind a registered marker **`perf_hotpath`** in **`pyproject.toml`** **`[tool.pytest.ini_options] markers`**, **or** (b) a **`scripts/`** **stdlib-only** helper (or both). Every timed **`pytest`** item uses **`@pytest.mark.perf_hotpath`**. Docstring or module comment ties rows to this backlog id. | **`pytest --markers`**; code review |
+| **PG3** | **Fixed inputs:** Use **deterministic** **`secret`** (**`str` or `bytes`**, UTF-8 when **`str`**) and **`body: bytes`** at **fixed** length(s) documented here (recommended: **one** representative size **≤ 64 KiB**, e.g. **4 KiB** or **16 KiB** buffer of stable octets — **JSON-shaped** body not required; opaque bytes are fine). Build a **valid** v1 **`Replayt-Signature`** value for that pair using **`compute_lifecycle_webhook_signature_header`** in setup **or** a committed header string (same rules as **A6** / golden vectors). | Code review |
+| **PG4** | **Hot path under test:** Time the **success** path only: **`verify_lifecycle_webhook_signature(secret=…, body=…, signature=…)`** completes **without** raising. Default **`metrics=None`** unless the Builder documents a separate row comparing **`metrics`** disabled vs enabled (optional). | Code review |
+| **PG5** | **Warm-up:** Before collecting samples, run **at least one** untimed iteration (or discard first **N** timed samples) so one-off allocation / import effects do not dominate. | Code review |
+| **PG6** | **Egregious-only thresholds:** Any **assertion** on wall time **must** target **order-of-magnitude** regressions, not percent-level drift. **Preferred:** compare median (or trimmed mean) cost of **PG4** to a **same-interpreter, same-run** **stdlib** control — e.g. **`hmac.new(key, body, hashlib.sha256).digest()`** (or equivalent minimal HMAC over the **same** key material and body) — and require **`t_verify ≤ K × t_hmac`** for a **documented** **`K`** large enough to absorb parsing / **`compare_digest`** overhead but **small enough** to catch accidental **≥~10×** inflation vs that ratio’s expected range (Builder documents **`K`** and rationale in the test module or this section). **Alternative:** env-gated baseline file + **≥~10×** slowdown check documented for **manual** / scheduled workflows only (**PG1** still satisfied). | Code review |
+| **PG7** | **Noise hygiene:** Timed sections **must not** include **sleep**, **subprocess**, **network**, or **disk I/O**. Prefer **`time.perf_counter()`** (or **`timeit`** for scripts). Document in **README** that laptops and CI VMs vary; contributors treat failures as **investigate**, not **block merge**, unless an opt-in job is added. | Code review |
+| **PG8** | **Contributor docs:** **README.md** (**Running tests**) lists copy-paste commands (install deps unchanged — **no** new mandatory deps for this backlog). Example pattern: **`pytest tests -m perf_hotpath -q`** **or** **`python scripts/<name>.py`** when **`scripts/`** is the harness. | Doc review |
+
+### Contributor commands (normative examples)
+
+Exact module names are **Builder-chosen**; replace placeholders after implementation:
+
+```bash
+# If pytest-marked (opt-in; not merge-blocking by default):
+pytest tests -m perf_hotpath -q
+
+# If a script is provided:
+python scripts/benchmark_verify_lifecycle_webhook_signature.py
 ```
 
 ## Backlog `bea2900c`: pip-audit suppression alignment and review reminders

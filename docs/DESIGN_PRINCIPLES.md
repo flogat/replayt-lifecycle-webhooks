@@ -13,7 +13,8 @@ Revise as the project matures. Defaults below are minimal—expand with rules fo
    **PC1**–**PC7** under backlog **`c39b2a5f`**; **sdist**/**wheel** **`python -m build`** + **`twine check`**, declared
    **package-data**, **`py.typed`** (**`78e3554b`** **PK1**–**PK7** + **`2ec2c21c`** **TP1**–**TP3**), and optional
    static typing gate (**`2ec2c21c`** **TP4**–**TP5**); optional **Hypothesis**
-   **`property_fuzz`** rows **PF1**–**PF10** under backlog **`dcffe5d5`**; **`pip-audit`** suppression alignment **PI1**–**PI7**
+   **`property_fuzz`** rows **PF1**–**PF10** under backlog **`dcffe5d5`**; optional **`perf_hotpath`** verify regression guard
+   **PG1**–**PG8** under backlog **`1b3df584`**; **`pip-audit`** suppression alignment **PI1**–**PI7**
    under backlog **`bea2900c`** in **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**). **Webhook request logging**
    convention: **structured** **`logging`** with **`snake_case`** **`extra=`** keys (**`webhook_*`**, **`lifecycle_*`**),
    package **`redact_*`** helpers, and **no default raw POST body** in log records—see

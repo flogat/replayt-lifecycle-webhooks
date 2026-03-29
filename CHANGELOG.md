@@ -9,11 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **Verify hot-path performance regression guard (spec)** (phase **2**, backlog **`1b3df584-4ac8-4f16-99cf-c14404c7692a` / *Performance regression guard for signature verification hot path*`): **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `1b3df584`** (**PG1**–**PG8** — optional **`perf_hotpath`** / **`scripts/`**, non-default CI, fixed inputs, **order-of-magnitude** thresholds); **`docs/SPEC_WEBHOOK_SIGNATURE.md`** **§ Performance regression guard**; cross-links in **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, and **`README.md`** (**Running tests**).
+
 - **Coordinated security disclosure** (phase **3**, backlog **`87e7edae-033d-45af-87fc-066fca51db96` / *SECURITY.md and coordinated disclosure process*`): repository root **`SECURITY.md`** (scope, reporting via GitHub **Security** / private reporting, response cadence, redaction, links to **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**, **`docs/DESIGN_PRINCIPLES.md`**); **`README.md`** link **`](SECURITY.md)`** and **Project layout** row update; **`CONTRIBUTING.md`** **`[SECURITY.md](SECURITY.md)`**; **`tests/test_security_disclosure_doc.py`** (**SEC1**–**SEC9**).
 
 - **Coordinated security disclosure spec** (phase **2**, backlog **`87e7edae-033d-45af-87fc-066fca51db96` / *SECURITY.md and coordinated disclosure process*`): new **`docs/SPEC_SECURITY_DISCLOSURE.md`** (**SC1**–**SC11**, optional test-vector / **CI** hygiene); **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `87e7edae`** (**SEC1**–**SEC9**); cross-links in **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/SPEC_README_OPERATOR_SECTIONS.md`**, **`README.md`** (**Project layout**), and **`CONTRIBUTING.md`** (**Security issues**).
 
 ### Added
+
+- **Verify hot-path performance regression guard** (phase **3**, backlog **`1b3df584-4ac8-4f16-99cf-c14404c7692a` / *Performance regression guard for signature verification hot path*`): registered **`perf_hotpath`** marker; **`tests/test_perf_verify_hotpath.py`** (median verify vs **stdlib** **`hmac`** ratio, **`K = 256`**); **`tests/conftest.py`** drops **`perf_hotpath`** from the default collection; **`scripts/benchmark_verify_lifecycle_webhook_signature.py`** (same inputs, optional **`--k`**). **CI** **`test`** job runs **`pytest -m "not perf_hotpath"`**. **README.md** (**Running tests**) lists opt-in commands.
 
 - **Webhook failure response fixtures** (phase **3**, backlog **`70689a62-61d1-4f2a-9d32-e8e8eec27c88` / *Harden SPEC_WEBHOOK_FAILURE_RESPONSES with end-to-end examples*`): **`tests/fixtures/webhook_failure_responses/`** holds one compact JSON file per stable **`error`** code (matches **§ Canonical end-to-end examples** in **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`**). **`tests/test_webhook_failure_response_fixtures.py`** (**FR5**) asserts each file’s bytes equal the matching **`handle_lifecycle_webhook_post`** response body. **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `70689a62`**; **FR5** verification in **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`** points at the fixtures.
 
