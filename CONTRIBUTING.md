@@ -19,19 +19,18 @@ You **do not** need to populate snapshots to build, test, or contribute code cha
 
 ## Packaging check (sdist and wheel)
 
-CI **must** run **`python -m build`** and **`twine check`** on the artifacts once backlog **`78e3554b`** is implemented;
+CI runs **`python -m build`** and **`twine check`** on every change (job **`package`** in **`.github/workflows/ci.yml`**);
 acceptance rows **PK1**–**PK7** live in **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog
 `78e3554b`**).
 
-**Local (matches the intended CI shape):**
+**Local (same lower bounds as CI):**
 
 ```bash
-python -m pip install "build" "twine"
+python -m pip install "build>=1.2.0" "twine>=5.0.0"
 rm -rf dist
 python -m build
 twine check dist/*
 ```
 
-Use a **venv** if you prefer; versions need not match CI exactly, but **`twine check`** **must** pass before a release.
-Inspecting the **wheel** (zip) for **`replayt_lifecycle_webhooks/fixtures/events/*.json`** is part of **PK5**—automate in CI
-as specified in **SPEC_AUTOMATED_TESTS**.
+Use a **venv** if you prefer. **`twine check`** **must** pass before a release. **PK5** is enforced by
+**`tests/test_packaging_layout.py`** (wheel zip members and **sdist** tarball paths).
