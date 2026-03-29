@@ -34,3 +34,16 @@ twine check dist/*
 
 Use a **venv** if you prefer. **`twine check`** **must** pass before a release. **PK5** is enforced by
 **`tests/test_packaging_layout.py`** (wheel zip members and **sdist** tarball paths).
+
+## Optional pre-commit (ruff)
+
+**Source of truth:** **`.github/workflows/ci.yml`**, job **`lint`** — **`pip install "ruff>=0.6.0"`**, then **`ruff check src tests`**
+and **`ruff format --check src tests`**. If those commands change in CI, update **`.pre-commit-config.yaml`** and this section so
+local hooks stay aligned.
+
+The repo root **`.pre-commit-config.yaml`** wires the same **ruff** targets via **astral-sh/ruff-pre-commit** (format is **check-only**,
+not silent rewrite on commit). Install the **pre-commit** tool (for example **`pip install pre-commit`** in your venv; it is **not** a
+package runtime dependency), then run **`pre-commit install`** so Git runs the hooks before each commit.
+
+This setup is **optional**. Contributors can open drive-by patches without installing hooks; **GitHub Actions** still runs the **`lint`**
+job on pushes and pull requests.
