@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **CI / ruff format** (phase **8**, backlog **`d10cf76f-e11e-4674-9d81-6d06899b4a64` / *Reference SQLite-backed idempotency store for event_id*`): **`tests/test_sqlite_idempotency_store.py`** reformatted so **`ruff format --check`** passes on the **lint** matrix (**3.11**–**3.13**); no test behavior change.
+- **CI / ruff format** (phase **8**, backlog **`d10cf76f-e11e-4674-9d81-6d06899b4a64` / *Reference SQLite-backed idempotency store for event_id*`): **`tests/test_sqlite_idempotency_store.py`** reformatted and line endings normalized to **LF** so **`ruff format --check`** passes on the **lint** matrix (**3.11**–**3.13**); no test behavior change.
 
 ### Added
 
