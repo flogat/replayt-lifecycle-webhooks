@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **Packaging gate wording** (phase **5** architect review, backlog **`78e3554b-2b50-4918-9859-85642ac1a84a` / *CI: `python -m build` + `twine check` on sdist/wheel*):
+  **`docs/MISSION.md`** success metric now describes the live **`package`** job and **pytest** layout checks; **`README.md`**
+  lists the **`package`** step alongside **ruff** and **pytest** in the CI summary.
 - **Packaging CI spec** (phase **2**, backlog **`78e3554b-2b50-4918-9859-85642ac1a84a` / *CI: `python -m build` + `twine check` on sdist/wheel*):
   **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `78e3554b`** with acceptance **PK1**–**PK7** (**`python -m build`**,
   **`twine check`**, **setuptools** **package-data** for **`fixtures/events/*.json`**, conditional **`py.typed`** when the

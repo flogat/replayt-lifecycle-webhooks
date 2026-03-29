@@ -59,7 +59,7 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 **Compatibility matrix** (**replayt** and **Python** support, CI-tested interpreter, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
 
-**Python:** `pyproject.toml` sets **`requires-python`** (minimum installers must satisfy). GitHub Actions runs **`ruff check`** / **`ruff format --check`** on **`src/`** and **`tests/`** and the full **`pytest`** suite on **Python 3.12** (see `.github/workflows/ci.yml`). A broader `requires-python` means other minors may work but are not necessarily exercised in CI until you add matrix jobs.
+**Python:** `pyproject.toml` sets **`requires-python`** (minimum installers must satisfy). GitHub Actions runs **`ruff check`** / **`ruff format --check`** on **`src/`** and **`tests/`**, the full **`pytest`** suite, and a **`package`** job (**`python -m build`**, **`twine check`**) on **Python 3.12** (see `.github/workflows/ci.yml`). A broader `requires-python` means other minors may work but are not necessarily exercised in CI until you add matrix jobs.
 
 ## Design principles
 
