@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Tests
+
+- **Subprocess reference server** (backlog **`83e07114`**, phase **3**): **`tests/test_reference_server_subprocess.py`**
+  starts **`sys.executable -m replayt_lifecycle_webhooks`** on **`127.0.0.1`** with a parent-chosen free port and
+  **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** in the child environment, waits for **`GET /health`**, **POST**s
+  **`tests/fixtures/events/run_started.json`** with **`compute_lifecycle_webhook_signature_header`**, and expects **204**.
+
 ### Documentation
+
+- **Subprocess reference-server test contract** (backlog **`83e07114`**): **`docs/SPEC_AUTOMATED_TESTS.md`** adds **SUB1**–**SUB8**,
+  **§ Minimum behavioral coverage** note, CI entrypoint allowance for **loopback** child HTTP, and topic-table traceability;
+  **`docs/SPEC_HTTP_SERVER_ENTRYPOINT.md`** adds **S9** and links **SUB** rows to **`tests/test_reference_server_subprocess.py`**.
 
 - **Reverse proxy operator guide** (phase **3**, backlog **`dc212184-8c0d-4ee6-90de-e0d50c370f6f`** /
   *Operator guide: reverse proxy in front of reference WSGI server*): new **`docs/OPERATOR_REVERSE_PROXY.md`** (raw POST body,

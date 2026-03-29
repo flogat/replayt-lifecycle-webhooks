@@ -102,6 +102,7 @@ When this backlog is implemented:
 | **S6** | Automated tests exercise the server **without** binding public sockets or requiring network **CI** access (in-process ASGI client, **WSGI** **`EnvironBuilder`**, or equivalent). | **`pytest tests -q`**; see **SPEC_AUTOMATED_TESTS** |
 | **S7** | Host, port, and (if supported) webhook path defaults are **documented** and stable; overrides are documented if present. | Doc review |
 | **S8** | Documented secret configuration (**env** and/or flags) does **not** contradict **SPEC_WEBHOOK_SIGNATURE**’s rule that **library** calls remain explicit-injection. | Doc review |
+| **S9** | At least one **pytest** exercises the **documented** **`python -m replayt_lifecycle_webhooks`** process (subprocess), **loopback-only** HTTP to **`GET /health`** and signed **POST** on the default webhook path, with clean teardown—checklist **SUB1**–**SUB8** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `83e07114`**). This **adds** operator-faithful wiring coverage alongside in-process **S3**/**S4**/**S6** tests. | **`pytest`**; **`tests/test_reference_server_subprocess.py`**; **`SPEC_AUTOMATED_TESTS`** **SUB** table |
 
 ## Related docs
 
@@ -109,7 +110,7 @@ When this backlog is implemented:
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — JSON **`error`** codes for client failures.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — verification and integrator logging rules.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction when server or handler code logs headers or metadata.
-- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint; minimum coverage when **S** rows are active.
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint; minimum coverage when **S** rows are active; subprocess **SUB1**–**SUB8** (**S9**).
 - **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** — declaring and justifying dependency changes.
 - **[README.md](../README.md)** — operator copy-paste for the canonical start command (once implemented).
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local **signed** fixture POST; default URL **must** stay

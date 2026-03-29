@@ -175,14 +175,16 @@ The **normative** full suite is defined in **[docs/SPEC_AUTOMATED_TESTS.md](docs
 **[docs/SPEC_REPLAYT_BOUNDARY_TESTS.md](docs/SPEC_REPLAYT_BOUNDARY_TESTS.md)**: **unit / contract** tests (signature
 verification, lifecycle JSON parsing, handler behavior, doc guards) and **replayt boundary** tests that **`import replayt`**
 and lock **EVENTS.md**-listed symbols (**R1–R5**). **`pytest tests -q`** is the contributor **test** entrypoint; **CI**
-also runs **ruff** on **`src/`** and **`tests/`** (see **`.github/workflows/ci.yml`**). There is **no** separate
-network-backed “integration” job unless **CHANGELOG.md** and those specs add one.
+also runs **ruff** on **`src/`** and **`tests/`** (see **`.github/workflows/ci.yml`**). The same command includes a
+**loopback-only** subprocess check (**`tests/test_reference_server_subprocess.py`**, backlog **`83e07114`**) that starts
+**`python -m replayt_lifecycle_webhooks`** with no outbound or public network I/O.
 
 **Focused runs (optional):**
 
 ```bash
 pytest tests/test_webhook_signature.py tests/test_lifecycle_events.py -q   # crypto + parsing only (example)
 pytest tests -m replayt_boundary -q                                         # replayt import + symbol checks only
+pytest tests/test_reference_server_subprocess.py -q                         # subprocess ``python -m`` server + loopback POST
 ```
 
 Checklist rows **A1–A5** (minimum verification / parsing) and **R1–R5** (replayt boundary): **SPEC_AUTOMATED_TESTS** and
