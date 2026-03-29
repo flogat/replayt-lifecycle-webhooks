@@ -11,6 +11,11 @@ import zipfile
 
 import pytest
 
+pytest.importorskip(
+    "build",
+    reason="PK5–PK7 layout tests need [project.optional-dependencies] dev (build, twine)",
+)
+
 _WHEEL_FIXTURE_MEMBER = "replayt_lifecycle_webhooks/fixtures/events/run_started.json"
 _SDIST_FIXTURE_SUFFIX = "replayt_lifecycle_webhooks/fixtures/events/run_started.json"
 

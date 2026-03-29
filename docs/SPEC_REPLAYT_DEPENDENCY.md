@@ -67,13 +67,15 @@ Once **`replayt`** is declared, remove or rewrite the **no runtime coupling** wo
 
 **Purpose:** Give integrators a single table mapping **released `replayt-lifecycle-webhooks` versions** to **supported `replayt` install ranges**, **declared Python support**, and **what CI actually runs**. Extend the table on every release that changes declared bounds, Python support, or the CI interpreter.
 
+**Workflow definition:** `.github/workflows/ci.yml`.
+
 **Maintainer rule:** When you cut a version or change `[project.dependencies]` for **replayt**, add or update the row for that package version and align **`CHANGELOG.md`**.
 
 **CI note on replayt versions:** The test job does not pin a single **replayt** patch beyond the declared lower bound; **`pip`** resolves a version satisfying **`replayt>=M.m.p`**. The **matrix** documents the **declared range**; **`tests/test_replayt_dependency.py`** asserts the installed release is **≥** the canonical floor from `pyproject.toml`.
 
 | replayt-lifecycle-webhooks | Supported replayt (declared in `pyproject.toml` for that release) | Python (`requires-python`) | CI-tested Python | Notes |
 | -------------------------- | ----------------------------------------------------------------- | -------------------------- | ---------------- | ----- |
-| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.11** and **3.12** for **`lint`** + **`test`** (matrix or equivalent; see **§ CI**); **`package`** + **`supply-chain`** on **3.12** only (single interpreter; not matrixed per backlog `6cd22a7b`) | **Target state** after backlog **`6cd22a7b`** ships: minimum minor is always exercised in merge-blocking **ruff**/**pytest** jobs. Until the workflow is updated, treat the matrix row as the contract and align `.github/workflows/ci.yml` in phase **3**. Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
+| 0.1.x (current tree)       | `>=0.4.25` (lower bound only; no upper bound)                     | `>=3.11` (see `pyproject.toml`) | **3.11** and **3.12** for **`lint`** + **`test`** (matrix; see **§ CI**); **`package`** + **`supply-chain`** on **3.12** only (single interpreter; not matrixed per backlog `6cd22a7b`) | Merge-blocking **ruff** and **pytest** jobs exercise the **`requires-python` floor** and **3.12** on each trigger. Floor chosen as the first PyPI **replayt** version verified with this package’s CI at pin time; bump when tests or product contract require newer **replayt** APIs or behavior. |
 
 **Integrator expectation:** Install this package from PyPI (or a fork) and let the resolver pick **replayt** consistent with the row for your **replayt-lifecycle-webhooks** version. If you pin **replayt** independently, ensure it still satisfies the declared range; otherwise signature or payload assumptions may not match what this repo tests.
 
