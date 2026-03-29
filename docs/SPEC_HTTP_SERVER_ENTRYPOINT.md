@@ -55,6 +55,14 @@ script) if **README** labels one as **primary** and **`pyproject.toml`** lists b
 | **Webhook route** | **POST** requests that carry lifecycle deliveries **must** use a **single documented default path** (recommended: **`/`** or **`/webhook`**—pick one per implementation and do not change without **CHANGELOG** + spec update). If the CLI accepts a path override, defaults **must** remain stable. **Package default (backlog `2cf0f4fb`):** **`/webhook`**. |
 | **Handler semantics** | **POST** handling **must** match **SPEC_MINIMAL_HTTP_HANDLER** (statuses **405** / **401** / **403** / **400** / **422** / **204**, JSON error bodies per **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** where that spec applies). |
 
+### Companion: offline body verification (backlog `845b4b11`)
+
+When backlog **`845b4b11`** is implemented, **`python -m replayt_lifecycle_webhooks verify`** (or the **single** documented
+alternate **`-m`** module per **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**) performs **offline**
+**v1** MAC verification for a saved raw body and **`Replayt-Signature`** header value. It **reuses** the **recommended**
+secret env var (**`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**) with the same hygiene story as **§ Configuration** below but does
+**not** change **S1**–**S13** acceptance for the HTTP listener itself.
+
 ## Health / readiness
 
 Platforms often require a **GET** probe that succeeds when the process is listening.
@@ -125,6 +133,9 @@ When this backlog is implemented:
 - **[README.md](../README.md)** — operator copy-paste for the canonical start command (once implemented).
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local **signed** fixture POST; default URL **must** stay
   aligned with this spec’s host, port, and **`/webhook`** defaults unless both docs change together (**D2**).
+- **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** — offline verify CLI for saved body + signature
+  (**VW1**–**VW8**; backlog **`845b4b11`**); shares **`python -m replayt_lifecycle_webhooks`** when implemented as a
+  **`verify`** subcommand.
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — reverse proxy in front of the
   reference server; acceptance **OG1**–**OG8**; deliverable **`docs/OPERATOR_REVERSE_PROXY.md`**.
 - **[MISSION.md](MISSION.md)** — optional HTTP glue scope; no mandatory framework for library-only installs.

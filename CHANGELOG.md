@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **Offline verify CLI spec** (phase **2**, backlog **`845b4b11-847d-48cb-a9f3-e75f3e4862ef` / *Support CLI: verify saved webhook (body file + signature header)*`): new **[`docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md`](docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** ( **`verify`** subcommand on **`python -m replayt_lifecycle_webhooks`**, exit codes **0**/**1**/**2**, **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**, golden vectors from **`tests/fixtures/events/`**, **VW1**–**VW8** in **[`docs/SPEC_AUTOMATED_TESTS.md`](docs/SPEC_AUTOMATED_TESTS.md)**). Cross-links: **[`docs/SPEC_PUBLIC_API.md`](docs/SPEC_PUBLIC_API.md)** (CLI table), **[`docs/SPEC_HTTP_SERVER_ENTRYPOINT.md`](docs/SPEC_HTTP_SERVER_ENTRYPOINT.md)**, **[`docs/SPEC_WEBHOOK_SIGNATURE.md`](docs/SPEC_WEBHOOK_SIGNATURE.md)**, **[`docs/SPEC_README_OPERATOR_SECTIONS.md`](docs/SPEC_README_OPERATOR_SECTIONS.md)**, **[`docs/MISSION.md`](docs/MISSION.md)**, **[`docs/DESIGN_PRINCIPLES.md`](docs/DESIGN_PRINCIPLES.md)**, **[`README.md`](README.md)** overview.
+
 ### Added
 
 - **Webhook failure response fixtures** (phase **3**, backlog **`70689a62-61d1-4f2a-9d32-e8e8eec27c88` / *Harden SPEC_WEBHOOK_FAILURE_RESPONSES with end-to-end examples*`): **`tests/fixtures/webhook_failure_responses/`** holds one compact JSON file per stable **`error`** code (matches **§ Canonical end-to-end examples** in **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`**). **`tests/test_webhook_failure_response_fixtures.py`** (**FR5**) asserts each file’s bytes equal the matching **`handle_lifecycle_webhook_post`** response body. **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `70689a62`**; **FR5** verification in **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`** points at the fixtures.

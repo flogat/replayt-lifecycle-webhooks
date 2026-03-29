@@ -62,6 +62,7 @@
   **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** (**§ Static typing (PEP 561)**).
 - Optional metrics hooks for verify / handler outcomes (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — checklist **M1**–**M8**
   under **§ Backlog `42b8d5a9`** below; normative contract **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**.
+- Offline verify CLI for saved webhook body + **`Replayt-Signature`** (`845b4b11-847d-48cb-a9f3-e75f3e4862ef`) — checklist **VW1**–**VW8** under **§ Backlog `845b4b11`** below; normative contract **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -82,6 +83,7 @@ behavioral coverage.
 | Reference server **HTTP surface** matrix for gateways (**RM1**–**RM7**), documentation | **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**; **§ Backlog `b4c68e50`** below |
 | Operator reverse-proxy guide (**OG1–OG8**) | **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; **§ Backlog `dc212184`** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
+| Offline verify CLI (**VW1**–**VW8**), when implemented | **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**; **§ Backlog `845b4b11`** below |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
@@ -191,6 +193,8 @@ When **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** is implemented
 **`verify_lifecycle_webhook_signature`**; non-success HTTP maps to non-zero exit or equivalent tested behavior). Those
 tests **must not** replace items **1**–**3**.
 
+When backlog **`845b4b11`** (**[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**) is implemented, the suite **must** additionally include **network-free** **pytest** rows **VW1**–**VW8** under **§ Backlog `845b4b11`** below (subprocess **CLI**, golden vectors from **`tests/fixtures/events/`**, **no** secret or full MAC leakage on failure). Those tests **must not** replace items **1**–**3** or **W** rows.
+
 When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** is implemented, the suite **must**
 additionally include **network-free** tests that satisfy checklist **L1–L9** under **Backlog `fa75ecf3`** below. Those
 tests **must not** replace items **1**–**3**.
@@ -281,6 +285,24 @@ These complement **H8** message checks in **`tests/test_http_handler.py`**; they
 | # | Criterion | Verification |
 |---|-----------|--------------|
 | FR5 | Committed **`tests/fixtures/webhook_failure_responses/*.json`** stay byte-identical to **`handle_lifecycle_webhook_post`** error bodies (compact JSON, no trailing newline) and cover every stable **`error`** code in that folder. | **`tests/test_webhook_failure_response_fixtures.py`** |
+
+## Backlog `845b4b11`: offline verify CLI (saved body + `Replayt-Signature`)
+
+Checklist rows for **Support CLI: verify saved webhook (body file + signature header)**
+(`845b4b11-847d-48cb-a9f3-e75f3e4862ef`). Normative contract: **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
+These extend **A1–A5** and **§ Minimum behavioral coverage** item **1** (signature verification) by exercising the **CLI**
+wrapper; they do **not** replace **`tests/test_webhook_signature.py`** **W** coverage or items **1**–**3**.
+
+| ID | Criterion | Verification |
+| -- | --------- | ------------ |
+| **VW1** | **README.md** documents the canonical **`python -m …`** invocation and links **SPEC_CLI_VERIFY_SAVED_WEBHOOK**. | Doc review; optional **`tests/test_readme_operator_sections.py`** extension if **SPEC_README_OPERATOR_SECTIONS** maps **OP** rows |
+| **VW2** | **`--help`** output includes **raw body discipline**, **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**, and exit codes **0** / **1** / **2**. | Subprocess or **`pytest`** string assertions |
+| **VW3** | Subprocess: committed **`tests/fixtures/events/`** body file + valid **`--signature`** → exit **0**, stdout **`ok\n`**. | **`pytest`** (module name aligned with implementation, e.g. **`tests/test_cli_verify_saved_webhook.py`**) |
+| **VW4** | Subprocess: MAC failure → exit **1**; combined **stdout**/**stderr** **must not** contain a distinctive **secret** substring or the **full** expected **64-hex** digest used in the test. | **`pytest`** |
+| **VW5** | Subprocess: body from **stdin** (**`-`**) + valid signature → exit **0**. | **`pytest`** |
+| **VW6** | Missing / empty secret → exit **2**. | **`pytest`** |
+| **VW7** | **SPEC_PUBLIC_API** CLI table and **CHANGELOG.md** **Unreleased** record the shipped entrypoint. | Doc review |
+| **VW8** | All cases above are **network-free** (no outbound HTTP). | Code review; **CI** |
 
 ## Backlog `4280c054`: delivery idempotency (`event_id`)
 

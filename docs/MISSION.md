@@ -12,6 +12,8 @@ live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
 **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**.
 **Reverse proxy / TLS** in front of the reference server (raw body, limits, timeouts): **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; operator guide **[OPERATOR_REVERSE_PROXY.md](OPERATOR_REVERSE_PROXY.md)**.
 Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
+**Offline verify CLI** (saved raw body + **`Replayt-Signature`** for support triage; backlog **`845b4b11`**):
+**[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
 **Structured logging** with default **redaction** for sensitive headers and metadata:
 **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**.
 **Delivery retries and `event_id` idempotency:**

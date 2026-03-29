@@ -20,7 +20,8 @@ handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.
 listener (raw POST body, limits, timeouts): contract **[docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**;
 operator guide **[docs/OPERATOR_REVERSE_PROXY.md](docs/OPERATOR_REVERSE_PROXY.md)** (**OG1**–**OG8**). **Local signed demo POST** (one command,
 dev fixtures, same **v1** signing as verification): **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)**
-(checklist **D1–D9**). **Run / approval JSON envelope** (field
+(checklist **D1–D9**). **Offline verify CLI** (saved raw body + **`Replayt-Signature`**; spec **VW1**–**VW8**, backlog **`845b4b11`**):
+**[docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**. **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. **PM/support digest** (deterministic text + optional JSON
 record after parse; **DG1–DG6**): **[docs/SPEC_EVENT_DIGEST.md](docs/SPEC_EVENT_DIGEST.md)** — digest output can still include
 identifiers or sender-controlled text that is **not suitable for external sharing**; read **SPEC_EVENT_DIGEST** section

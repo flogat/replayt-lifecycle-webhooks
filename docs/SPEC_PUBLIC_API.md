@@ -1,6 +1,6 @@
 # Spec: public Python API surface and deprecation policy
 
-**Backlogs (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). **PEP 561** / static typing expectations for integrators (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) — **§ Static typing (PEP 561)** and **TYP1**–**TYP3** below. Optional metrics hooks (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** and **SPEC_AUTOMATED_TESTS** **M1**–**M8**.
+**Backlogs (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). **PEP 561** / static typing expectations for integrators (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) — **§ Static typing (PEP 561)** and **TYP1**–**TYP3** below. Optional metrics hooks (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** and **SPEC_AUTOMATED_TESTS** **M1**–**M8**. Offline verify CLI for saved body + header (`845b4b11-847d-48cb-a9f3-e75f3e4862ef`) — **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** and **SPEC_AUTOMATED_TESTS** **VW1**–**VW8**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), downstream library authors, maintainers.
 
@@ -86,8 +86,14 @@ These **module** invocations are **supported** public **CLI** surfaces (behavior
 
 | Command | Spec |
 | ------- | ---- |
-| `python -m replayt_lifecycle_webhooks` | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
+| `python -m replayt_lifecycle_webhooks` | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — reference **WSGI** server (default when no subcommand). |
+| `python -m replayt_lifecycle_webhooks verify` | **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** — offline **v1** MAC check for a saved raw body + **`Replayt-Signature`** value (**when implemented**; backlog **`845b4b11`**). |
 | `python -m replayt_lifecycle_webhooks.demo_webhook` | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
+
+**Note:** Until backlog **`845b4b11`** is implemented, the **`verify`** row documents the **planned** subcommand; **`python -m
+replayt_lifecycle_webhooks`** without **`verify`** remains the server-only entrypoint. If Builder chooses a **dedicated**
+**`-m`** module instead of a subcommand, replace the **`verify`** row’s **Command** column with that module path and keep a
+single **canonical** command in **README.md** per **SPEC_CLI_VERIFY_SAVED_WEBHOOK** **§ Entrypoint shape**.
 
 Adding or renaming a **`-m`** entrypoint requires updating this table, the relevant feature spec, **README.md**, and **CHANGELOG.md**.
 
@@ -132,5 +138,5 @@ At **1.0.0**, tighten policy as maintainers document (this spec should gain a **
 
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — principles **explicit contracts**, **small public surfaces**, **consumer-side maintenance**.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — stability at the **`replayt`** dependency seam (orthogonal to *this* package’s export surface).
-- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**; backlog **`2ec2c21c`** maps **TP1**–**TP6** for **`py.typed`** and optional typing gate; backlog **`42b8d5a9`** maps **M1**–**M8** for optional metrics hooks.
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**; backlog **`2ec2c21c`** maps **TP1**–**TP6** for **`py.typed`** and optional typing gate; backlog **`42b8d5a9`** maps **M1**–**M8** for optional metrics hooks; backlog **`845b4b11`** maps **VW1**–**VW8** for the offline verify CLI.
 - **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** — optional verify / handler metrics extension point (backlog **`42b8d5a9`**).
