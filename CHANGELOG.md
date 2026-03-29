@@ -91,8 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   lists the **`package`** step alongside **ruff** and **pytest** in the CI summary.
 - **Packaging CI spec** (phase **2**, backlog **`78e3554b-2b50-4918-9859-85642ac1a84a` / *CI: `python -m build` + `twine check` on sdist/wheel*):
   **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `78e3554b`** with acceptance **PK1**–**PK7** (**`python -m build`**,
-  **`twine check`**, **setuptools** **package-data** for **`fixtures/events/*.json`**, conditional **`py.typed`** when the
-  marker exists under **`src/`**). **`CONTRIBUTING.md`** adds **Packaging check (sdist and wheel)** with local commands.
+  **`twine check`**, **setuptools** **package-data** for **`fixtures/events/*.json`**, **`py.typed`** via **PK6** (mandatory
+  **wheel**/**sdist** marker since backlog **`2ec2c21c`**, **TP1**–**TP3**). **`CONTRIBUTING.md`** adds **Packaging check (sdist and wheel)** with local commands.
   **`docs/MISSION.md`** and **`docs/DESIGN_PRINCIPLES.md`** reference the packaging gate. **RF4** wording in
   **`docs/SPEC_AUTOMATED_TESTS.md`** no longer claims **CONTRIBUTING.md** is absent.
 - **Optional serve / handler structured logging** (phase **2** spec, backlog **`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`** /
