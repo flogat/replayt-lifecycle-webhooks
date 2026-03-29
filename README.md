@@ -241,6 +241,10 @@ Checklist rows **A1–A5** (minimum verification / parsing), **R1–R5**, and **
 
 ## Troubleshooting
 
+**Stable response fixtures (gateways / contract tests):** Copy **HTTP status**, **`Content-Type`**, and compact JSON bodies
+from **[docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md § Canonical end-to-end examples](docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md#canonical-end-to-end-examples)**
+— one normative example per stable **`error`** code (and **204** success described there as an empty body).
+
 **Wrong or rotated shared secret:** If the HMAC key on the receiver does not match the sender, verification fails with
 **`signature_mismatch`**. Use one secret out of band on both sides and roll receivers before retiring an old key.
 
@@ -477,7 +481,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_LOCAL_WEBHOOK_DEMO.md` | Local demo: one command POSTs signed fixtures to default listener; acceptance **D1–D9** |
 | `replayt_lifecycle_webhooks.demo_webhook` | **`python -m replayt_lifecycle_webhooks.demo_webhook`**: signed POST to default **`/webhook`** URL |
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |
-| `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
+| `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; canonical end-to-end examples; logging boundaries |
 | `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L9** |
 | `docs/SPEC_METRICS_HOOKS.md` | Optional **`LifecycleWebhookMetrics`** / **`metrics=`** contract; verify vs handler timing; tests **M1**–**M8** (backlog **`42b8d5a9`**) |
 | `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP9** |

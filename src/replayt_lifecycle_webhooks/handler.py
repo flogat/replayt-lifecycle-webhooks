@@ -12,9 +12,10 @@ Status policy (see ``docs/SPEC_MINIMAL_HTTP_HANDLER.md``):
 - **204** — accepted (empty body); duplicate **``event_id``** when **``dedup_store``** rejects a second claim also yields **204**
   without calling **``on_success``**.
 
-Client errors (**405**, **401**, **403**, **400**) return a JSON body per
+Client errors (**405**, **401**, **403**, **400**, **422**) return a JSON body per
 ``docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`` (**``error``** + **``message``**) and
-``Content-Type: application/json; charset=utf-8``.
+``Content-Type: application/json; charset=utf-8``. Canonical HTTP + JSON examples per stable code:
+``docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md#canonical-end-to-end-examples``.
 
 Uses :func:`replayt_lifecycle_webhooks.verify_lifecycle_webhook_signature` only;
 no JSON parsing runs until verification succeeds.

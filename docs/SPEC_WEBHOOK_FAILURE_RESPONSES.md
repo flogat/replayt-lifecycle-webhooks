@@ -1,6 +1,7 @@
 # Spec: webhook failure responses for operators and runbooks
 
 **Backlog:** Document webhook failure responses operators can act on (`5ec1325a-5b45-440f-b93f-28b711fa5482`).  
+**Backlog (examples + cross-links):** Harden canonical HTTP + JSON examples (`70689a62-61d1-4f2a-9d32-e8e8eec27c88`).  
 **Audience:** Spec gate (2b), Builder (3), Tester (4), operators, support, integrators.
 
 ## Problem
@@ -42,56 +43,9 @@ When returning a **non-empty** error body, prefer a single JSON object with exac
 **Optional extension:** Integrators may add **`request_id`** (opaque id from their edge) for log correlation; it must not
 reveal secrets or PII.
 
-### Safe example bodies (redacted, illustrative)
-
-These examples are **not** real traffic; digests and ids are placeholders.
-
-**Missing signature (401):**
-
-```json
-{"error":"signature_required","message":"The Replayt-Signature header is missing or empty."}
-```
-
-**Malformed signature value (401):**
-
-```json
-{"error":"signature_malformed","message":"The signature header is not a valid v1 value."}
-```
-
-**MAC does not match body (403):**
-
-```json
-{"error":"signature_mismatch","message":"Signature does not match the request body."}
-```
-
-**Body not valid UTF-8 or not JSON text after verification (400):**
-
-```json
-{"error":"invalid_json","message":"Request body is not valid UTF-8 JSON."}
-```
-
-**Wrong HTTP method (405):** Custom integrators may use an empty body or minimal plain text (often with **`Allow: POST`**).
-**`handle_lifecycle_webhook_post`** returns JSON for every client error on this path, including **405**, for a single
-shape across statuses:
-
-```json
-{"error":"method_not_allowed","message":"Only POST is supported for this endpoint."}
-```
-
-**Unknown or unsupported `event_type` after verification (typical 422):**
-
-```json
-{"error":"unknown_event_type","message":"Event type is not supported by this integration."}
-```
-
-**Replay / freshness rejected by integrator policy (typical 422; see v1 note below):**
-
-```json
-{"error":"replay_rejected","message":"Delivery is outside the accepted time window or was already processed."}
-```
-
-**Success (204):** **No body** per **SPEC_MINIMAL_HTTP_HANDLER** for the reference handler; integrators using **200** may
-return a minimal JSON ack—out of scope for this failure spec.
+**Canonical examples:** One **normative** HTTP + JSON surface per stable **`error`** code lives in **§ Canonical
+end-to-end examples** below (after the category tables). Use those blocks for **API gateways**, **contract tests**, and
+**client mocks** so all languages share the same status, headers, and body bytes (modulo insignificant JSON whitespace).
 
 ## Error categories and HTTP codes
 
@@ -126,6 +80,124 @@ correct.
 | **v1 signing (this repo today)** | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — there is **no** normative timestamp **inside** the signed material for v1. MAC verification alone does **not** prove freshness. |
 | **Operator runbooks** | Still document **`replay_rejected`** (or **`stale_delivery`** as an alias code **only if** you document both as equivalent) for **your** deduplication store, **`event_id`** replay windows, **`occurred_at`** freshness, or **future** upstream timestamp headers. Dedupe keys and TTL: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; freshness parameters and hooks: **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**. |
 | **If upstream adds a signed timestamp later** | Update **SPEC_WEBHOOK_SIGNATURE**, **REPLAYT_WEBHOOK_SIGNING.md**, and this file; add tests with injected clocks; map wire failures to **`replay_rejected`** or a dedicated stable code (e.g. **`timestamp_skew`**) in a minor release. |
+
+<a id="canonical-end-to-end-examples"></a>
+
+## Canonical end-to-end examples (HTTP + JSON)
+
+These examples are **not** real traffic: they are **normative fixtures** for integrators. Bodies use the JSON envelope in
+**§ JSON error envelope**; field order matches the reference handler’s compact encoding (**`separators=(",", ":")`** in
+Python) so byte-for-byte checks are stable:
+
+```json
+{"error":"<code>","message":"<text>"}
+```
+
+**Response headers (when a body is present):** **`Content-Type: application/json; charset=utf-8`**. **405** responses from
+the reference handler also include **`Allow: POST`**.
+
+**Success (not an `error` code):** **`handle_lifecycle_webhook_post`** returns **204** with an **empty** body on success
+(and for benign duplicate **`event_id`** acks when **`dedup_store`** is configured). No JSON object is returned on those
+paths.
+
+### `method_not_allowed` — **405**
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **405 Method Not Allowed** |
+| Extra response headers | **`Allow: POST`** (reference handler and WSGI adapter) |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"method_not_allowed","message":"Only POST is supported for this endpoint."}
+```
+
+### `signature_required` — **401**
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **401 Unauthorized** |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"signature_required","message":"The Replayt-Signature header is missing or empty."}
+```
+
+### `signature_malformed` — **401**
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **401 Unauthorized** |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"signature_malformed","message":"The signature header is not a valid v1 value."}
+```
+
+### `signature_mismatch` — **403**
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **403 Forbidden** |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"signature_mismatch","message":"Signature does not match the request body."}
+```
+
+### `invalid_json` — **400**
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **400 Bad Request** |
+| When | MAC verified; body is not valid UTF-8 and/or not JSON text (**`UnicodeDecodeError`** / **`json.JSONDecodeError`**). |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"invalid_json","message":"Request body is not valid UTF-8 JSON."}
+```
+
+### `invalid_payload_shape` — **400** (post-verify; hooks enabled)
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **400 Bad Request** |
+| When | MAC verified; JSON parses, but the top-level value is **not** a JSON **object** while **`dedup_store`** and/or
+**`replay_policy`** is set on **`handle_lifecycle_webhook_post`** (reference handler path). Custom integrators without
+those hooks may instead accept non-object JSON and enforce shape in **`on_success`**—this code applies when the reference
+pipeline requires a lifecycle **object**. |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"invalid_payload_shape","message":"Valid JSON but not the expected top-level object for lifecycle events."}
+```
+
+### `unknown_event_type` — **422** (post-verify)
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **422 Unprocessable Content** (formerly *Unprocessable Entity*); **400** is allowed if you document one policy per deployment. |
+| When | MAC verified; JSON is an object but **`event_type`** / schema does not match **[EVENTS.md](EVENTS.md)** (e.g.
+**`parse_lifecycle_webhook_event`** raises **`pydantic.ValidationError`**). |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"unknown_event_type","message":"Event type is not supported by this integration."}
+```
+
+### `replay_rejected` — **422** or **409** (post-verify)
+
+| Item | Value |
+| ---- | ----- |
+| Recommended status | **422** (preferred) or **409 Conflict**—pick one policy per deployment and document it. |
+| When | MAC verified; parsed lifecycle object fails **application-level** replay, freshness, or duplicate policy (e.g.
+**`occurred_at`** outside the configured window per **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**). **Not**
+used for **benign** duplicate **`event_id`** acks that return **204** per **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**. |
+| `Content-Type` | **`application/json; charset=utf-8`** |
+
+```json
+{"error":"replay_rejected","message":"Delivery is outside the accepted time window or was already processed."}
+```
 
 ## Fuzz / property tests
 
@@ -174,19 +246,30 @@ related keys.
 ## Reference handler vs this spec
 
 **`handle_lifecycle_webhook_post`** (**SPEC_MINIMAL_HTTP_HANDLER**) returns the JSON envelope above for **405** / **401**
-/ **403** / **400** (with **`Content-Type: application/json; charset=utf-8`**). **204** success has **no** body. Custom
-wrappers may still extend responses (for example **`request_id`**) per the optional extension rule.
+/ **403** / **400** / **422** (with **`Content-Type: application/json; charset=utf-8`**). **204** success has **no** body.
+Custom wrappers may still extend responses (for example **`request_id`**) per the optional extension rule. Copy-paste
+status + body fixtures: **§ Canonical end-to-end examples**.
 
 ## Acceptance criteria (checklist)
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
 | F1 | **README** links this spec and summarizes operator-facing failure categories. | Review **README.md**. |
-| F2 | This spec lists **categories**, **typical HTTP codes**, **stable `error` codes**, and **redacted** example JSON bodies. | Review this file. |
+| F2 | This spec lists **categories**, **typical HTTP codes**, **stable `error` codes**, and **§ Canonical end-to-end examples** with one **normative** HTTP + JSON fixture per documented **`error`** code (plus **204** success called out as non-JSON). | Review this file. |
 | F3 | Guidance forbids returning or logging **secrets**, **full signature header**, **computed MAC**, and **raw payload** excerpts. | Review **§ What not to log or return** and **SPEC_WEBHOOK_SIGNATURE**. |
 | F4 | Semantics align with **SPEC_MINIMAL_HTTP_HANDLER** status table and **verify-before-JSON** ordering. | Cross-check both specs. |
-| F5 | **Unknown `event_type`** and **replay / freshness** are documented with v1 **MAC** limitations and application-layer responsibility. | Review **§ Stale timestamp / replay** and post-verification table. |
+| F5 | **Unknown `event_type`**, **`invalid_payload_shape`**, and **replay / freshness** are documented with v1 **MAC** limitations and application-layer responsibility. | Review **§ Stale timestamp / replay**, post-verification table, and canonical **`replay_rejected`** / **`unknown_event_type`** examples. |
 | F6 | **Structured logging / redaction** defaults and test rows **L1–L9** are specified for header- and metadata-shaped fields (including **no raw body** in default request logs). | Review **SPEC_STRUCTURED_LOGGING_REDACTION**; **SPEC_AUTOMATED_TESTS** backlog **`fa75ecf3`**. |
+
+### Backlog `70689a62` — canonical examples and cross-links (documentation)
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| FR1 | Each stable **`error`** in the **§ Error categories** tables appears in **§ Canonical end-to-end examples** with **recommended HTTP status**, optional extra headers (**`Allow`** for **405**), and exact **`message`** text aligned with **`test_h8_error_messages_match_failure_response_spec`** when the reference handler emits that code. | Review this file; **`tests/test_http_handler.py`** (**H8**). |
+| FR2 | **`README.md`** **§ Troubleshooting** links **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`** and calls out **§ Canonical end-to-end examples** (anchor **`#canonical-end-to-end-examples`**) for gateway / mock fixtures. | Review **README.md**; **SPEC_README_OPERATOR_SECTIONS** **OP4**. |
+| FR3 | **`src/replayt_lifecycle_webhooks/handler.py`** module docstring points to **§ Canonical end-to-end examples** in this spec (same anchor or explicit section name). | Review **handler.py** docstring. |
+| FR4 | **SPEC_MINIMAL_HTTP_HANDLER** links **§ Canonical end-to-end examples** from the JSON response-body paragraph. | Review **SPEC_MINIMAL_HTTP_HANDLER.md**. |
+| FR5 | Optional **JSON fixtures** under **`tests/fixtures/`** (or similar), if added for contract tests, **must** match canonical bodies byte-for-byte (compact JSON) and cite this spec in a comment or **README** under that folder—**no** drift between doc and files. | **`tests/fixtures/webhook_failure_responses/`** (see **`README.md`** there) + **`tests/test_webhook_failure_response_fixtures.py`** (**FR5**). |
 
 ## Related docs
 

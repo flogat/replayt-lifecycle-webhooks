@@ -101,7 +101,9 @@ The section **must**:
    **`error_code`**) and **redaction** expectations, with a link to
    **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (not a dump of the full spec).
 3. Link **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** as the **stable `error` code catalog**
-   (HTTP + JSON) for verification and post-verify failures.
+   (HTTP + JSON) for verification and post-verify failures. When backlog **`70689a62`** (canonical examples) is in scope,
+   **§ Troubleshooting** **should** also link anchor **`#canonical-end-to-end-examples`** on that file for copy-paste
+   gateway / mock fixtures.
 4. Cross-link **at least two** of: **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**,
    **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**,
    **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** for the matching symptom (duplicate delivery, replay policy,
@@ -172,7 +174,7 @@ examples.
 
 - **Never** document real shared secrets, bearer tokens, or live **`Replayt-Signature`** values. Use obvious placeholders
   (**`your-shared-secret`**, **`<signature-header-value>`**).
-- Code blocks **must not** echo **SPEC_WEBHOOK_FAILURE_RESPONSES** “safe example” signature fragments if those examples use
+- Code blocks **must not** echo **SPEC_WEBHOOK_FAILURE_RESPONSES** example **`Replayt-Signature`** values when those examples use
   distinctive hex patterns—prefer ellipses or generic placeholders in README-only snippets.
 - Align with **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** **LLM / demos** and **MISSION** redaction expectations for
   anything resembling production logs.

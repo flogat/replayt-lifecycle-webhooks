@@ -219,7 +219,7 @@ app = Starlette(routes=[Route("/webhook", endpoint=lifecycle_webhook, methods=["
 
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — raw body, **`Replayt-Signature`**, **`verify_lifecycle_webhook_signature`**.
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — **`handle_lifecycle_webhook_post`**, status table **H5** (verify before JSON on bad MAC).
-- **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable **`error`** codes and safe bodies.
+- **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable **`error`** codes and canonical HTTP + JSON examples.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redacting **`Replayt-Signature`** in logs.
 - **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** — supported imports; no internal modules in examples.
 - **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README **`## Verifying webhook signatures`** link requirement.
