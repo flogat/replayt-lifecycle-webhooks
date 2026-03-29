@@ -7,9 +7,9 @@ Development setup, tests, and coding expectations are summarized in **[README.md
 
 For **undisclosed**, **security-sensitive** problems in **this repository**—especially **signature verification**,
 **HMAC** handling, unintended **secret** or **full-signature** leakage through **APIs**, **logs**, **errors**, or
-**documentation** that could cause integrators to **skip** verification—use the coordinated disclosure process described in
-**[docs/SPEC_SECURITY_DISCLOSURE.md](docs/SPEC_SECURITY_DISCLOSURE.md)** and the repository root **`SECURITY.md`** file
-(see **SC11** for **CONTRIBUTING** expectations and **SC10** for the **README** link in that spec). **Do not** post exploit-ready details, live **HMAC** keys, full
+**documentation** that could cause integrators to **skip** verification—follow **[SECURITY.md](SECURITY.md)** at the
+repository root and the normative contract **[docs/SPEC_SECURITY_DISCLOSURE.md](docs/SPEC_SECURITY_DISCLOSURE.md)**.
+**Do not** post exploit-ready details, live **HMAC** keys, full
 **`Replayt-Signature`** values, or raw production webhook bodies in public **Issues** or **pull requests**. Routine bugs,
 **replayt** upstream behavior, and published **CVE** / dependency questions follow normal **[README.md](README.md)** /
 **Issues** triage unless they are clearly **undisclosed** verification-boundary issues.

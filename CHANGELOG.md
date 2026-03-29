@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- **Coordinated security disclosure spec** (phase **2**, backlog **`87e7edae-033d-45af-87fc-066fca51db96` / *SECURITY.md and coordinated disclosure process*`): new **`docs/SPEC_SECURITY_DISCLOSURE.md`** (**SC1**–**SC11**, optional test-vector / **CI** hygiene); **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `87e7edae`** (**SEC1**–**SEC9**); cross-links in **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/SPEC_README_OPERATOR_SECTIONS.md`**, **`README.md`** (**Project layout**), and **`CONTRIBUTING.md`** (**Security issues**). Root **`SECURITY.md`** and **pytest** guards are **Builder** (phase **3**) deliverables per the spec.
+- **Coordinated security disclosure** (phase **3**, backlog **`87e7edae-033d-45af-87fc-066fca51db96` / *SECURITY.md and coordinated disclosure process*`): repository root **`SECURITY.md`** (scope, reporting via GitHub **Security** / private reporting, response cadence, redaction, links to **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`**, **`docs/DESIGN_PRINCIPLES.md`**); **`README.md`** link **`](SECURITY.md)`** and **Project layout** row update; **`CONTRIBUTING.md`** **`[SECURITY.md](SECURITY.md)`**; **`tests/test_security_disclosure_doc.py`** (**SEC1**–**SEC9**).
+
+- **Coordinated security disclosure spec** (phase **2**, backlog **`87e7edae-033d-45af-87fc-066fca51db96` / *SECURITY.md and coordinated disclosure process*`): new **`docs/SPEC_SECURITY_DISCLOSURE.md`** (**SC1**–**SC11**, optional test-vector / **CI** hygiene); **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `87e7edae`** (**SEC1**–**SEC9**); cross-links in **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/SPEC_README_OPERATOR_SECTIONS.md`**, **`README.md`** (**Project layout**), and **`CONTRIBUTING.md`** (**Security issues**).
 
 ### Added
 

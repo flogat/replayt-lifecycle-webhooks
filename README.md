@@ -60,6 +60,8 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 **Report breakage:** Open an issue on [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues). Include both the installed **replayt** version and **replayt-lifecycle-webhooks** version.
 
+**Security-sensitive issues:** Use the private reporting path described in **[SECURITY.md](SECURITY.md)** (do not post undisclosed exploit details in public Issues).
+
 **Compatibility matrix** (**replayt** and **Python** support, CI-tested interpreter, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
 
 **Python:** `pyproject.toml` sets **`requires-python`** (minimum installers must satisfy). Merge-blocking **`lint`** and **`test`** jobs run **`ruff check`** / **`ruff format --check`** on **`src/`** and **`tests/`** and the full **`pytest`** suite on **Python 3.11**, **Python 3.12**, and **Python 3.13** (matrix in **`.github/workflows/ci.yml`**). See **`docs/SPEC_REPLAYT_DEPENDENCY.md`** (**§ CI**, compatibility matrix) and **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `6cd22a7b`**, **§ Backlog `8e58aa9c`**). The **`package`** (**`python -m build`**, **`twine check`**) and **`supply-chain`** (**`pip-audit`**) jobs use **Python 3.12** only (single interpreter per job; matrix **Notes**). See **`.github/workflows/ci.yml`** for the live wiring.
@@ -486,7 +488,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_METRICS_HOOKS.md` | Optional **`LifecycleWebhookMetrics`** / **`metrics=`** contract; verify vs handler timing; tests **M1**–**M8** (backlog **`42b8d5a9`**) |
 | `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP9** |
 | `docs/SPEC_SECURITY_DISCLOSURE.md` | Coordinated disclosure: root **`SECURITY.md`** requirements, scope vs **replayt** upstream, **README**/**CONTRIBUTING** links; tests **SEC1–SEC9** (backlog **`87e7edae`**) |
-| `SECURITY.md` | **Security policy** (GitHub **Security** tab); specified by **SPEC_SECURITY_DISCLOSURE** — added in Builder phase for backlog **`87e7edae`** |
+| `SECURITY.md` | **Security policy** at repo root (GitHub **Security** tab when private reporting is enabled); **SPEC_SECURITY_DISCLOSURE**, **pytest** **SEC1–SEC9** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, **`event_id`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |
