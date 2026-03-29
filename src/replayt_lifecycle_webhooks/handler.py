@@ -328,7 +328,9 @@ def handle_lifecycle_webhook_post(
 
         if dedup_store is not None:
             if not dedup_store.try_claim(event.event_id):
-                return finish(LifecycleWebhookHttpResult(HTTPStatus.NO_CONTENT, (), b""))
+                return finish(
+                    LifecycleWebhookHttpResult(HTTPStatus.NO_CONTENT, (), b"")
+                )
 
     if on_success is not None:
         on_success(payload)

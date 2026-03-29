@@ -1,6 +1,6 @@
 # Spec: public Python API surface and deprecation policy
 
-**Backlogs (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). **PEP 561** / static typing expectations for integrators (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) — **§ Static typing (PEP 561)** and **TYP1**–**TYP3** below.
+**Backlogs (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). **PEP 561** / static typing expectations for integrators (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) — **§ Static typing (PEP 561)** and **TYP1**–**TYP3** below. Optional metrics hooks (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** and **SPEC_AUTOMATED_TESTS** **M1**–**M8**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), downstream library authors, maintainers.
 

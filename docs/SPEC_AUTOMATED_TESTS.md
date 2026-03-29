@@ -59,6 +59,8 @@
 - **PEP 561 `py.typed` in distributions + optional static typing gate** (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) —
   checklist **TP1**–**TP6** under **§ Backlog `2ec2c21c`** below; integrator expectations in
   **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** (**§ Static typing (PEP 561)**).
+- Optional metrics hooks for verify / handler outcomes (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — checklist **M1**–**M8**
+  under **§ Backlog `42b8d5a9`** below; normative contract **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -88,6 +90,7 @@ behavioral coverage.
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | Optional **serve** / **handler** diagnostic logging + redaction (**LG1–LG4**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic logging**); **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S10**–**S12**) |
+| Optional verify / handler **metrics** callbacks (**M1**–**M8**), when implemented | **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**; **§ Backlog `42b8d5a9`** below |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
@@ -189,6 +192,10 @@ tests **must not** replace items **1**–**3**.
 When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** is implemented, the suite **must**
 additionally include **network-free** tests that satisfy checklist **L1–L9** under **Backlog `fa75ecf3`** below. Those
 tests **must not** replace items **1**–**3**.
+
+When **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** is implemented, the suite **must** additionally include
+**network-free** tests that satisfy checklist **M1**–**M8** under **§ Backlog `42b8d5a9`** below. Those tests **must not**
+replace items **1**–**4** in **§ Minimum behavioral coverage**.
 
 When backlog **`0bab43f3`** (optional **serve** / **handler** structured diagnostics) is implemented, the suite **must**
 additionally include **network-free** tests that satisfy checklist **LG1–LG4** under **§ Backlog `0bab43f3`** below. Those
@@ -332,6 +339,25 @@ These extend **§ Minimum behavioral coverage** item **4**; they do not replace 
 | **API1** (events) | **`replayt_lifecycle_webhooks.events`** **`__all__`** matches the **Events / parsing** row in **that row’s order** (same symbols as re-exported from the root). | **`tests/test_public_api.py`** — **`test_events___all___matches_spec_events_row`** |
 | **API2** | **SPEC_PUBLIC_API** § **Unsupported imports** module paths exist (internal until **1.0**). | **`tests/test_public_api.py`** — **`test_spec_lists_documented_internal_modules_as_importable`** |
 | **API3** | **SPEC_PUBLIC_API** § **Deprecation policy** documents **CHANGELOG** visibility (**Deprecated**), **minor** / **0.x** notice period, and related bullets. | **`tests/test_public_api.py`** — **`test_spec_public_api_deprecation_policy_mentions_changelog_and_notice`** |
+
+## Backlog `42b8d5a9`: optional metrics hooks (verify / handler)
+
+Checklist rows for **Optional metrics hooks for verify / handler outcomes**
+(`42b8d5a9-a246-4c47-b167-f39ac371789e`). Normative contract: **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** (**MH1**–**MH5**).
+These extend **A1–A5** and **§ Minimum behavioral coverage**; they **do not** replace **API1**–**API3**, **L1–L9**, **R1–R5**, or items **1**–**4**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **M1** | With **`metrics=None`**, **`verify_lifecycle_webhook_signature`** does **not** call **`time.monotonic()`** solely for metrics and does **not** invoke integrator hook methods. | **`tests/test_metrics_hooks.py`** — **`test_m1_verify_metrics_none_no_monotonic_and_no_hooks`** |
+| **M2** | With **`metrics=None`**, **`handle_lifecycle_webhook_post`** does **not** call **`time.monotonic()`** solely for metrics and does **not** invoke integrator hook methods (success and failure paths). | **`tests/test_metrics_hooks.py`** — **`test_m2_handler_metrics_none_no_monotonic_and_no_hooks`** |
+| **M3** | Successful verify with a wired metrics object records **`success`** exactly once per call and a **non-negative** **`duration_sec`**. | **`tests/test_metrics_hooks.py`** — **`test_m3_wired_verify_success_once`** |
+| **M4** | Missing / format / mismatch failures map to **`missing_signature`**, **`format_error`**, and **`mismatch`** respectively, each recording **once** with **non-negative** **`duration_sec`**. | **`tests/test_metrics_hooks.py`** — **`test_m4_wired_verify_distinct_outcomes`** |
+| **M5** | Handler path with structured **4xx** JSON records **`record_handler_outcome`** with matching **`http_status`**, stable **`error_code`**, and **non-negative** **`duration_sec`**. | **`tests/test_metrics_hooks.py`** — **`test_m5_wired_handler_4xx_error_code_in_handler_outcome`** |
+| **M6** | Callback kwargs **never** embed raw body text, the shared secret, or the full **`Replayt-Signature`** header value (representative leak tokens). | **`tests/test_metrics_hooks.py`** — **`test_m6_callback_args_no_body_secret_or_full_signature`** |
+| **M7** | Reference **`InMemoryLifecycleWebhookMetrics`** tallies a successful signed **POST** through **`handle_lifecycle_webhook_post`** (**204** path). | **`tests/test_metrics_hooks.py`** — **`test_m7_in_memory_metrics_golden_signed_post`** |
+| **M8** | Package root **`__all__`** and **SPEC_PUBLIC_API** § **Primary: package root** include **`LifecycleWebhookVerifyOutcome`**, **`LifecycleWebhookMetrics`**, **`NullLifecycleWebhookMetrics`**, **`InMemoryLifecycleWebhookMetrics`** in **table order** with signature symbols. | **`tests/test_public_api.py`** — **`test_package_root___all___matches_spec_table`**; **`test_package_root___all___names_are_importable`** |
+
+**Supplementary:** **`tests/test_metrics_hooks.py`** — **`test_handler_wall_duration_covers_verify_slice`** documents handler vs verify duration semantics per **SPEC_METRICS_HOOKS**.
 
 ## Backlog `6cd22a7b`: CI Python minimum (**pytest** + **ruff**)
 

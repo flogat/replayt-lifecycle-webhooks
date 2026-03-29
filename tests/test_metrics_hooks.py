@@ -1,4 +1,7 @@
-"""SPEC_METRICS_HOOKS / SPEC_AUTOMATED_TESTS backlog ``42b8d5a9``: **M1**–**M7** (no network)."""
+"""SPEC_METRICS_HOOKS / SPEC_AUTOMATED_TESTS backlog ``42b8d5a9``: **M1**–**M7** (no network).
+
+**M8** (package ``__all__`` / SPEC_PUBLIC_API alignment): ``tests/test_public_api.py`` (**API1**).
+"""
 
 from __future__ import annotations
 
@@ -123,8 +126,12 @@ def test_m5_wired_handler_4xx_error_code_in_handler_outcome() -> None:
     )
     m.record_verify_outcome.assert_called_once()
     m.record_handler_outcome.assert_called_once()
-    assert m.record_handler_outcome.call_args.kwargs["http_status"] == HTTPStatus.FORBIDDEN
-    assert m.record_handler_outcome.call_args.kwargs["error_code"] == "signature_mismatch"
+    assert (
+        m.record_handler_outcome.call_args.kwargs["http_status"] == HTTPStatus.FORBIDDEN
+    )
+    assert (
+        m.record_handler_outcome.call_args.kwargs["error_code"] == "signature_mismatch"
+    )
     assert m.record_handler_outcome.call_args.kwargs["duration_sec"] >= 0.0
 
 
@@ -165,8 +172,13 @@ def test_m7_in_memory_metrics_golden_signed_post() -> None:
     assert result.status == HTTPStatus.NO_CONTENT
     assert mem.verify_outcomes["success"] == 1
     assert mem.handler_outcomes[(HTTPStatus.NO_CONTENT, None)] == 1
-    assert mem.last_verify_duration_sec is not None and mem.last_verify_duration_sec >= 0.0
-    assert mem.last_handler_duration_sec is not None and mem.last_handler_duration_sec >= 0.0
+    assert (
+        mem.last_verify_duration_sec is not None and mem.last_verify_duration_sec >= 0.0
+    )
+    assert (
+        mem.last_handler_duration_sec is not None
+        and mem.last_handler_duration_sec >= 0.0
+    )
 
 
 def test_handler_wall_duration_covers_verify_slice() -> None:
