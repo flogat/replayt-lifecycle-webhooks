@@ -46,6 +46,8 @@ regex (for example **`CVE-\d{4}-\d+`**) for both workflow and markdown extractio
 
 1. Parse only the region at or after the heading **`## Accepted risks`** through the end of the file **or** through the next
    **`## `** heading of equal or higher level than **Accepted risks** if the doc gains additional top-level sections below it.
+   The checker treats **`## Accepted risks`** as an **ATX heading at the start of a line** only (so inline prose that
+   mentions the same characters does not start the region).
 2. Every accepted suppression **must** be represented by an **`###`** (level-3) heading whose visible title contains **exactly
    one** suppression id matching **`CVE-\d{4}-\d+`**. Example: **`### CVE-2026-4539 (pygments)`**.
 3. Under that heading, the body **must** include:

@@ -1,8 +1,8 @@
 # Dependency audit
 
 **Alignment spec:** **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)** defines how
-**`pip-audit --ignore-vuln`** flags in **`.github/workflows/ci.yml`** must match **`## Accepted risks`** here, how entries
-are parsed, and the **Next review (UTC)** rule enforced in CI once backlog **`bea2900c`** is implemented.
+**`pip-audit --ignore-vuln`** flags in **`.github/workflows/ci.yml`** must match the **`## Accepted risks`** section below,
+how entries are parsed, and the **Next review (UTC)** rule enforced in CI (**`supply-chain`** job and **`pytest`**).
 
 ## Adding or updating a pip-audit ignore
 

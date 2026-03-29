@@ -22,6 +22,7 @@ dev = [
   "pytest>=8.0",
   "ruff>=0.6.0",
   "pip-audit>=2.7.0",
+  "pyyaml>=6.0.1",
   "jsonschema>=4.18.0",
   "build>=1.2.0",
   "twine>=5.0.0",
@@ -47,6 +48,7 @@ where = ["src"]
 target-version = "py311"
 
 [tool.pytest.ini_options]
+pythonpath = ["scripts"]
 markers = [
   "replayt_boundary: import replayt and assert EVENTS.md-listed symbols (SPEC_REPLAYT_BOUNDARY_TESTS).",
   "property_fuzz: optional Hypothesis fuzzing for verify/parse (SPEC_AUTOMATED_TESTS § Backlog dcffe5d5, PF1–PF10).",

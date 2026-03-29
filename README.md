@@ -223,6 +223,8 @@ pytest tests/test_webhook_signature.py tests/test_lifecycle_events.py -q   # cry
 pytest tests -m replayt_boundary -q                                         # replayt import + symbol checks only
 pytest tests/test_reference_server_subprocess.py -q                         # reference server via python -m; loopback POST
 pytest tests/test_reference_http_server_route_map_doc.py -q                 # route map spec + README link (backlog b4c68e50)
+pytest tests/test_pip_audit_suppression_alignment.py -q                     # pip-audit ignores vs DEPENDENCY_AUDIT.md (bea2900c)
+python scripts/pip_audit_suppression_alignment.py                           # same check without pytest (needs dev install for PyYAML)
 ```
 
 **Property / fuzz tests (optional, backlog `dcffe5d5`):** install **`[property]`** (adds **Hypothesis**), then run

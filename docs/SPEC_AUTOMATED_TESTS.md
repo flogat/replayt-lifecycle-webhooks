@@ -114,8 +114,9 @@ behavioral coverage.
   aligned with the **`lint`** job; it does **not** replace **RF1**/**RF2**.
 
 - **`supply-chain`** (**`pip-audit`** after **`pip install -e ".[dev]"`**) is specified in **`.github/workflows/ci.yml`**.
-  When **§ Backlog `bea2900c`** is implemented, a **pre-audit** or **post-audit** step **or** a **`pytest`** module **must**
-  enforce **PI1**–**PI7** without removing or bypassing the existing **`pip-audit`** invocation (**PI7**).
+  **§ Backlog `bea2900c`** is enforced by **`tests/test_pip_audit_suppression_alignment.py`** (**PI1**–**PI6**) and a
+  **`supply-chain`** step that runs **`python scripts/pip_audit_suppression_alignment.py`** before **`pip-audit`** (**PI7**
+  keeps the existing **`pip-audit`** invocation with **`--desc`**).
 
 ## Prohibited patterns
 

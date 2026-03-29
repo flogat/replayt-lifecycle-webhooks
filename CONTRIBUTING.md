@@ -56,5 +56,5 @@ Accepted **`--ignore-vuln`** CVEs and contributor steps for adding one live in *
 Normative alignment rules (workflow ignores ↔ doc headings, **`Next review (UTC)`** due dates) and automated test rows **PI1**–**PI7**
 are in **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** and **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `bea2900c`**).
 
-Once that backlog is implemented, local debugging should mirror the documented **`pytest`** or script command added in **README**
-(**Running tests** → **Focused runs**) or this section when the Builder wires it.
+Local check (same logic as CI): from the repo root, **`pip install -e ".[dev]"`**, then **`python scripts/pip_audit_suppression_alignment.py`**
+(or **`pytest tests/test_pip_audit_suppression_alignment.py -q`**). See **README.md** (**Running tests** → **Focused runs**).
