@@ -60,7 +60,7 @@ that history (and upstream’s own changelog or GitHub Releases when you need pr
 
 **Compatibility matrix** (**replayt** and **Python** support, CI-tested interpreter, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
 
-**Python:** `pyproject.toml` sets **`requires-python`** (minimum installers must satisfy). GitHub Actions runs **`ruff check`** / **`ruff format --check`** on **`src/`** and **`tests/`**, the full **`pytest`** suite, and a **`package`** job (**`python -m build`**, **`twine check`**) on **Python 3.12** (see `.github/workflows/ci.yml`). A broader `requires-python` means other minors may work but are not necessarily exercised in CI until you add matrix jobs.
+**Python:** `pyproject.toml` sets **`requires-python`** (minimum installers must satisfy). Merge-blocking **`lint`** and **`test`** jobs run **`ruff check`** / **`ruff format --check`** on **`src/`** and **`tests/`** and the full **`pytest`** suite on **Python 3.11** and **Python 3.12** (matrix in **`.github/workflows/ci.yml`**). See **`docs/SPEC_REPLAYT_DEPENDENCY.md`** (**§ CI**, compatibility matrix) and **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `6cd22a7b`**). The **`package`** (**`python -m build`**, **`twine check`**) and **`supply-chain`** (**`pip-audit`**) jobs use **Python 3.12** only (single interpreter per job; matrix **Notes**). See **`.github/workflows/ci.yml`** for the live wiring.
 
 ## Design principles
 

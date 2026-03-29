@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import pathlib
 
+import pytest
 import tomllib
+import yaml
 
 
 def _repo_root() -> pathlib.Path:
@@ -34,3 +36,40 @@ def test_pyproject_has_tool_ruff_target_version() -> None:
     data = tomllib.loads((_repo_root() / "pyproject.toml").read_text(encoding="utf-8"))
     assert "tool" in data and "ruff" in data["tool"]
     assert data["tool"]["ruff"].get("target-version") == "py311"
+
+
+def _ci_workflow_dict() -> dict:
+    path = _repo_root() / ".github" / "workflows" / "ci.yml"
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def test_ci_lint_job_matrix_includes_python_311_and_312() -> None:
+    """CI1 + SPEC_REPLAYT_DEPENDENCY A9: lint runs on requires-python floor and recommended minor."""
+    wf = _ci_workflow_dict()
+    matrix = wf["jobs"]["lint"]["strategy"]["matrix"]
+    versions = matrix["python-version"]
+    assert "3.11" in versions
+    assert "3.12" in versions
+    text = (_repo_root() / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "${{ matrix.python-version }}" in text
+
+
+def test_ci_test_job_matrix_includes_python_311_and_312() -> None:
+    """CI2 + SPEC_REPLAYT_DEPENDENCY A9: test runs on 3.11 and recommended 3.12."""
+    wf = _ci_workflow_dict()
+    matrix = wf["jobs"]["test"]["strategy"]["matrix"]
+    versions = matrix["python-version"]
+    assert "3.11" in versions
+    assert "3.12" in versions
+
+
+@pytest.mark.parametrize("job", ("package", "supply-chain"))
+def test_ci_package_and_supply_chain_stay_on_single_python_312(job: str) -> None:
+    """A10: packaging and pip-audit jobs are not matrixed across Python minors (backlog 6cd22a7b)."""
+    wf = _ci_workflow_dict()
+    assert "strategy" not in wf["jobs"][job]
+    steps = wf["jobs"][job]["steps"]
+    setup = next(s for s in steps if s.get("uses") == "actions/setup-python@v5")
+    assert setup["with"]["python-version"] == "3.12"

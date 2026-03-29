@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **CI Python matrix** (phase **3**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`.github/workflows/ci.yml`** runs **`lint`** and **`test`** on **3.11** and **3.12** (`strategy.matrix`); **`package`** and **`supply-chain`** stay on **3.12** only. **`tests/test_ci_ruff_wiring.py`** asserts the matrix (**CI1**–**CI2**, **A9**–**A10**); **`tests/test_replayt_dependency.py`** guards **A8** against the split matrix vs single-interpreter jobs; **`tests/test_packaging_layout.py`** skips when **`build`** is missing (dev extra). **`docs/SPEC_REPLAYT_DEPENDENCY.md`** adds a **Workflow definition** line under **Compatibility matrix**; **Notes** and **`README.md`** CI wording match the workflow.
+
 ### Documentation
+
+- **CI Python 3.11 contract** (phase **2**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`docs/SPEC_REPLAYT_DEPENDENCY.md`** (**§ CI**, matrix **A9**–**A10**, compatibility matrix target state), **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `6cd22a7b`**, **CI1**–**CI6**, interpreter skip guidance), **`README.md`** compatibility paragraph, and **`docs/MISSION.md`** success metrics.
+
+- **CONTRIBUTING / CI matrix** (phase **5**, architecture review, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`CONTRIBUTING.md`** optional **ruff** section notes **`lint`** runs on **Python 3.11** and **3.12** per **`.github/workflows/ci.yml`**.
 
 - **`pip-audit` ignore alignment spec** (phase **2**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
   automate pip-audit ignore review reminders*`): new **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** (workflow vs

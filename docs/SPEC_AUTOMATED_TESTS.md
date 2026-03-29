@@ -15,7 +15,7 @@
   **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**; **Backlog `f9677140`** table below (**RP5** overlaps **I4**).
 - PM/support lifecycle event digest format (`069e0240-54c5-44a9-bba3-ad0a80a52c60`) — acceptance **DG1**–**DG6** in
   **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**; **Backlog `069e0240`** table below.
-- Add replayt dependency declaration and compatibility matrix stub (`8b16060d-f6e6-4111-bed2-4978b965ff52`) — **SPEC_REPLAYT_DEPENDENCY** matrix (**Python** / CI-tested columns), **A8**, stub checklist when **`replayt`** is absent from **`pyproject.toml`**.
+- Add replayt dependency declaration and compatibility matrix stub (`8b16060d-f6e6-4111-bed2-4978b965ff52`) — **SPEC_REPLAYT_DEPENDENCY** matrix (**Python** / CI-tested columns), **A8**, stub checklist when **`replayt`** is absent from **`pyproject.toml`**. Rows **A9**–**A10** (CI Python floor) are backlog **`6cd22a7b`**.
 
 - Run **ruff** in CI for fast lint (and optionally format) feedback (`5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`) — checklist **RF1**–**RF5** under **Backlog `5a3f5a7f`** below.
 - Optional **pre-commit** mirroring CI **ruff** invocations (`c39b2a5f-a2f5-42a4-a5c2-a2b20989a31c`) — checklist **PC1**–**PC7** under **Backlog `c39b2a5f`** below.
@@ -44,6 +44,8 @@
 - **`pip-audit`** suppression alignment and review dates (`bea2900c-17e9-4bf8-9623-0830105386a2`) — checklist **PI1**–**PI7**
   under **§ Backlog `bea2900c`** below; normative parsing and governance rules in
   **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**.
+- **CI: run pytest and ruff on Python 3.11 (minimum supported)** (`6cd22a7b-72bc-4d34-ba7c-a6878b68907d`) — checklist **CI1**–**CI6**
+  under **§ Backlog `6cd22a7b`** below; compatibility matrix and **A9**–**A10** in **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**.
 - Reference HTTP server **route / HTTP status** matrix for gateways (`b4c68e50-04df-4149-b9b5-f5d6280b38cc`) —
   checklist **RM1**–**RM7** in **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** (**RM1**–**RM4**:
   **`tests/test_reference_http_server_route_map_doc.py`**);
@@ -73,7 +75,7 @@ behavioral coverage.
 | Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
-| **replayt** dependency / doc contract (**A1**–**A8**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
+| **replayt** dependency / doc contract (**A1**–**A10**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
@@ -101,6 +103,11 @@ behavioral coverage.
   signing / parsing / handler unit tests mandated in the specs above. **Loopback HTTP** to a **child process** started by
   the test suite (backlog **`83e07114`**, rows **SUB1**–**SUB8**) is **allowed** and is **not** an “extra service” as
   long as it uses **`127.0.0.1`** / **`localhost`** only and needs no Docker, databases, or remote endpoints.
+
+- **Python minors:** Merge-blocking **`test`** jobs **must** run that command (or equivalent) on **Python 3.11**, the
+  **`requires-python` floor**, per **§ Backlog `6cd22a7b`** and **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** **§ CI** / **A9**.
+  If the workflow uses a **matrix**, **every** leg that claims to satisfy **A9** must run the **full** **`test`** step list;
+  optional **3.12** legs are **recommended** but not a substitute for **3.11**.
 
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
@@ -315,6 +322,33 @@ These extend **§ Minimum behavioral coverage** item **4**; they do not replace 
 | **API2** | **SPEC_PUBLIC_API** § **Unsupported imports** module paths exist (internal until **1.0**). | **`tests/test_public_api.py`** — **`test_spec_lists_documented_internal_modules_as_importable`** |
 | **API3** | **SPEC_PUBLIC_API** § **Deprecation policy** documents **CHANGELOG** visibility (**Deprecated**), **minor** / **0.x** notice period, and related bullets. | **`tests/test_public_api.py`** — **`test_spec_public_api_deprecation_policy_mentions_changelog_and_notice`** |
 
+## Backlog `6cd22a7b`: CI Python minimum (**pytest** + **ruff**)
+
+Checklist rows for **CI: run pytest and ruff on Python 3.11 (minimum supported)**
+(`6cd22a7b-72bc-4d34-ba7c-a6878b68907d`). Normative matrix and job split (**`package`** / **`supply-chain`** single version):
+**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** (**§ CI**, **A9**–**A10**). These rows extend **A4**, **RF1**–**RF2**,
+and **PI7**’s workflow expectations; they do **not** replace **pytest** behavioral minima or **ruff** path coverage.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **CI1** | **`.github/workflows/ci.yml`** runs the existing **`lint`** job’s **ruff** steps (**`ruff check src tests`**, **`ruff format --check src tests`**) on **Python 3.11** at least once per trigger (matrix value or dedicated job). | Workflow YAML + CI logs |
+| **CI2** | The **`test`** job runs **`python -m pytest tests -q`** (or documented equivalent) on **3.11** with the same **`pip install`** / **`pyproject.toml`** validation steps as today, at least once per trigger. | Workflow YAML + CI logs |
+| **CI3** | **`[tool.ruff] target-version`** in **`pyproject.toml`** remains **`py311`** (or the same minor as **`requires-python` floor** if the floor moves in a future change). | **`pyproject.toml`** review |
+| **CI4** | **`docs/SPEC_REPLAYT_DEPENDENCY.md`** **compatibility matrix** “CI-tested Python” column and **Notes** match the workflow (including **`package`** / **`supply-chain`** single interpreter). | Doc diff vs **`ci.yml`** |
+| **CI5** | Any **`skip`**, **`xfail`**, **`pytest.mark.skipif`**, or **`importorskip`** tied to **`sys.version_info`** / **`platform.python_version()`** is documented in this file (**§ Interpreter-conditioned skips**) **or** in a **`Reason:`** / adjacent comment that names the backlog and the interpreter rule. | Code + doc review |
+| **CI6** | **README** compatibility / CI prose matches the matrix (minimum **3.11** exercised for **lint**/**test**). | **`README.md`** review |
+
+**Builder note:** After adding a matrix, consider extending **`tests/test_ci_ruff_wiring.py`** (or a sibling guard) so CI
+cannot regress **CI1** silently—for example by asserting **`python-version: "3.11"`** (or **`3.11`** in a **`strategy.matrix`**
+block) appears under **`lint`** and **`test`**. Phase **2** is spec-only; phase **3** owns workflow and test updates.
+
+### Interpreter-conditioned skips
+
+There are **no** interpreter-version **xfail**/**skip** markers in the suite at the time this section was added. If a
+future test must diverge by CPython minor (for example a **stdlib** or **typing** difference), **prefer** fixing the
+implementation for all supported minors. If a skip is unavoidable, add **CI5** documentation here (one row per marker or
+group) and keep **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** truthful about what “full **pytest**” means.
+
 ## Backlog `5a3f5a7f`: **ruff** in CI (lint and optional format)
 
 Checklist rows for **Run ruff in CI for fast style and lint feedback**
@@ -325,7 +359,8 @@ items **1**–**4** in **§ Minimum behavioral coverage**.
 runs on **push** and **pull_request** for **`master`** and **`mc/**`** (and **`workflow_dispatch`**). **RF1** applies to
 that file unless the project adds another workflow that is also required for merges to **`master`** / **`mc/**`**—if so,
 **every** such workflow must run the same **ruff** gates (or the spec and **CHANGELOG.md** must record a deliberate
-exception).
+exception). When backlog **`6cd22a7b`** is implemented, **RF1**/**RF2** apply to **each** merge-blocking **`lint`** matrix
+leg that satisfies **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** **A9** (including **3.11**).
 
 **Scope on disk:** **`ruff check`** must cover Python sources the project maintains for this package—at minimum
 **`src/`** and **`tests/`** (and any other tracked project Python at the repo root the maintainer group treats as

@@ -8,6 +8,8 @@ import tomllib
 
 import importlib.metadata as md
 
+import yaml
+
 
 def _repo_root() -> pathlib.Path:
     return pathlib.Path(__file__).resolve().parents[1]
@@ -37,7 +39,22 @@ def _requires_python_from_pyproject() -> str:
     return str(data["project"]["requires-python"])
 
 
-def _workflow_python_versions() -> list[str]:
+def _ci_workflow_dict() -> dict:
+    path = _repo_root() / ".github" / "workflows" / "ci.yml"
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def _lint_test_matrix_python_versions() -> list[str]:
+    wf = _ci_workflow_dict()
+    out: list[str] = []
+    for job in ("lint", "test"):
+        matrix = wf["jobs"][job]["strategy"]["matrix"]
+        out.extend(str(v) for v in matrix["python-version"])
+    return out
+
+
+def _quoted_setup_python_versions() -> list[str]:
+    """Jobs that pin `python-version: \"x.y\"` (non-matrix), e.g. package and supply-chain."""
     text = (_repo_root() / ".github" / "workflows" / "ci.yml").read_text(
         encoding="utf-8"
     )
@@ -79,13 +96,12 @@ def test_readme_documents_integrator_compatibility() -> None:
     )
     missing = [s for s in required if s not in text]
     assert not missing, f"README missing expected integrator strings: {missing}"
-    versions = _workflow_python_versions()
-    assert versions, "expected python-version in .github/workflows/ci.yml"
-    assert len(set(versions)) == 1, (
-        f"CI must pin one Python version for README alignment, got {versions!r}"
+    matrix_versions = _lint_test_matrix_python_versions()
+    assert "3.11" in matrix_versions and "3.12" in matrix_versions, (
+        f"expected lint+test matrix to include 3.11 and 3.12, got {matrix_versions!r}"
     )
-    assert f"Python {versions[0]}" in text, (
-        "README must state the same Python minor CI uses (see SPEC A8)"
+    assert "Python 3.11" in text and "Python 3.12" in text, (
+        "README must name both merge-blocking CI Python minors (see SPEC A8 / backlog 6cd22a7b)"
     )
 
 
@@ -114,12 +130,18 @@ def test_spec_compatibility_matrix_matches_pyproject_replayt_floor() -> None:
     assert "no upper bound" in spec.lower() or "upper bound" in spec.lower()
 
 
-def test_a8_workflow_pins_single_python_minor() -> None:
-    """SPEC A8: one interpreter version across CI jobs that set python-version."""
-    versions = _workflow_python_versions()
-    assert versions, "expected python-version entries in .github/workflows/ci.yml"
-    assert len(set(versions)) == 1, (
-        f"all CI jobs must use the same python-version, got {versions!r}"
+def test_a8_lint_test_matrix_and_single_interpreter_jobs() -> None:
+    """SPEC A8/A9/A10: lint+test matrix includes the requires-python floor; package/supply-chain stay on one minor."""
+    wf = _ci_workflow_dict()
+    for job in ("lint", "test"):
+        versions = [
+            str(v) for v in wf["jobs"][job]["strategy"]["matrix"]["python-version"]
+        ]
+        assert "3.11" in versions and "3.12" in versions, f"{job} matrix: {versions!r}"
+    quoted = _quoted_setup_python_versions()
+    assert quoted, "expected at least one literal python-version (package/supply-chain)"
+    assert set(quoted) == {"3.12"}, (
+        f"non-matrix jobs must pin 3.12 only for backlog 6cd22a7b, got {set(quoted)!r}"
     )
 
 
@@ -129,9 +151,6 @@ def test_a8_spec_matrix_aligns_requires_python_ci_and_workflow_path() -> None:
     req_py = _requires_python_from_pyproject()
     spec = (root / "docs" / "SPEC_REPLAYT_DEPENDENCY.md").read_text(encoding="utf-8")
     matrix = _compatibility_matrix_doc_section(spec)
-    ci_versions = _workflow_python_versions()
-    assert len(set(ci_versions)) == 1
-    ci_py = ci_versions[0]
 
     assert "`requires-python`" in matrix or "requires-python" in matrix
     assert "CI-tested Python" in matrix
@@ -139,7 +158,9 @@ def test_a8_spec_matrix_aligns_requires_python_ci_and_workflow_path() -> None:
         f"compatibility matrix must echo pyproject requires-python {req_py!r} "
         "(SPEC_REPLAYT_DEPENDENCY.md ## Compatibility matrix)"
     )
-    assert ci_py in matrix, f"compatibility matrix must list CI-tested Python {ci_py!r}"
+    assert "3.11" in matrix and "3.12" in matrix, (
+        "compatibility matrix must list both CI-tested minors for lint+test"
+    )
     assert ".github/workflows/ci.yml" in matrix
 
     assert "A8 |" in spec
