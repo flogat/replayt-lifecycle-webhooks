@@ -234,8 +234,10 @@ python scripts/pip_audit_suppression_alignment.py                           # sa
 **`tests/test_property_fuzz_parse.py`** skip at import (**`pytest.importorskip`**), so the default suite stays lean.
 Normative rows **PF1**–**PF10**: **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `dcffe5d5`**).
 
-Checklist rows **A1–A5** (minimum verification / parsing) and **R1–R5** (replayt boundary): **SPEC_AUTOMATED_TESTS** and
+Checklist rows **A1–A5** (minimum verification / parsing), **R1–R5**, and **G1–G7** (version bump guardrails): **SPEC_AUTOMATED_TESTS** and
 **SPEC_REPLAYT_BOUNDARY_TESTS**.
+
+**Upstream / network checks:** There is no opt-in **pytest** marker for live PyPI or other outbound **replayt** probes in this tree. Merge-blocking **pytest** stays network-free per **SPEC_REPLAYT_BOUNDARY_TESTS** **G3**; optional cron workflows would be documented here if added (**G4** / **G5**).
 
 ## Troubleshooting
 
