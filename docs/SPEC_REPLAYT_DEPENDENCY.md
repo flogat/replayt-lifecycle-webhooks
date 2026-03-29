@@ -7,6 +7,7 @@
 - **Pin replayt and document a minimum supported version** — `e65371ff-be0f-4dfb-ad57-9cdef4ecc8fc` (original pin / floor contract).
 - **CI: run pytest and ruff on Python 3.11 (minimum supported)** — `6cd22a7b-72bc-4d34-ba7c-a6878b68907d` (matrix or equivalent for **`lint`** + **`test`**; matrix text in this spec; **§ Backlog `6cd22a7b`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**).
 - **CI: expand Python interpreter matrix beyond 3.12** — `8e58aa9c-0d62-4649-852a-766babcd8218` (**3.13** on merge-blocking **`lint`** + **`test`** alongside **3.11**/**3.12**; matrix/README/**CONTRIBUTING** alignment; skip documentation—**§ Backlog `8e58aa9c`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**; checklist **A11**–**A14** below).
+- **Contract tests: replayt version bump guardrails** — `2b5bb9f6-af49-4c68-a76f-132ec40769d5` (**G1–G7** in **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**; **§ When boundary or guardrail tests fail** below).
 
 **Audience:** Spec gate (2b), Builder (3), integrators, maintainers.
 
@@ -89,6 +90,14 @@ Once **`replayt`** is declared, remove or rewrite the **no runtime coupling** wo
 
 - **In-repo channel:** [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues) for this repository — use for verification failures, resolver errors, or **replayt** upgrades that behave differently from this spec.
 - **Upstream product / signing semantics:** Follow **replayt**’s own support and documentation channels for core behavior; this repo does not steer **replayt** (see **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)**). Include **both** installed **`replayt`** version and **`replayt-lifecycle-webhooks`** version in issue text.
+
+## When boundary or guardrail tests fail
+
+When **`tests/test_replayt_boundary.py`** (or future modules under the same backlog) fails:
+
+1. Read the **AssertionError** / **`pytest.fail`** message: it includes paths for **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**, this file (bump policy), and **`CHANGELOG.md`**, per **§ Failure messages** in **SPEC_REPLAYT_BOUNDARY_TESTS**.
+2. Decide whether **replayt** changed in a way this repo should **accept** (update **[EVENTS.md](EVENTS.md)** and **SPEC_REPLAYT_BOUNDARY_TESTS** expectations, adjust tests if the spec allows) or whether the install is **wrong** (pin / resolver).
+3. If you raise the **replayt** floor or change compatibility claims, follow **§ Dependency declaration** (**Justifying the floor**), update the **compatibility matrix**, and add **`CHANGELOG.md`** notes per **A4**.
 
 ## Acceptance criteria (checklist)
 

@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Replayt boundary guardrail tests** (phase **3**, builder, backlog **`2b5bb9f6-af49-4c68-a76f-132ec40769d5` / *Contract tests: replayt version bump guardrails*`): **`tests/test_replayt_boundary.py`** enforces **G1**–**G4**, **G6**, **G7** from **`docs/SPEC_REPLAYT_BOUNDARY_TESTS.md`** — required **`RunResult`**, **`RunFailed`**, **`ApprovalPending`** imports, **`replayt.__all__`** superset check, and failure text pointing at **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`CHANGELOG.md`**, and **`docs/SPEC_REPLAYT_BOUNDARY_TESTS.md`**. **README.md** (**Running tests**) notes **G3**/**G5** posture (no opt-in upstream **pytest** marker in-repo). **G5** (optional scheduled workflow): not added.
+
 - **Optional metrics hooks** (phase **3**, backlog **`42b8d5a9-a246-4c47-b167-f39ac371789e` / *Optional metrics hooks for verify / handler outcomes*`): keyword-only **`metrics=`** on **`verify_lifecycle_webhook_signature`**, **`handle_lifecycle_webhook_post`**, **`make_lifecycle_webhook_wsgi_app`**, and **`make_reference_lifecycle_webhook_wsgi_app`** (default **`None`**, no **`time.monotonic()`** solely for metrics on the disabled path). New exports **`LifecycleWebhookVerifyOutcome`**, **`LifecycleWebhookMetrics`**, **`NullLifecycleWebhookMetrics`**, **`InMemoryLifecycleWebhookMetrics`** (stdlib-only). Tests: **`tests/test_metrics_hooks.py`** (**M1**–**M7**). **`docs/SPEC_PUBLIC_API.md`** table updated.
 
 ### Documentation
+
+- **Replayt version bump guardrails (normative specs)** (backlog **`2b5bb9f6-af49-4c68-a76f-132ec40769d5` / *Contract tests: replayt version bump guardrails*`; phase **5** architect): **`docs/SPEC_REPLAYT_BOUNDARY_TESTS.md`** **§ Version bump guardrails** and acceptance **G1**–**G7**; **`docs/SPEC_AUTOMATED_TESTS.md`** backlog **`2b5bb9f6`** table and **§ Minimum behavioral coverage** item **3** tie-in; **`docs/SPEC_REPLAYT_DEPENDENCY.md`** traceability row and **§ When boundary or guardrail tests fail**.
 
 - **Optional metrics hooks traceability** (phase **3**, backlog **`42b8d5a9-a246-4c47-b167-f39ac371789e` / *Optional metrics hooks for verify / handler outcomes*`): **`docs/SPEC_METRICS_HOOKS.md`** (normative **`LifecycleWebhookMetrics`** contract, **MH1**–**MH5**, disabled-path timing); **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `42b8d5a9`** (**M1**–**M8**); **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** **§ Metrics and observability callbacks**; **`docs/SPEC_PUBLIC_API.md`** preamble backlog id.
 
