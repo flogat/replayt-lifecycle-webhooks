@@ -485,6 +485,8 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L9** |
 | `docs/SPEC_METRICS_HOOKS.md` | Optional **`LifecycleWebhookMetrics`** / **`metrics=`** contract; verify vs handler timing; tests **M1**–**M8** (backlog **`42b8d5a9`**) |
 | `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP9** |
+| `docs/SPEC_SECURITY_DISCLOSURE.md` | Coordinated disclosure: root **`SECURITY.md`** requirements, scope vs **replayt** upstream, **README**/**CONTRIBUTING** links; tests **SEC1–SEC9** (backlog **`87e7edae`**) |
+| `SECURITY.md` | **Security policy** (GitHub **Security** tab); specified by **SPEC_SECURITY_DISCLOSURE** — added in Builder phase for backlog **`87e7edae`** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, **`event_id`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |
