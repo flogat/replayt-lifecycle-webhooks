@@ -271,6 +271,17 @@ boundary rows **R1–R5**.
 | A9 | After verify, the success path invokes the caller hook (**H7**). | **`tests/test_http_handler.py`** — **`test_on_success_called_after_verify`** |
 | A10 | Tests **`import`** **`replayt_lifecycle_webhooks.signature`**, **`replayt_lifecycle_webhooks.handler`**, and **`replayt_lifecycle_webhooks.events`** directly (not only the package root), and exercise **`replayt_lifecycle_webhooks.serve`** where the reference server is in tree. | Search **`tests/`**; **`tests/test_reference_server.py`** for **serve** |
 
+## Backlog `70689a62`: canonical webhook failure examples (fixtures)
+
+Checklist rows for **Harden SPEC_WEBHOOK_FAILURE_RESPONSES with end-to-end examples**
+(`70689a62-61d1-4f2a-9d32-e8e8eec27c88`). Normative HTTP + JSON surface:
+**[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** (**§ Canonical end-to-end examples**).
+These complement **H8** message checks in **`tests/test_http_handler.py`**; they do not replace **H8**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| FR5 | Committed **`tests/fixtures/webhook_failure_responses/*.json`** stay byte-identical to **`handle_lifecycle_webhook_post`** error bodies (compact JSON, no trailing newline) and cover every stable **`error`** code in that folder. | **`tests/test_webhook_failure_response_fixtures.py`** |
+
 ## Backlog `4280c054`: delivery idempotency (`event_id`)
 
 Checklist rows for **Specify idempotency and replay-safe delivery semantics**

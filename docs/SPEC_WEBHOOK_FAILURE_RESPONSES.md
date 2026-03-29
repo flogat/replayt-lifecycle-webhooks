@@ -269,7 +269,7 @@ status + body fixtures: **§ Canonical end-to-end examples**.
 | FR2 | **`README.md`** **§ Troubleshooting** links **`docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md`** and calls out **§ Canonical end-to-end examples** (anchor **`#canonical-end-to-end-examples`**) for gateway / mock fixtures. | Review **README.md**; **SPEC_README_OPERATOR_SECTIONS** **OP4**. |
 | FR3 | **`src/replayt_lifecycle_webhooks/handler.py`** module docstring points to **§ Canonical end-to-end examples** in this spec (same anchor or explicit section name). | Review **handler.py** docstring. |
 | FR4 | **SPEC_MINIMAL_HTTP_HANDLER** links **§ Canonical end-to-end examples** from the JSON response-body paragraph. | Review **SPEC_MINIMAL_HTTP_HANDLER.md**. |
-| FR5 | Optional **JSON fixtures** under **`tests/fixtures/`** (or similar), if added for contract tests, **must** match canonical bodies byte-for-byte (compact JSON) and cite this spec in a comment or **README** under that folder—**no** drift between doc and files. | Review fixtures when present; otherwise **N/A**. |
+| FR5 | Optional **JSON fixtures** under **`tests/fixtures/`** (or similar), if added for contract tests, **must** match canonical bodies byte-for-byte (compact JSON) and cite this spec in a comment or **README** under that folder—**no** drift between doc and files. | **`tests/fixtures/webhook_failure_responses/`** (see **`README.md`** there) + **`tests/test_webhook_failure_response_fixtures.py`** (**FR5**). |
 
 ## Related docs
 
