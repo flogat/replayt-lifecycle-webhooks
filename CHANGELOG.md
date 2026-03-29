@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **PEP 561 / typing spec** (phase **2**, backlog **`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb` / *Packaging: ship `py.typed` and optional static typing gate*`):
+  **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `2ec2c21c`** (**TP1**–**TP6**); **`docs/SPEC_PUBLIC_API.md`** adds **§ Static typing (PEP 561)** and acceptance **TYP1**–**TYP3**; **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`CONTRIBUTING.md`** cross-link the backlog. **Builder** phase is expected to add **`py.typed`**, **`pyproject.toml`** package-data, **pytest** **sdist**/**wheel** assertions, optional type-check wiring, and a user-facing **CHANGELOG** bullet per **TP6**.
+
 ### Changed
 
 - **CI Python matrix** (phase **3**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`.github/workflows/ci.yml`** runs **`lint`** and **`test`** on **3.11** and **3.12** (`strategy.matrix`); **`package`** and **`supply-chain`** stay on **3.12** only. **`tests/test_ci_ruff_wiring.py`** asserts the matrix (**CI1**–**CI2**, **A9**–**A10**); **`tests/test_replayt_dependency.py`** guards **A8** against the split matrix vs single-interpreter jobs; **`tests/test_packaging_layout.py`** skips when **`build`** is missing (dev extra). **`docs/SPEC_REPLAYT_DEPENDENCY.md`** adds a **Workflow definition** line under **Compatibility matrix**; **Notes** and **`README.md`** CI wording match the workflow.

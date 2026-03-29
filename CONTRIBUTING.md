@@ -21,7 +21,8 @@ You **do not** need to populate snapshots to build, test, or contribute code cha
 
 CI runs **`python -m build`** and **`twine check`** on every change (job **`package`** in **`.github/workflows/ci.yml`**);
 acceptance rows **PK1**–**PK7** live in **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog
-`78e3554b`**).
+`78e3554b`**). **PEP 561** **`py.typed`**, **sdist**/**wheel** layout for that marker, and an **optional** **pyright** /
+**mypy** contributor or CI path are specified under **§ Backlog `2ec2c21c`** (**TP1**–**TP6**).
 
 **Local (same lower bounds as CI):**
 

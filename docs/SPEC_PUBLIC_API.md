@@ -1,6 +1,6 @@
 # Spec: public Python API surface and deprecation policy
 
-**Backlog (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`).
+**Backlogs (normative traceability):** Define public API surface and deprecation policy before 1.0 (`30e133a5-78fa-4eee-ae56-56a1af4c9f73`). **PEP 561** / static typing expectations for integrators (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) — **§ Static typing (PEP 561)** and **TYP1**–**TYP3** below.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), downstream library authors, maintainers.
 
@@ -66,6 +66,18 @@ The following **import paths** are **internal implementation** until **1.0.0** (
 
 **Rule:** Do **not** rely on symbols that appear in those modules but are **not** re-exported via the package root **`__all__`** (or **`events.__all__`** for the events submodule). They may change or move without a deprecation cycle.
 
+## Static typing (PEP 561)
+
+**Purpose:** Integrators using **pyright**, **mypy**, or other **PEP 484**-aware tools should be able to treat this distribution as a **typed** dependency once **`py.typed`** ships (**[PEP 561](https://peps.python.org/pep-0561/)**).
+
+**Shipment:** After backlog **`2ec2c21c`** is implemented, releases **must** include an **empty** **`py.typed`** marker inside the **wheel** and **sdist** at **`replayt_lifecycle_webhooks/py.typed`** (see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `2ec2c21c`**, **TP1**–**TP3**). Until then, consumers should assume **partial** / **untyped** packaging for the distribution.
+
+**Supported typing surface:** Type checkers **should** be pointed at the **same** import paths as **§ Supported import paths**—the package root and **`replayt_lifecycle_webhooks.events`**. Maintainers **aim** for accurate annotations on **public** symbols listed in **`__all__`** (and the **`events`** submodule **`__all__`**). **Internal** modules listed in **§ Unsupported imports** are **not** a supported typing contract: annotations there may be incomplete or churn without a deprecation cycle.
+
+**Dependencies:** This package **does not** vendor type stubs for **`replayt`** or **`pydantic`**; integrators rely on those projects’ own **`py.typed`** / inline types at the versions they install. Boundary expectations at the **`replayt`** import seam remain **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+
+**Optional maintainer gate:** An optional **pyright** or **mypy** pass on an **allowlisted** subset of **`src/`** (see **SPEC_AUTOMATED_TESTS** **TP4**–**TP5**) **must not** be confused with a guarantee that every internal module is strict-clean—only the documented **public** entry modules are in scope for that gate.
+
 ## Documented CLI entrypoints
 
 These **module** invocations are **supported** public **CLI** surfaces (behavior and flags live in their feature specs):
@@ -110,9 +122,12 @@ At **1.0.0**, tighten policy as maintainers document (this spec should gain a **
 | **API1** | **Supported public imports** are exactly those documented in **§ Supported import paths** (package root table + **`events`** submodule rule). |
 | **API2** | **Internal** modules are listed in **§ Unsupported imports**; integrator docs and **README** do not encourage deep imports from them. |
 | **API3** | **Deprecation policy** states **minimum** wait (**one minor 0.x** after deprecating release) and **CHANGELOG** requirements (**Deprecated** section + migration + removal tracking). |
+| **TYP1** | **§ Static typing (PEP 561)** states that **`py.typed`** shipment is **required** after backlog **`2ec2c21c`** and names **SPEC_AUTOMATED_TESTS** **TP1**–**TP3** as the mechanical bar. |
+| **TYP2** | Supported **typing** surface matches **supported imports** (package root + **`events`**); **internal** modules are explicitly **not** a typing stability contract. |
+| **TYP3** | **CHANGELOG** records typing posture when **`py.typed`** ships (**SPEC_AUTOMATED_TESTS** **TP6**). |
 
 ## Related documentation
 
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — principles **explicit contracts**, **small public surfaces**, **consumer-side maintenance**.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — stability at the **`replayt`** dependency seam (orthogonal to *this* package’s export surface).
-- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**.
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**; backlog **`2ec2c21c`** maps **TP1**–**TP6** for **`py.typed`** and optional typing gate.
