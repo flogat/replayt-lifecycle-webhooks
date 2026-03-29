@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Route map doc guards** (phase **3**, backlog **`b4c68e50-04df-4149-b9b5-f5d6280b38cc` / *Docs: machine-readable route/status map for the reference HTTP server*):
+  **`tests/test_reference_http_server_route_map_doc.py`** enforces **RM1**–**RM4** from **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`**
+  (canonical table content, **`README.md`** link, alignment with **`replayt_lifecycle_webhooks.serve`** defaults). **`docs/SPEC_AUTOMATED_TESTS.md`**
+  (**§ Backlog `b4c68e50`**) and **`README.md`** (**Running tests**) name the module.
+
 - **SPEC_WEBHOOK_FAILURE_RESPONSES** — **§ Fuzz / property tests**: exception expectations for optional **Hypothesis**
   **PF5**–**PF8** coverage and HTTP **`error`** mapping; **PF9** handler fuzzing noted as omitted in the current suite
   (phase **5** / architect review, backlog **`dcffe5d5`**).

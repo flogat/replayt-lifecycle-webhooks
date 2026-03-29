@@ -42,7 +42,8 @@
 - Property-based fuzzing for **`parse_lifecycle_webhook_event`** and signature verification
   (`dcffe5d5-7f7c-4585-aca0-a882653f20dd`) — checklist **PF1**–**PF10** under **§ Backlog `dcffe5d5`** below.
 - Reference HTTP server **route / HTTP status** matrix for gateways (`b4c68e50-04df-4149-b9b5-f5d6280b38cc`) —
-  checklist **RM1**–**RM7** in **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**;
+  checklist **RM1**–**RM7** in **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** (**RM1**–**RM4**:
+  **`tests/test_reference_http_server_route_map_doc.py`**);
   **README** link rule in **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **SPEC_HTTP_SERVER_ENTRYPOINT**
   **S13**.
 
@@ -471,15 +472,15 @@ Checklist rows for **Docs: machine-readable route/status map for the reference H
 **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** (**§ Reference server route map link**). **Traceability**
 on the entrypoint spec: **S13** in **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**.
 
-**Scope:** **Documentation only**—no new Python runtime API. **Verification** is **documentation review** for **RM1**–**RM7**
-unless maintainers later add an optional **pytest** doc guard (not required for this backlog).
+**Scope:** **Documentation only**—no new Python runtime API. **Verification:** **RM5**–**RM7** remain **documentation review**.
+**RM1**–**RM4** are also enforced by **`tests/test_reference_http_server_route_map_doc.py`** (phase **3** builder).
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
-| **RM1** | Canonical **Markdown** table includes **`POST /webhook`** and **`GET /health`**. | Doc review (**SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP**) |
-| **RM2** | Table documents default **bind host**, **port**, and **`/webhook`** path consistent with **SPEC_HTTP_SERVER_ENTRYPOINT**. | Doc review |
-| **RM3** | Table links **SPEC_WEBHOOK_FAILURE_RESPONSES** and **SPEC_WEBHOOK_SIGNATURE** for webhook errors and signing policy. | Doc review |
-| **RM4** | **`README.md`** links **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`**. | Doc review |
+| **RM1** | Canonical **Markdown** table includes **`POST /webhook`** and **`GET /health`**. | **`pytest`** **`tests/test_reference_http_server_route_map_doc.py`**; doc review |
+| **RM2** | Table documents default **bind host**, **port**, and **`/webhook`** path consistent with **SPEC_HTTP_SERVER_ENTRYPOINT** and **`replayt_lifecycle_webhooks.serve`** defaults. | **`pytest`** (same module); doc review |
+| **RM3** | Table links **SPEC_WEBHOOK_FAILURE_RESPONSES** and **SPEC_WEBHOOK_SIGNATURE** for webhook errors and signing policy. | **`pytest`** (same module); doc review |
+| **RM4** | **`README.md`** links **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`**. | **`pytest`** (same module); doc review |
 | **RM5** | **SPEC_README_OPERATOR_SECTIONS** records the backlog mapping and README requirement. | Doc review |
 | **RM6** | **SPEC_HTTP_SERVER_ENTRYPOINT** and **SPEC_AUTOMATED_TESTS** (this section) reference the route map for discoverability. | Doc review |
 | **RM7** | **No new runtime API** beyond documentation and cross-links. | Doc review |

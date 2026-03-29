@@ -65,7 +65,7 @@ status story including **422**, **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HT
 | **RM1** | **§ Canonical route / status table** exists in this file and includes **`POST /webhook`** and **`GET /health`**. | Doc review |
 | **RM2** | Table documents **default bind host**, **port**, and **`/webhook`** path (values consistent with **SPEC_HTTP_SERVER_ENTRYPOINT**). | Doc review |
 | **RM3** | Table lists **primary success** statuses (**204** for webhook, **200** for health) and **primary error** statuses for the webhook path, with links to **SPEC_WEBHOOK_FAILURE_RESPONSES** and **SPEC_WEBHOOK_SIGNATURE**. | Doc review |
-| **RM4** | **`README.md`** links to this spec (see **§ Publication surfaces**). | Doc review; optional **pytest** doc guard in a follow-on if maintainers add one |
+| **RM4** | **`README.md`** links to this spec (see **§ Publication surfaces**). | Doc review; **`pytest`** **`tests/test_reference_http_server_route_map_doc.py`** |
 | **RM5** | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** documents the README link requirement for this backlog (traceability for **OP** tests). | Doc review |
 | **RM6** | **SPEC_HTTP_SERVER_ENTRYPOINT** and **SPEC_AUTOMATED_TESTS** reference this document for gateway / operator matrix discoverability. | Doc review |
 | **RM7** | **No new runtime API**—docs and links only. | Doc / manifest review |
