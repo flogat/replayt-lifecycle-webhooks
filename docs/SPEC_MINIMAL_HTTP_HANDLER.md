@@ -87,5 +87,6 @@ Rows **H9**–**H12** match **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON contract and typed parsing after a successful parse (see **README**).
 - **[README.md](../README.md)** — copy-paste examples for **`handle_lifecycle_webhook_post`** and **`make_lifecycle_webhook_wsgi_app`**.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable JSON **`error`** codes, HTTP mapping, and logging boundaries for operators.
+- **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)** — **FastAPI** / **Starlette** verified-first pattern; bridges this handler spec to ASGI apps (**AF1**–**AF7**).
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — post-verify freshness, dedupe store, handler hooks (**RP2**); traceability **H9**–**H12** above.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction helpers when logging headers or structured metadata; optional **per-request** diagnostics on this handler and the reference **serve** path (**§ Optional diagnostic logging**, backlog **`0bab43f3`**, **pytest** **LG1–LG4**).

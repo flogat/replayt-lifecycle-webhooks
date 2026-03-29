@@ -5,7 +5,8 @@ POST matches **`Replayt-Signature`** (HMAC over the **raw body**) before you par
 **not** a fork of [replayt](https://pypi.org/project/replayt/); the supported **replayt** floor and verification rules
 live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**,
 **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**, the optional HTTP helper spec
-**[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**, and the optional **reference server** contract
+**[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**, **ASGI** integrator recipe
+**[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**, and the optional **reference server** contract
 **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (one documented start command when implemented);
 **path / method / status** matrix for gateways:
 **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**.
@@ -156,7 +157,7 @@ Integrators and operators are responsible for:
 - **Releases and versioning** — Public API and dependency contract changes are tracked under **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)** as declared in **`CHANGELOG.md`**; cutting a release means updating the version in **`pyproject.toml`**, grouping **Unreleased** notes into a dated section, and publishing to PyPI (or the project’s canonical index) per maintainer practice. Integrators rely on the **replayt** lower bound and changelog for upgrade safety (**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**).
 - **CHANGELOG.md** records user-visible API and dependency changes under **Unreleased** (or the releasing section) per
   project convention.
-- Operators can adopt verification using **[README.md](../README.md)** + **SPEC_WEBHOOK_SIGNATURE.md** without reading the whole tree. Operator-focused **README** structure (troubleshooting, high-level **approval** path, copy-paste signature checks) is specified in **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **pytest** rows **OP1**–**OP8** in **SPEC_AUTOMATED_TESTS** are enforced by **`tests/test_readme_operator_sections.py`**.
+- Operators can adopt verification using **[README.md](../README.md)** + **SPEC_WEBHOOK_SIGNATURE.md** without reading the whole tree. Operator-focused **README** structure (troubleshooting, high-level **approval** path, copy-paste signature checks) is specified in **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **pytest** rows **OP1**–**OP9** in **SPEC_AUTOMATED_TESTS** are enforced by **`tests/test_readme_operator_sections.py`**.
 
 ## Doc hygiene (checklist)
 

@@ -295,7 +295,9 @@ sequenceDiagram
 ## Verifying webhook signatures
 
 Verify the **raw request body** with your shared secret and the **`Replayt-Signature`** header before parsing JSON or
-running automation. Ordered steps for handlers:
+running automation. For **FastAPI**, **Starlette**, or other **ASGI** apps, read **`await request.body()`** (or equivalent)
+before **`json.loads`** or typed body parsing—copy-paste patterns and **401**/**403** mapping are in
+**[docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**. Ordered steps for handlers:
 **[Verification procedure](docs/SPEC_WEBHOOK_SIGNATURE.md#verification-procedure-integrators)** in
 **[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**. Full contract detail also in
 **[docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md](docs/reference-documentation/REPLAYT_WEBHOOK_SIGNING.md)**.
@@ -463,6 +465,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / **ruff** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H12** |
+| `docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md` | Integrator recipe: raw body + verify-before-JSON for **FastAPI** / **Starlette** (**AF1**–**AF7**; backlog **`c631fe3f`**) |
 | `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S13** |
 | `docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md` | Gateway-oriented **path / method / HTTP status** matrix; backlog **`b4c68e50`**, acceptance **RM1**–**RM7** |
 | `docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md` | Normative contract for **`docs/OPERATOR_REVERSE_PROXY.md`**: nginx/Caddy-style proxy, raw body, limits, timeouts; **pytest** **OG1**–**OG8** |
@@ -472,7 +475,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `replayt_lifecycle_webhooks/fixtures/events/` | Packaged JSON presets aligned with **`tests/fixtures/events/`** for **`pip install`** demos |
 | `docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md` | Operator-facing HTTP + JSON failure contract; safe examples; logging boundaries |
 | `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L9** |
-| `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP8** |
+| `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP9** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, **`event_id`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |

@@ -20,8 +20,11 @@
 - Run **ruff** in CI for fast lint (and optionally format) feedback (`5a3f5a7f-d54a-4f8a-a446-e71b932d22c5`) — checklist **RF1**–**RF5** under **Backlog `5a3f5a7f`** below.
 - Optional **pre-commit** mirroring CI **ruff** invocations (`c39b2a5f-a2f5-42a4-a5c2-a2b20989a31c`) — checklist **PC1**–**PC7** under **Backlog `c39b2a5f`** below.
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
-  checklist **OP1**–**OP8** under **Backlog `23e2da29`** below; normative contract
+  checklist **OP1**–**OP9** under **Backlog `23e2da29`** below (**OP9** from backlog **`c631fe3f`**); normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
+- Integrator **ASGI** verified-first recipe (`c631fe3f-8a66-4a9d-a900-bab855860c7b`) — checklist **AF1**–**AF7** in
+  **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** below
+  (**pytest** for **AF1**–**AF6**; **AF7** review).
 - Reverse proxy in front of the reference HTTP server (`dc212184-8c0d-4ee6-90de-e0d50c370f6f`) — checklist **OG1**–**OG8**
   under **Backlog `dc212184`** below; normative contract
   **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; deliverable **`docs/OPERATOR_REVERSE_PROXY.md`**.
@@ -88,6 +91,7 @@ behavioral coverage.
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
+| ASGI (**FastAPI** / **Starlette**) verified-first integrator guide (**AF1**–**AF7**) | **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
 | **SDist / wheel** build, **`twine check`**, declared package data, **`py.typed`** (**PEP 561**) | **§ Backlog `78e3554b`** (**PK1**–**PK7**) + **§ Backlog `2ec2c21c`** (**TP1**–**TP6**) |
@@ -200,7 +204,7 @@ When **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** ships formatters in-tree, 
 items **1**–**3**.
 
 Backlog **`23e2da29`** (**[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**) is covered by **network-free**
-**pytest** rows **OP1**–**OP8** under **Backlog `23e2da29`** below (**`tests/test_readme_operator_sections.py`**). Those
+**pytest** rows **OP1**–**OP9** under **Backlog `23e2da29`** below (**`tests/test_readme_operator_sections.py`**). Those
 tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
 
 Backlog **`dc212184`** (**[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**) is covered by **network-free**
@@ -465,6 +469,29 @@ between consecutive **`## `** headings so each row scopes content to the right s
 | **OP6** | Under **Approval webhook flow**, prose links **`docs/EVENTS.md`**. | **`pytest`** |
 | **OP7** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** with fragment **`#verification-procedure-integrators`** (substring match). | **`pytest`** |
 | **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
+| **OP9** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** (backlog **`c631fe3f`**). | **`pytest`** (same module) |
+
+## Backlog `c631fe3f`: integrator ASGI verified-first recipe
+
+Checklist rows for **Integrator recipe: FastAPI / Starlette verified-first handler**
+(`c631fe3f-8a66-4a9d-a900-bab855860c7b`). Normative contract:
+**[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**. These are **documentation** acceptance
+criteria; they **do not** replace signature, parsing, boundary, or **pytest** minima in **§ Minimum behavioral coverage**.
+
+**Verification:** **Builder (3)** added **network-free** **`pytest`** guards: **`tests/test_spec_integrator_asgi_verified_first.py`**
+(**AF1**–**AF5**), **`tests/test_readme_operator_sections.py`** **`test_op9_verifying_links_integrator_asgi_spec`** (**AF6**).
+**AF7** remains **review** against **`CHANGELOG.md`** **Unreleased** (no dedicated **`pytest`** row). **Tester (4)** re-checks
+the checklist on regression.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **AF1** | **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** contains **§ Copy-paste examples** with at least one minimal **FastAPI** and/or **Starlette** example (not a placeholder). | **`pytest`** — **`tests/test_spec_integrator_asgi_verified_first.py`** |
+| **AF2** | Examples read **raw body `bytes`** before JSON parsing; prose names **`request.json()`** / premature body dependencies as wrong. | **`pytest`** — same module |
+| **AF3** | Examples import **only** **SPEC_PUBLIC_API**-supported symbols for this package. | **`pytest`** — same module |
+| **AF4** | Examples map signature failures to **401** / **403** without leaking secret, full signature, or MAC. | **`pytest`** — same module |
+| **AF5** | Guide links **SPEC_WEBHOOK_SIGNATURE** and **SPEC_WEBHOOK_FAILURE_RESPONSES**. | **`pytest`** — same module |
+| **AF6** | Root **`README.md`** **`## Verifying webhook signatures`** links **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`**. | **`pytest`** — **`tests/test_readme_operator_sections.py`** |
+| **AF7** | **`CHANGELOG.md`** **Unreleased** documents the shipped guide (Builder). | Review / spec gate |
 
 ## Backlog `dc212184`: operator reverse-proxy guide
 
@@ -474,7 +501,7 @@ Checklist rows for **Operator guide: reverse proxy in front of reference WSGI se
 replace signature, parsing, boundary, or public-API coverage.
 
 Implement **network-free** assertions by reading **`docs/OPERATOR_REVERSE_PROXY.md`** and **`README.md`** from disk (same
-pattern as **OP1**–**OP8**). **Builder** may use a dedicated module (for example **`tests/test_operator_reverse_proxy_doc.py`**)
+pattern as **OP1**–**OP9**). **Builder** may use a dedicated module (for example **`tests/test_operator_reverse_proxy_doc.py`**)
 or extend an existing README doc-guard module if maintainers prefer one file—**Tester** ensures all **OG** rows are covered.
 
 | # | Criterion | Verification |
@@ -706,7 +733,7 @@ shelling out.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**;
   optional **serve** / **handler** diagnostics, **LG1–LG4** (**§ Optional diagnostic logging**).
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.
-- **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP8**.
+- **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP9**.
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — operator reverse-proxy guide, **OG1**–**OG8**.
 - **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)** — optional **`docs/reference-documentation/`** workflow, **RD1**–**RD8**.
 - **`CONTRIBUTING.md`** — local **sdist** / **wheel** + **`twine check`** commands (**PK7**); **§ Backlog `78e3554b`** above is normative for CI acceptance; **§ Backlog `2ec2c21c`** for **`py.typed`** + optional typing commands.

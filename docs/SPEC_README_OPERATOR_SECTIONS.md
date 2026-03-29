@@ -13,10 +13,10 @@ It does **not** redefine **replayt** product semantics (when approvals fire upst
 upstream documentation for payload meaning.
 
 **Normative for Builder:** When this backlog is in scope, **`README.md`** **must** satisfy **§ Required sections** and
-**§ Content requirements** below. **§ Automated acceptance** maps to **pytest** rows **OP1**–**OP8** in
-**[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**.
+**§ Content requirements** below. **§ Automated acceptance** maps to **pytest** rows **OP1**–**OP9** in
+**[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP9** from backlog **`c631fe3f`**).
 
-**Non-goals for README prose:** Full HTTP framework tutorials, enterprise runbooks, or copying entire normative specs into
+**Non-goals for README prose:** Full **generic** HTTP framework tutorials, enterprise runbooks, or copying entire normative specs into
 the README—**link** to **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**,
 **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)**,
 **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)**,
@@ -24,7 +24,7 @@ the README—**link** to **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md
 **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**,
 **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**,
 **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** / **`docs/OPERATOR_REVERSE_PROXY.md`**
-instead of duplicating them verbatim.
+instead of duplicating them verbatim. **Exception:** backlog **`c631fe3f`** requires a **short** pointer in **`## Verifying webhook signatures`** to the single normative ASGI recipe (**[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**)—not a full tutorial in **`README.md`**.
 
 ## Backlog acceptance mapping (`23e2da29`)
 
@@ -57,6 +57,16 @@ Cross-cutting README rule for **Docs: machine-readable route/status map for the 
 | Source criterion | Where addressed in this spec |
 | ---------------- | ---------------------------- |
 | README cross-link to the route / status matrix | **§ Content requirements** — **Reference server route map link** |
+
+## Backlog acceptance mapping (`c631fe3f`)
+
+Cross-cutting README rule for **Integrator recipe: FastAPI / Starlette verified-first handler**
+(`c631fe3f-8a66-4a9d-a900-bab855860c7b`). Normative guide and checklist **AF1**–**AF7** live in
+**[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**.
+
+| Source criterion | Where addressed in this spec |
+| ---------------- | ---------------------------- |
+| README cross-link to the ASGI verified-first recipe | **§ Content requirements** — **`## Verifying webhook signatures`** — **ASGI / FastAPI / Starlette recipe link** |
 
 ## Required sections (`README.md`)
 
@@ -150,6 +160,14 @@ The section **must**:
 **Must not** include complete **`Replayt-Signature`** header values tied to real fixtures (no committed **64-char hex**
 example posing as a live MAC) or **base64/raw key** material.
 
+### ASGI / FastAPI / Starlette recipe link (backlog `c631fe3f`)
+
+When **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)** is in scope (backlog
+**`c631fe3f-8a66-4a9d-a900-bab855860c7b`**), **`README.md`** **must** include a markdown link to
+**`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** (path as written from the repository root) inside **`## Verifying webhook signatures`**.
+Use **one or two sentences** of context (raw body before JSON; FastAPI / Starlette)—the linked spec holds the copy-paste
+examples.
+
 ## Secrets and examples hygiene
 
 - **Never** document real shared secrets, bearer tokens, or live **`Replayt-Signature`** values. Use obvious placeholders
@@ -171,8 +189,9 @@ maintainer-facing contract.
 
 ## Automated acceptance
 
-See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP1**–**OP8**). Implementations
-**must** use **network-free** tests that read **`README.md`** from disk (same pattern as **DG6**, **A2**/README checks).
+See **Backlog `23e2da29`** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**OP1**–**OP9**; **OP9** is the
+**`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** link under **Verifying**, backlog **`c631fe3f`**). Implementations **must** use
+**network-free** tests that read **`README.md`** from disk (same pattern as **DG6**, **A2**/README checks).
 
 ## Related docs
 
