@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **ASGI integrator recipe spec** (phase **2**, backlog **`c631fe3f-8a66-4a9d-a900-bab855860c7b` / *Integrator recipe: FastAPI / Starlette verified-first handler*): new **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** (checklist **AF1**–**AF7**, **Pattern A**/**B**, error-mapping and hygiene); **`docs/SPEC_README_OPERATOR_SECTIONS.md`** README **`## Verifying webhook signatures`** link rule; traceability in **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `c631fe3f`**), **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, and **`README.md`** project layout table. Copy-paste examples and **`README.md`** operator cross-link ship in phase **3** (Builder).
+
 - **CI Python matrix beyond 3.12** (phases **2**–**3**, backlog **`8e58aa9c-0d62-4649-852a-766babcd8218` / *CI: expand Python interpreter matrix beyond 3.12*`): **`docs/SPEC_REPLAYT_DEPENDENCY.md`** **§ CI**, checklist **A11**–**A14**, and compatibility matrix **CI-tested Python**; **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `8e58aa9c`** (**PYM1**–**PYM7**), traceability, **CI entrypoint**, and **RF1**/**RF2** notes; **`docs/MISSION.md`** success metrics (**3.13** matrix). Phase **3** wires **`3.13`** into **`.github/workflows/ci.yml`**, **README.md**, **CONTRIBUTING.md**, and **`tests/test_ci_ruff_wiring.py`** / **`tests/test_replayt_dependency.py`**.
 
 - **PEP 561 / typing spec** (phase **2**, backlog **`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb` / *Packaging: ship `py.typed` and optional static typing gate*`):

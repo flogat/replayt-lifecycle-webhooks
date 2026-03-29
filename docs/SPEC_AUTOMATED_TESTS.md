@@ -22,6 +22,9 @@
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
   checklist **OP1**–**OP8** under **Backlog `23e2da29`** below; normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
+- Integrator **ASGI** verified-first recipe (`c631fe3f-8a66-4a9d-a900-bab855860c7b`) — checklist **AF1**–**AF7** in
+  **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** below
+  (doc / review acceptance; optional **pytest** extension noted there).
 - Reverse proxy in front of the reference HTTP server (`dc212184-8c0d-4ee6-90de-e0d50c370f6f`) — checklist **OG1**–**OG8**
   under **Backlog `dc212184`** below; normative contract
   **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; deliverable **`docs/OPERATOR_REVERSE_PROXY.md`**.
@@ -88,6 +91,7 @@ behavioral coverage.
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
+| ASGI (**FastAPI** / **Starlette**) verified-first integrator guide (**AF1**–**AF7**) | **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
 | **SDist / wheel** build, **`twine check`**, declared package data, **`py.typed`** (**PEP 561**) | **§ Backlog `78e3554b`** (**PK1**–**PK7**) + **§ Backlog `2ec2c21c`** (**TP1**–**TP6**) |
@@ -465,6 +469,28 @@ between consecutive **`## `** headings so each row scopes content to the right s
 | **OP6** | Under **Approval webhook flow**, prose links **`docs/EVENTS.md`**. | **`pytest`** |
 | **OP7** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** with fragment **`#verification-procedure-integrators`** (substring match). | **`pytest`** |
 | **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
+
+## Backlog `c631fe3f`: integrator ASGI verified-first recipe
+
+Checklist rows for **Integrator recipe: FastAPI / Starlette verified-first handler**
+(`c631fe3f-8a66-4a9d-a900-bab855860c7b`). Normative contract:
+**[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**. These are **documentation** acceptance
+criteria; they **do not** replace signature, parsing, boundary, or **pytest** minima in **§ Minimum behavioral coverage**.
+
+**Verification:** **Spec gate (2b)** and **code review** satisfy **AF1**–**AF7** against the committed markdown until a
+follow-up backlog adds **network-free** **`pytest`** assertions (for example extending **`tests/test_readme_operator_sections.py`**
+for the **README** link in **AF6** and/or a new module for recipe code fences). **Tester (4)** confirms the checklist
+when the Builder commit lands.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **AF1** | **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** contains **§ Copy-paste examples** with at least one minimal **FastAPI** and/or **Starlette** example (not a placeholder). | Review / spec gate |
+| **AF2** | Examples read **raw body `bytes`** before JSON parsing; prose names **`request.json()`** / premature body dependencies as wrong. | Review / spec gate |
+| **AF3** | Examples import **only** **SPEC_PUBLIC_API**-supported symbols for this package. | Review / spec gate |
+| **AF4** | Examples map signature failures to **401** / **403** without leaking secret, full signature, or MAC. | Review / spec gate |
+| **AF5** | Guide links **SPEC_WEBHOOK_SIGNATURE** and **SPEC_WEBHOOK_FAILURE_RESPONSES**. | Review / spec gate |
+| **AF6** | Root **`README.md`** **`## Verifying webhook signatures`** links **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`**. | Review / spec gate (optional **`pytest`** later) |
+| **AF7** | **`CHANGELOG.md`** **Unreleased** documents the shipped guide (Builder). | Review / spec gate |
 
 ## Backlog `dc212184`: operator reverse-proxy guide
 

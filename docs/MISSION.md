@@ -5,7 +5,8 @@ POST matches **`Replayt-Signature`** (HMAC over the **raw body**) before you par
 **not** a fork of [replayt](https://pypi.org/project/replayt/); the supported **replayt** floor and verification rules
 live **here**—see **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**,
 **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**, the optional HTTP helper spec
-**[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**, and the optional **reference server** contract
+**[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)**, **ASGI** integrator recipe
+**[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**, and the optional **reference server** contract
 **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (one documented start command when implemented);
 **path / method / status** matrix for gateways:
 **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**.

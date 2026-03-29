@@ -463,6 +463,7 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_AUTOMATED_TESTS.md` | **pytest** / **ruff** / CI entrypoint, minimum verification + parsing coverage, no smoke-only **`assert True`** |
 | `docs/SPEC_WEBHOOK_SIGNATURE.md` | Incoming webhook signature verification: API contract, tests, upstream alignment |
 | `docs/SPEC_MINIMAL_HTTP_HANDLER.md` | Optional minimal HTTP POST handler: mounting, status codes, acceptance **H1–H12** |
+| `docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md` | Integrator recipe: raw body + verify-before-JSON for **FastAPI** / **Starlette** (**AF1**–**AF7**; backlog **`c631fe3f`**) |
 | `docs/SPEC_HTTP_SERVER_ENTRYPOINT.md` | Reference HTTP server: one start command, **POST** route, **`GET /health`**, acceptance **S1–S13** |
 | `docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md` | Gateway-oriented **path / method / HTTP status** matrix; backlog **`b4c68e50`**, acceptance **RM1**–**RM7** |
 | `docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md` | Normative contract for **`docs/OPERATOR_REVERSE_PROXY.md`**: nginx/Caddy-style proxy, raw body, limits, timeouts; **pytest** **OG1**–**OG8** |

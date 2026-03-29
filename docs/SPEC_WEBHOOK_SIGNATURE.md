@@ -174,6 +174,7 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 - **[README.md](../README.md)** — integrator entry and quick example.
 - **[EVENTS.md](EVENTS.md)** and **`replayt_lifecycle_webhooks.events`** — normative lifecycle JSON field contract and **`parse_lifecycle_webhook_event`** after verification (see **README** overview).
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — optional **`handle_lifecycle_webhook_post`** and WSGI factory, status table, **H1–H8**.
+- **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)** — **ASGI** (**FastAPI** / **Starlette**) recipe: raw body before JSON, **401**/**403** mapping (**AF1**–**AF7**).
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — dev **sender** contract; signing **must** stay **v1**-compatible with this spec.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — operator-facing JSON error envelope, **`error`** codes, post-verify failures, replay/freshness notes for v1.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — post-verify replay protection, **`occurred_at`** windows, optional wire headers, **`LifecycleWebhookDedupStore`**.
