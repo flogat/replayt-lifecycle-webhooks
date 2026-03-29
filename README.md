@@ -204,6 +204,9 @@ ruff check src tests
 ruff format --check src tests
 ```
 
+The same checks can run as optional **Git** hooks via **`.pre-commit-config.yaml`**; see **[CONTRIBUTING.md](CONTRIBUTING.md)**
+(**Optional pre-commit (ruff)**).
+
 The **normative** full suite is defined in **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** and
 **[docs/SPEC_REPLAYT_BOUNDARY_TESTS.md](docs/SPEC_REPLAYT_BOUNDARY_TESTS.md)**: **unit / contract** tests (signature
 verification, lifecycle JSON parsing, handler behavior, doc guards) and **replayt boundary** tests that **`import replayt`**
