@@ -118,7 +118,7 @@ The store answers: **“May this integrator-defined key cause side effects right
 | ---- | ----------- |
 | **Protocol / ABC** | Expose a **`typing.Protocol`** (or abstract base) **`LifecycleWebhookDedupStore`** documenting **`try_claim`**. |
 | **`InMemoryLifecycleWebhookDedupStore`** | Concrete implementation backed by a **`dict`** (or similar) with **configurable TTL**, suitable for **unit tests** and **examples**. **Must** allow **injectable time** for deterministic expiry tests. |
-| **`SqliteLifecycleWebhookDedupStore`** | **When implemented** (backlog **`d10cf76f`**): optional **filesystem** store using **stdlib** **`sqlite3`**, same **`try_claim`** / TTL semantics, **injectable time**, documented locking / **WAL** notes. Normative: **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (**SQ1**–**SQ7**). |
+| **`SqliteLifecycleWebhookDedupStore`** | **Done** (backlog **`d10cf76f`**): optional **filesystem** store using **stdlib** **`sqlite3`**, same **`try_claim`** / TTL semantics, **injectable time**, documented locking / **WAL** notes. Normative: **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (**SQ1**–**SQ7**). |
 | **Mandatory dependency** | **No** new **mandatory** third-party dependencies for the store contract; **stdlib** only for the in-memory type and the SQLite reference type. |
 
 ## Optional HTTP handler integration
@@ -156,7 +156,7 @@ Maps to backlog acceptance: *documented strategy*, *code path rejects or de-dupl
 | Item | Status | Notes |
 | ---- | ------ | ----- |
 | Normative spec (this file) | **Done** (phase **2**) | — |
-| Public helpers + in-memory store + handler hooks | **Done** (phase **3**) | **`replay_protection`**, optional **`handle_lifecycle_webhook_post`** kwargs |
+| Public helpers + in-memory + SQLite reference store + handler hooks | **Done** (phase **3**) | **`replay_protection`**, **`sqlite_idempotency`**, optional **`handle_lifecycle_webhook_post`** kwargs |
 | **pytest** **RP4** / **RP5** | **Done** (phase **3**) | **`tests/test_replay_protection.py`**; **RP5** still overlaps **I4** |
 
 ## Related docs

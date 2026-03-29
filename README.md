@@ -390,6 +390,25 @@ store (stdlib **SQLite** only, optional—**not** required for other deployments
 **[docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md](docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (acceptance **SQ1**–**SQ7**; wiring
 example in that spec).
 
+Optional **SQLite** persistence (stdlib only; same **`dedup_store=`** contract):
+
+```python
+from replayt_lifecycle_webhooks import SqliteLifecycleWebhookDedupStore, handle_lifecycle_webhook_post
+
+dedup = SqliteLifecycleWebhookDedupStore(
+    path="/var/lib/myapp/webhook_idempotency.sqlite",
+    ttl_seconds=86_400,
+)
+result = handle_lifecycle_webhook_post(
+    secret=secret,
+    method=method,
+    body=body,
+    headers=headers,
+    dedup_store=dedup,
+    on_success=on_success,
+)
+```
+
 **Callable (any framework):** pass method, raw body bytes, and headers (names are matched case-insensitively):
 
 ```python

@@ -122,7 +122,7 @@ silently.
 | **Normative docs** (this file + **EVENTS.md** cross-links) | **Done** (phase **2** spec) | — |
 | **Fixtures / synthetic examples** use **distinct** **`event_id`** per **distinct** logical event in examples | **Done** (examples in **EVENTS.md**) | Duplicate-delivery pair: **`run_started.json`** / **`run_started_redelivery.json`** (same bytes, same **`event_id`**) under **`tests/fixtures/events/`** and packaged **`replayt_lifecycle_webhooks/fixtures/events/`**. |
 | **Automated tests** assert **`event_id`** uniqueness rules per logical event in fixtures | **Done** (phase **3**) | **`tests/test_lifecycle_events.py`** (**I3**, **I4**); see **Acceptance criteria** below. |
-| **SQLite reference `LifecycleWebhookDedupStore`** (optional persistence) | **Pending** (phase **3**) | Backlog **`d10cf76f`**; normative contract **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (**SQ1**–**SQ7**). |
+| **SQLite reference `LifecycleWebhookDedupStore`** (optional persistence) | **Done** (phase **3**) | Backlog **`d10cf76f`**; **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (**SQ1**–**SQ7**). |
 | **Upstream replayt** HTTP emitter guarantees | **Out of scope** for this repo | Track in **CHANGELOG** / **SPEC_REPLAYT_DEPENDENCY** when discovered. |
 
 ## Acceptance criteria (Builder / Tester)

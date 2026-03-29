@@ -62,7 +62,7 @@ Stable name (**normative for Builder**):
 | ------ | ---- |
 | **`SqliteLifecycleWebhookDedupStore`** | Concrete **`LifecycleWebhookDedupStore`** using **`sqlite3`** and a filesystem path (or suitable URI accepted by **`sqlite3.connect`**). |
 
-- **Export:** **`SqliteLifecycleWebhookDedupStore`** **must** appear in the package root **`__all__`** in **table order** after **`InMemoryLifecycleWebhookDedupStore`** (see **SPEC_PUBLIC_API.md** **§ Planned: SQLite reference store**).
+- **Export:** **`SqliteLifecycleWebhookDedupStore`** **must** appear in the package root **`__all__`** in **table order** after **`InMemoryLifecycleWebhookDedupStore`** (see **SPEC_PUBLIC_API.md** **§ Supported import paths**).
 - **Internal module path:** Implementation **may** live in **`src/replayt_lifecycle_webhooks/sqlite_idempotency.py`** (or adjacent internal module); deep imports remain **unsupported** per **SPEC_PUBLIC_API** until explicitly promoted.
 - **CHANGELOG** and **SPEC_PUBLIC_API** **must** be updated in the same release that ships the symbol.
 
@@ -93,15 +93,15 @@ result = handle_lifecycle_webhook_post(
 )
 ```
 
-**README** **must** point integrators at **this spec** from the **`dedup_store`** / idempotency discussion and state that **SQLite is optional**; the normative API names and test rows live here and in **SPEC_PUBLIC_API** (**§ Planned** until **SQ6**).
+**README** **must** point integrators at **this spec** from the **`dedup_store`** / idempotency discussion and state that **SQLite is optional**; the normative API names and test rows live here and in **SPEC_PUBLIC_API**.
 
 ## Implementation status (this repository)
 
 | Item | Status | Notes |
 | ---- | ------ | ----- |
 | Normative spec (this file) | **Done** (phase **2**) | Backlog **`d10cf76f`** |
-| **`SqliteLifecycleWebhookDedupStore`** + tests **SQ1**–**SQ7** | **Pending** (phase **3**) | See **SPEC_AUTOMATED_TESTS.md** |
-| **README** wiring snippet + link | **Pending** (phase **3**) | Short optional subsection |
+| **`SqliteLifecycleWebhookDedupStore`** + tests **SQ1**–**SQ7** | **Done** (phase **3**) | See **SPEC_AUTOMATED_TESTS.md** |
+| **README** wiring snippet + link | **Done** (phase **3**) | Short optional subsection |
 
 ## Acceptance criteria (Builder / Tester)
 

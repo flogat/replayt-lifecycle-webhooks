@@ -295,7 +295,7 @@ do **not** replace **RP4**, **I3**/**I4**, or **R1–R5**.
 | SQ3 | **Concurrency / locking** — Per **SPEC_SQLITE_IDEMPOTENCY_STORE** **§ Concurrency and SQLite locking**: either a **network-free** threaded **`pytest`** or a **`pytest`** that asserts required docstring substrings (**`timeout`**, **`locked`**, **`WAL`** or **`journal_mode`**). | **`pytest`** |
 | SQ4 | **Handler integration** — Two **`handle_lifecycle_webhook_post`** calls with SQLite **`dedup_store`**, same **`event_id`**, valid MACs → **204** both times; **`on_success`** once. | **`pytest`**, no network |
 | SQ5 | **README** links **SPEC_SQLITE** from the idempotency / **`dedup_store`** area; copy-paste normative example in **SPEC_SQLITE** **§ Wiring** (README may mirror when stable). | Doc review |
-| SQ6 | **`SqliteLifecycleWebhookDedupStore`** in package root **`__all__`**, **SPEC_PUBLIC_API** table (replacing **§ Planned**), **`tests/test_public_api.py`** order tuple, **CHANGELOG** **Added**. | **`pytest`** + doc review |
+| SQ6 | **`SqliteLifecycleWebhookDedupStore`** in package root **`__all__`**, **SPEC_PUBLIC_API** replay-protection row, **`tests/test_public_api.py`** order tuple, **CHANGELOG** **Added**. | **`pytest`** + doc review |
 | SQ7 | **No new mandatory PyPI dependencies** for this feature (**`sqlite3`** stdlib only). | **`pyproject.toml`** review |
 
 ## Backlog `fa75ecf3`: structured logging and redaction
