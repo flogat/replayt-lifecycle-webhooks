@@ -43,7 +43,7 @@ Stable names are re-exported from **`replayt_lifecycle_webhooks`** and listed in
 | ------ | ---- |
 | **`LifecycleWebhookHttpResult`** | Frozen dataclass: **`status`**, **`headers`** (tuple of pairs), **`body`** (bytes). |
 | **`handle_lifecycle_webhook_post`** | Keyword-only: **`secret`**, **`method`**, **`body`** (bytes), **`headers`**, optional **`on_success`**, optional **`dedup_store`**, optional **`replay_policy`**. Returns **`LifecycleWebhookHttpResult`**; does not raise for client errors. |
-| **`make_lifecycle_webhook_wsgi_app`** | Keyword-only: **`secret`**, optional **`on_success`**, optional **`dedup_store`**, optional **`replay_policy`**. Returns a WSGI **application** callable. |
+| **`make_lifecycle_webhook_wsgi_app`** | Keyword-only: **`secret`**, optional **`on_success`**, optional **`dedup_store`**, optional **`replay_policy`**, optional **`webhook_diagnostics`** (**`None`** reads **`REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS`**; **`True`**/**`False`** override). When enabled, emits one **INFO** record per request via **`format_safe_webhook_log_extra`** (see **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** **§ Optional diagnostic logging**). Returns a WSGI **application** callable. |
 
 **Secret:** Passed by the caller only (same rule as **`verify_lifecycle_webhook_signature`**). The library does not read the environment.
 
