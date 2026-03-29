@@ -9,7 +9,8 @@ Revise as the project matures. Defaults below are minimal—expand with rules fo
    (no smoke-only **`assert True`** as substitute for verification / parsing coverage; **ruff** lint/format CI rows
    **RF1**–**RF5** under backlog **`5a3f5a7f`**; optional local **pre-commit** mirroring those **ruff** invocations
    **PC1**–**PC7** under backlog **`c39b2a5f`**; **sdist**/**wheel** **`python -m build`** + **`twine check`**, declared
-   **package-data**, and conditional **`py.typed`** under backlog **`78e3554b`**, **PK1**–**PK7**; optional **Hypothesis**
+   **package-data**, **`py.typed`** (**`78e3554b`** **PK1**–**PK7** + **`2ec2c21c`** **TP1**–**TP3**), and optional
+   static typing gate (**`2ec2c21c`** **TP4**–**TP5**); optional **Hypothesis**
    **`property_fuzz`** rows **PF1**–**PF10** under backlog **`dcffe5d5`**; **`pip-audit`** suppression alignment **PI1**–**PI7**
    under backlog **`bea2900c`** in **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**). **Webhook request logging**
    convention: **structured** **`logging`** with **`snake_case`** **`extra=`** keys (**`webhook_*`**, **`lifecycle_*`**),

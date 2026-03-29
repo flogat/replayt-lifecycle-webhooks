@@ -21,7 +21,8 @@ You **do not** need to populate snapshots to build, test, or contribute code cha
 
 CI runs **`python -m build`** and **`twine check`** on every change (job **`package`** in **`.github/workflows/ci.yml`**);
 acceptance rows **PK1**–**PK7** live in **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog
-`78e3554b`**).
+`78e3554b`**). **PEP 561** **`py.typed`**, **sdist**/**wheel** layout for that marker, and an **optional** **pyright** /
+**mypy** contributor or CI path are specified under **§ Backlog `2ec2c21c`** (**TP1**–**TP6**).
 
 **Local (same lower bounds as CI):**
 
@@ -32,8 +33,21 @@ python -m build
 twine check dist/*
 ```
 
-Use a **venv** if you prefer. **`twine check`** **must** pass before a release. **PK5** is enforced by
-**`tests/test_packaging_layout.py`** (wheel zip members and **sdist** tarball paths).
+Use a **venv** if you prefer. **`twine check`** **must** pass before a release. **PK5** and **`py.typed`** (**TP3**) are enforced by
+**`tests/test_packaging_layout.py`** (wheel zip members, **`py.typed`**, and **sdist** tarball paths).
+
+## Optional static typing (`pyright`)
+
+Job **`typing`** in **`.github/workflows/ci.yml`** installs **`pyright`** from PyPI, **`pip install -e .`**, then type-checks
+**`src/replayt_lifecycle_webhooks/__init__.py`** and **`src/replayt_lifecycle_webhooks/events.py`** (backlog **`2ec2c21c`**, **TP4**–**TP5**).
+The job sets **`continue-on-error: true`** so it is informative only; **`lint`**, **`test`**, and **`package`** remain the merge bar.
+
+Local check:
+
+```bash
+pip install -e . pyright
+pyright src/replayt_lifecycle_webhooks/__init__.py src/replayt_lifecycle_webhooks/events.py
+```
 
 ## Optional pre-commit (ruff)
 

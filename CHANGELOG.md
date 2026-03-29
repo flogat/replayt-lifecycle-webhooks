@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **PEP 561 / typing spec** (phase **2**, backlog **`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb` / *Packaging: ship `py.typed` and optional static typing gate*`):
+  **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `2ec2c21c`** (**TP1**–**TP6**); **`docs/SPEC_PUBLIC_API.md`** adds **§ Static typing (PEP 561)** and acceptance **TYP1**–**TYP3**; **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`CONTRIBUTING.md`** cross-link the backlog.
+
 ### Changed
 
 - **CI Python matrix** (phase **3**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`.github/workflows/ci.yml`** runs **`lint`** and **`test`** on **3.11** and **3.12** (`strategy.matrix`); **`package`** and **`supply-chain`** stay on **3.12** only. **`tests/test_ci_ruff_wiring.py`** asserts the matrix (**CI1**–**CI2**, **A9**–**A10**); **`tests/test_replayt_dependency.py`** guards **A8** against the split matrix vs single-interpreter jobs; **`tests/test_packaging_layout.py`** skips when **`build`** is missing (dev extra). **`docs/SPEC_REPLAYT_DEPENDENCY.md`** adds a **Workflow definition** line under **Compatibility matrix**; **Notes** and **`README.md`** CI wording match the workflow.
@@ -25,6 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   contract. Phase **3** adds the checker, tests, and CI wiring (see **Added** below).
 
 ### Added
+
+- **PEP 561 `py.typed` and optional `pyright` CI** (phase **3**, backlog **`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb` / *Packaging: ship `py.typed` and optional static typing gate*`):
+  empty **`src/replayt_lifecycle_webhooks/py.typed`**, **`[tool.setuptools.package-data]`** listing for the marker, and
+  **`tests/test_packaging_layout.py`** checks that **wheel** and **sdist** include **`replayt_lifecycle_webhooks/py.typed`** (**TP1**–**TP3**).
+  **`.github/workflows/ci.yml`** adds a non-blocking **`typing`** job (**`continue-on-error: true`**) running **pyright** on the package
+  root and **`events`** modules (**TP4**–**TP5**). **`CONTRIBUTING.md`** documents the local **pyright** command. Integrators get a typed
+  package per **SPEC_PUBLIC_API** **§ Static typing (PEP 561)**; CI does not type-check every internal module.
 
 - **`pip-audit` suppression alignment** (phase **3**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
   automate pip-audit ignore review reminders*`): **`scripts/pip_audit_suppression_alignment.py`** compares **`supply-chain`**
@@ -79,8 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   lists the **`package`** step alongside **ruff** and **pytest** in the CI summary.
 - **Packaging CI spec** (phase **2**, backlog **`78e3554b-2b50-4918-9859-85642ac1a84a` / *CI: `python -m build` + `twine check` on sdist/wheel*):
   **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `78e3554b`** with acceptance **PK1**–**PK7** (**`python -m build`**,
-  **`twine check`**, **setuptools** **package-data** for **`fixtures/events/*.json`**, conditional **`py.typed`** when the
-  marker exists under **`src/`**). **`CONTRIBUTING.md`** adds **Packaging check (sdist and wheel)** with local commands.
+  **`twine check`**, **setuptools** **package-data** for **`fixtures/events/*.json`**, **`py.typed`** via **PK6** (mandatory
+  **wheel**/**sdist** marker since backlog **`2ec2c21c`**, **TP1**–**TP3**). **`CONTRIBUTING.md`** adds **Packaging check (sdist and wheel)** with local commands.
   **`docs/MISSION.md`** and **`docs/DESIGN_PRINCIPLES.md`** reference the packaging gate. **RF4** wording in
   **`docs/SPEC_AUTOMATED_TESTS.md`** no longer claims **CONTRIBUTING.md** is absent.
 - **Optional serve / handler structured logging** (phase **2** spec, backlog **`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`** /

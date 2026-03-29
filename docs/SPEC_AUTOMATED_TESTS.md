@@ -37,8 +37,8 @@
   contract **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic
   logging**); reference server rows **S10**–**S12** in **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**.
 - **SDist / wheel build + `twine check`** in CI (`78e3554b-2b50-4918-9859-85642ac1a84a`) — checklist **PK1**–**PK7** under
-  **§ Backlog `78e3554b`** below; normative **distribution contract** (package data, conditional **`py.typed`**) in that
-  section.
+  **§ Backlog `78e3554b`** below; normative **distribution contract** (package data; **`py.typed`** via **`78e3554b`** + **`2ec2c21c`**) in those
+  sections.
 - Property-based fuzzing for **`parse_lifecycle_webhook_event`** and signature verification
   (`dcffe5d5-7f7c-4585-aca0-a882653f20dd`) — checklist **PF1**–**PF10** under **§ Backlog `dcffe5d5`** below.
 - **`pip-audit`** suppression alignment and review dates (`bea2900c-17e9-4bf8-9623-0830105386a2`) — checklist **PI1**–**PI7**
@@ -51,6 +51,9 @@
   **`tests/test_reference_http_server_route_map_doc.py`**);
   **README** link rule in **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **SPEC_HTTP_SERVER_ENTRYPOINT**
   **S13**.
+- **PEP 561 `py.typed` in distributions + optional static typing gate** (`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`) —
+  checklist **TP1**–**TP6** under **§ Backlog `2ec2c21c`** below; integrator expectations in
+  **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** (**§ Static typing (PEP 561)**).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -85,7 +88,7 @@ behavioral coverage.
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
-| **SDist / wheel** build, **`twine check`**, declared package data, conditional **`py.typed`** | **§ Backlog `78e3554b`** below (**PK1**–**PK7**) |
+| **SDist / wheel** build, **`twine check`**, declared package data, **`py.typed`** (**PEP 561**) | **§ Backlog `78e3554b`** (**PK1**–**PK7**) + **§ Backlog `2ec2c21c`** (**TP1**–**TP6**) |
 | Optional **Hypothesis** fuzzing for verify + parse (no default install) | **§ Backlog `dcffe5d5`** below (**PF1**–**PF10**) |
 | **`pip-audit --ignore-vuln`** alignment vs **`docs/DEPENDENCY_AUDIT.md`**, review due dates | **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**; **§ Backlog `bea2900c`** below (**PI1**–**PI7**) |
 
@@ -533,18 +536,17 @@ on the entrypoint spec: **S13** in **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_
 
 Checklist rows for **CI: `python -m build` + `twine check` on sdist/wheel**
 (`78e3554b-2b50-4918-9859-85642ac1a84a`). **Scope:** CI wiring + verification steps + contributor docs; **no** change to
-runtime library behavior except what packaging already implies (for example adding **`py.typed`** only if the project
-chooses to adopt **PEP 561** markers—optional and driven by **PK6**).
+runtime library behavior except what packaging already implies. **`py.typed`** was **optional** under **PK6** alone until backlog
+**`2ec2c21c`** shipped; that backlog makes the marker **mandatory** and extends verification (**TP1**–**TP3**).
 
 **Normative distribution contract (this repository today):**
 
 - **`[tool.setuptools.package-data]`** in **`pyproject.toml`** declares JSON under
   **`replayt_lifecycle_webhooks/fixtures/events/*.json`**. Those files **must** ship inside both the **wheel** and the
   **sdist** produced by **`python -m build`**. **PK5** enforces at least one representative file.
-- **`py.typed`:** There is **no** committed **`py.typed`** marker at the time this spec was written. **PK6** applies **only
-  after** **`src/replayt_lifecycle_webhooks/py.typed`** exists; until then maintainers **may** add the marker under a
-  separate backlog if they want **PEP 561** compliance—this backlog’s CI **must** start enforcing the wheel member as soon
-  as the file appears in **`src/`**.
+- **`py.typed`:** **TP1**–**TP3** require the committed marker under **`src/replayt_lifecycle_webhooks/`**, **`pyproject.toml`**
+  package-data, and **pytest** proof in **both** **wheel** and **sdist** (**`tests/test_packaging_layout.py`**). **PK6** described
+  the pre-**`2ec2c21c`** conditional rule; enforcement is **TP3** today.
 
 **Workflow surface:** Prefer a **dedicated** job in **`.github/workflows/ci.yml`** (for example **`package`**) so **lint** /
 **test** failures stay visually distinct from packaging failures. The job **must** use the same **push** / **pull_request**
@@ -563,10 +565,31 @@ already installed from **`pip install -e ".[dev]"`** unless **`pyproject.toml`**
 | **PK3** | The job runs **`python -m build`** from the **repository root** on a **clean** **`dist/`** directory (for example **`rm -rf dist`** immediately before the build step) so each run’s artifacts correspond only to the current tree. | Review workflow |
 | **PK4** | The job runs **`twine check dist/*`** (or an equivalent that checks **every** artifact in **`dist/`** from that build). **Non-zero** exit on long-description / README / metadata issues **must** fail the workflow. | Review workflow; optional negative PR |
 | **PK5** | **Package data:** After build, at least one **committed** JSON fixture that **`pyproject.toml`** claims under **`fixtures/events/`** (for example **`run_started.json`**) **must** be present inside the **wheel** at path prefix **`replayt_lifecycle_webhooks/fixtures/events/`** (wheels are zips—inspect members). The same file **must** appear inside the **sdist** archive under the setuptools layout (for example **`replayt_lifecycle_webhooks-*/src/replayt_lifecycle_webhooks/fixtures/events/`** or the layout **`build`** emits for this backend—assert by **`tar`**/path list, not by guessing intermediate temp dirs). | Workflow step **or** **`pytest`** module dedicated to packaging layout |
-| **PK6** | **`py.typed`:** If **`src/replayt_lifecycle_webhooks/py.typed`** exists, the built **wheel** **must** contain **`replayt_lifecycle_webhooks/py.typed`**. If it does **not** exist, **no** CI assertion is required for **`py.typed`** under this backlog. | Source tree + workflow when applicable |
+| **PK6** | **`py.typed`:** Historical **conditional** rule before **`2ec2c21c`**. With **TP1**–**TP3** implemented, the marker **must** exist and the **wheel** and **sdist** **must** include **`replayt_lifecycle_webhooks/py.typed`**—see **TP3** for the normative **pytest** bar. | Source tree + **`tests/test_packaging_layout.py`** |
 | **PK7** | **`CONTRIBUTING.md`** documents the **same** local commands (clean **`dist/`**, **`python -m build`**, **`twine check dist/*`**) **or** explicitly points to this section as the canonical copy-paste block. | Doc review |
 
 **Equivalence:** **`python -m build`** (no extra flags) is the **default** normative command. **`python -m build --sdist --wheel`** is an acceptable **documented** equivalent if maintainers prefer explicit formats.
+
+## Backlog `2ec2c21c`: PEP 561 `py.typed` and optional static typing gate
+
+Checklist rows for **Packaging: ship `py.typed` and optional static typing gate**
+(`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb`). **Scope:** packaging metadata + CI/docs verification; **no** runtime semantic
+changes to verification or HTTP behavior. **Normative integrator contract:** **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)**
+(**§ Static typing (PEP 561)**).
+
+**Relationship to `78e3554b`:** **PK1**–**PK5** and **PK7** unchanged. **PK6**’s conditional story is **closed** (**TP1** requires
+the marker). **TP3** extends **`tests/test_packaging_layout.py`** so **`py.typed`** is proven in **both** wheel and **sdist**, not only the wheel.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **TP1** | An **empty** **PEP 561** marker file **`src/replayt_lifecycle_webhooks/py.typed`** is committed (zero-byte file is valid). | Source tree review |
+| **TP2** | **`pyproject.toml`** declares the marker as **package data** for **`replayt_lifecycle_webhooks`** (extend **`[tool.setuptools.package-data]`** or use a **setuptools**-equivalent hook documented in the PR) so **`python -m build`** includes **`py.typed`** in the **wheel** and **sdist** layouts—same posture as **`fixtures/events/*.json`**. | **`pyproject.toml`** + build inspection |
+| **TP3** | **`pytest`** asserts **`replayt_lifecycle_webhooks/py.typed`** is a member of the built **wheel** (zip) **and** that the **sdist** tarball contains a file path ending with **`replayt_lifecycle_webhooks/py.typed`** (same listing style as **PK5**, tolerant of intermediate directory prefixes). Update or replace **`test_built_wheel_includes_py_typed_when_present_in_source`** so the marker is **required**, not conditional. | **`tests/test_packaging_layout.py`** (or agreed module); **`pip install -e ".[dev]"`** |
+| **TP4** | **Optional** static typing gate: implement **at least one** of: (a) a **non-merge-blocking** GitHub Actions workflow (for example **`workflow_dispatch`** only, or a job that is **not** a **required** check on **`master`** PRs); (b) a **CONTRIBUTING.md** copy-paste block only (no CI). **Default `lint` / `test` / `package` jobs must not** start failing on **pyright** / **mypy** unless a **later** backlog promotes that. If the optional workflow is omitted, record the choice in the PR / **handoff**—no silent requirement. | Workflow review + **CONTRIBUTING.md** |
+| **TP5** | When **TP4**(a) or **TP4**(b) runs a checker, use **pyright** **or** **mypy** (one tool per implementation—document which). Check an **allowlisted** small set of **`src/`** modules that cover the **supported public** import surface—**minimum:** **`replayt_lifecycle_webhooks/__init__.py`** and **`replayt_lifecycle_webhooks/events.py`**. **Internal** modules **may** stay out of the allowlist initially. Configuration **should** target **clear public API** issues (exported callables and types integrators use); suppressions for third-party / **replayt** seams are acceptable when documented next to the command. | Config file + doc snippet or workflow logs |
+| **TP6** | **`CHANGELOG.md`** **Unreleased** gains an **Added** (preferred) or **Documentation** bullet stating **PEP 561** / **`py.typed`** shipment and the **typing posture** (what is type-checked vs best-effort—align with **SPEC_PUBLIC_API**). | Doc review |
+
+**CI packaging job:** The existing **`package`** job (**PK3**) already runs **`python -m build`**. **TP3** remains **pytest**-driven so local contributors catch missing **`py.typed`** without relying on workflow log archaeology.
 
 ## Backlog `dcffe5d5`: property-based fuzzing (parse + signature)
 
@@ -663,5 +686,5 @@ shelling out.
 - **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP8**.
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — operator reverse-proxy guide, **OG1**–**OG8**.
 - **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)** — optional **`docs/reference-documentation/`** workflow, **RD1**–**RD8**.
-- **`CONTRIBUTING.md`** — local **sdist** / **wheel** + **`twine check`** commands (**PK7**); **§ Backlog `78e3554b`** above is normative for CI acceptance.
+- **`CONTRIBUTING.md`** — local **sdist** / **wheel** + **`twine check`** commands (**PK7**); **§ Backlog `78e3554b`** above is normative for CI acceptance; **§ Backlog `2ec2c21c`** for **`py.typed`** + optional typing commands.
 - **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)** — **`pip-audit`** ignore alignment and **Next review** rules (**PI1**–**PI7**).
