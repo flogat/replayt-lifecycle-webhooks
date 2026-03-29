@@ -12,6 +12,7 @@ from http import HTTPStatus
 from typing import Any
 
 from .handler import make_lifecycle_webhook_wsgi_app
+from .metrics import LifecycleWebhookMetrics
 
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8000
@@ -33,6 +34,7 @@ def make_reference_lifecycle_webhook_wsgi_app(
     *,
     webhook_path: str = DEFAULT_WEBHOOK_PATH,
     on_success: Callable[[Any], None] | None = None,
+    metrics: LifecycleWebhookMetrics | None = None,
     webhook_diagnostics: bool | None = None,
 ) -> Callable[[Mapping[str, Any], Callable[..., Any]], list[bytes]]:
     """WSGI app: ``GET /health`` plus ``POST`` on ``webhook_path`` (default ``/webhook``).
@@ -43,6 +45,7 @@ def make_reference_lifecycle_webhook_wsgi_app(
     inner = make_lifecycle_webhook_wsgi_app(
         secret,
         on_success=on_success,
+        metrics=metrics,
         webhook_diagnostics=webhook_diagnostics,
     )
     mount = _normalize_path(webhook_path)

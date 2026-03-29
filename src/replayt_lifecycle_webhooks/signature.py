@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import time
 from typing import Final
+
+from .metrics import LifecycleWebhookMetrics
 
 # HTTP header name for the HMAC (case-insensitive on the wire; use this spelling in docs).
 LIFECYCLE_WEBHOOK_SIGNATURE_HEADER: Final[str] = "Replayt-Signature"
@@ -51,11 +54,30 @@ def _parse_signature_header(value: str) -> bytes:
     return digest
 
 
+def _verify_lifecycle_webhook_signature_core(
+    *,
+    secret: str | bytes,
+    body: bytes,
+    signature: str | None,
+) -> None:
+    if signature is None or not signature.strip():
+        raise WebhookSignatureMissingError(
+            f"missing or empty {LIFECYCLE_WEBHOOK_SIGNATURE_HEADER!r} header value"
+        )
+    provided = _parse_signature_header(signature)
+    expected = hmac.new(_secret_key(secret), body, hashlib.sha256).digest()
+    if not hmac.compare_digest(expected, provided):
+        raise WebhookSignatureMismatchError(
+            "webhook signature does not match body and secret"
+        )
+
+
 def verify_lifecycle_webhook_signature(
     *,
     secret: str | bytes,
     body: bytes,
     signature: str | None,
+    metrics: LifecycleWebhookMetrics | None = None,
 ) -> None:
     """Verify an incoming lifecycle webhook using HMAC-SHA256 over the raw body.
 
@@ -75,16 +97,44 @@ def verify_lifecycle_webhook_signature(
     **Secret:** When ``secret`` is a ``str``, it is encoded as UTF-8 for the HMAC key.
 
     Uses :func:`hmac.compare_digest` on raw digests (constant-time for equal-length inputs).
+
+    **Metrics:** When ``metrics`` is not ``None``, records a coarse verify outcome and verify-only
+    duration (via :func:`time.monotonic`) before raising or returning. When ``metrics`` is ``None``,
+    no metrics methods run and no monotonic timer is started solely for metrics.
     """
-    if signature is None or not signature.strip():
-        raise WebhookSignatureMissingError(
-            f"missing or empty {LIFECYCLE_WEBHOOK_SIGNATURE_HEADER!r} header value"
+    if metrics is None:
+        _verify_lifecycle_webhook_signature_core(
+            secret=secret, body=body, signature=signature
         )
-    provided = _parse_signature_header(signature)
-    expected = hmac.new(_secret_key(secret), body, hashlib.sha256).digest()
-    if not hmac.compare_digest(expected, provided):
-        raise WebhookSignatureMismatchError(
-            "webhook signature does not match body and secret"
+        return
+
+    t0 = time.monotonic()
+    try:
+        _verify_lifecycle_webhook_signature_core(
+            secret=secret, body=body, signature=signature
+        )
+    except WebhookSignatureMissingError:
+        metrics.record_verify_outcome(
+            outcome="missing_signature",
+            duration_sec=time.monotonic() - t0,
+        )
+        raise
+    except WebhookSignatureFormatError:
+        metrics.record_verify_outcome(
+            outcome="format_error",
+            duration_sec=time.monotonic() - t0,
+        )
+        raise
+    except WebhookSignatureMismatchError:
+        metrics.record_verify_outcome(
+            outcome="mismatch",
+            duration_sec=time.monotonic() - t0,
+        )
+        raise
+    else:
+        metrics.record_verify_outcome(
+            outcome="success",
+            duration_sec=time.monotonic() - t0,
         )
 
 

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Optional metrics hooks** (phase **3**, backlog **`42b8d5a9-a246-4c47-b167-f39ac371789e` / *Optional metrics hooks for verify / handler outcomes*`): keyword-only **`metrics=`** on **`verify_lifecycle_webhook_signature`**, **`handle_lifecycle_webhook_post`**, **`make_lifecycle_webhook_wsgi_app`**, and **`make_reference_lifecycle_webhook_wsgi_app`** (default **`None`**, no **`time.monotonic()`** solely for metrics on the disabled path). New exports **`LifecycleWebhookVerifyOutcome`**, **`LifecycleWebhookMetrics`**, **`NullLifecycleWebhookMetrics`**, **`InMemoryLifecycleWebhookMetrics`** (stdlib-only). Tests: **`tests/test_metrics_hooks.py`** (**M1**–**M7**). **`docs/SPEC_PUBLIC_API.md`** table updated.
+
 ### Documentation
 
 - **ASGI integrator recipe** (phases **2**–**3**, backlog **`c631fe3f-8a66-4a9d-a900-bab855860c7b` / *Integrator recipe: FastAPI / Starlette verified-first handler*): **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** now includes **FastAPI** (**`verify_lifecycle_webhook_signature`**) and **Starlette** (**`handle_lifecycle_webhook_post`**) copy-paste examples under **§ Copy-paste examples** (**AF1**–**AF5**). **`README.md`** **`## Verifying webhook signatures`** links that guide (**AF6**). Phase **2** added the normative spec, **`docs/SPEC_README_OPERATOR_SECTIONS.md`** link rule, and traceability in **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `c631fe3f`**), **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, and the **`README.md`** project layout table. Phase **5** architect review aligns **OP1**–**OP9** wording in **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `dc212184`** doc-guard pattern), and older **`CHANGELOG`** **`23e2da29`** bullets that still said **OP8**.

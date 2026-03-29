@@ -30,12 +30,13 @@ The authoritative list of **public** names is the package **`__all__`** in **`sr
 | -------- | --------------------------- |
 | Version | `__version__` |
 | Signature | `LIFECYCLE_WEBHOOK_SIGNATURE_HEADER`, `WebhookSignatureError`, `WebhookSignatureFormatError`, `WebhookSignatureMismatchError`, `WebhookSignatureMissingError`, `compute_lifecycle_webhook_signature_header`, `verify_lifecycle_webhook_signature` |
+| Metrics (optional hooks) | `LifecycleWebhookVerifyOutcome`, `LifecycleWebhookMetrics`, `NullLifecycleWebhookMetrics`, `InMemoryLifecycleWebhookMetrics` |
 | Events / parsing | `SUPPORTED_LIFECYCLE_WEBHOOK_SCHEMA_VERSIONS`, `LIFECYCLE_WEBHOOK_EVENT_TYPES`, `LifecycleCorrelation`, `LifecycleWebhookEvent`, `ApprovalPendingDetail`, `ApprovalPendingEvent`, `ApprovalResolvedDetail`, `ApprovalResolvedEvent`, `RunCompletedDetail`, `RunCompletedEvent`, `RunFailedDetail`, `RunFailedEvent`, `RunStartedDetail`, `RunStartedEvent`, `parse_lifecycle_webhook_event`, `lifecycle_event_to_digest_text`, `lifecycle_event_to_digest_record` |
 | HTTP handler (optional glue) | `LifecycleWebhookHttpResult`, `handle_lifecycle_webhook_post`, `make_lifecycle_webhook_wsgi_app` |
 | Replay protection | `LifecycleWebhookDedupStore`, `InMemoryLifecycleWebhookDedupStore`, `LifecycleWebhookReplayPolicy`, `ReplayFreshnessRejected`, `ensure_occurred_at_within_replay_window` |
 | Redaction / logging helpers | `DEFAULT_SENSITIVE_HEADER_NAMES`, `DEFAULT_SENSITIVE_MAPPING_KEYS`, `REDACTED_PLACEHOLDER`, `redact_headers`, `redact_mapping`, `format_safe_webhook_log_extra` |
 
-**Acceptance (Builder / CI):** **`__all__`** lists **exactly** the names in the table above in **table order** (Version row, then Signature, Events / parsing, HTTP handler, Replay protection, Redaction / logging helpers). **`tests/test_public_api.py`** checks both the set and this order.
+**Acceptance (Builder / CI):** **`__all__`** lists **exactly** the names in the table above in **table order** (Version row, then Signature, Metrics, Events / parsing, HTTP handler, Replay protection, Redaction / logging helpers). **`tests/test_public_api.py`** checks both the set and this order.
 
 ### Secondary: `replayt_lifecycle_webhooks.events`
 
@@ -60,6 +61,7 @@ The following **import paths** are **internal implementation** until **1.0.0** (
 | `replayt_lifecycle_webhooks.handler` | **Internal** — use package root. |
 | `replayt_lifecycle_webhooks.replay_protection` | **Internal** — use package root. |
 | `replayt_lifecycle_webhooks.redaction` | **Internal** — use package root. |
+| `replayt_lifecycle_webhooks.metrics` | **Internal** — use package root (**`LifecycleWebhookMetrics`** and related symbols). |
 | `replayt_lifecycle_webhooks.serve` | **Internal** — reference server implementation detail; behavior is described in **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**. |
 | `replayt_lifecycle_webhooks.demo_webhook` | **Internal** — demo CLI is invoked via **`python -m replayt_lifecycle_webhooks.demo_webhook`** per **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**; do not import for library use. |
 | `replayt_lifecycle_webhooks.__main__` | **Internal** — use **`python -m replayt_lifecycle_webhooks`**. |
@@ -130,4 +132,5 @@ At **1.0.0**, tighten policy as maintainers document (this spec should gain a **
 
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — principles **explicit contracts**, **small public surfaces**, **consumer-side maintenance**.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — stability at the **`replayt`** dependency seam (orthogonal to *this* package’s export surface).
-- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**; backlog **`2ec2c21c`** maps **TP1**–**TP6** for **`py.typed`** and optional typing gate.
+- **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI bar; backlog **`30e133a5`** maps **API1**–**API3** to **`tests/test_public_api.py`**; backlog **`2ec2c21c`** maps **TP1**–**TP6** for **`py.typed`** and optional typing gate; backlog **`42b8d5a9`** maps **M1**–**M8** for optional metrics hooks.
+- **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)** — optional verify / handler metrics extension point (backlog **`42b8d5a9`**).

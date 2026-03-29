@@ -25,6 +25,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import time
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from http import HTTPStatus
@@ -33,6 +34,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from .events import parse_lifecycle_webhook_event
+from .metrics import LifecycleWebhookMetrics
 from .redaction import format_safe_webhook_log_extra
 from .replay_protection import (
     LifecycleWebhookDedupStore,
@@ -193,6 +195,7 @@ def handle_lifecycle_webhook_post(
     on_success: Callable[[Any], None] | None = None,
     dedup_store: LifecycleWebhookDedupStore | None = None,
     replay_policy: LifecycleWebhookReplayPolicy | None = None,
+    metrics: LifecycleWebhookMetrics | None = None,
 ) -> LifecycleWebhookHttpResult:
     """Handle one lifecycle webhook HTTP request view (POST, raw body, headers).
 
@@ -211,14 +214,32 @@ def handle_lifecycle_webhook_post(
     :class:`LifecycleWebhookHttpResult` values with JSON bodies (see
     ``docs/SPEC_WEBHOOK_FAILURE_RESPONSES.md``). Verification exceptions are mapped to status codes only.
 
+    **Metrics:** When ``metrics`` is not ``None``, :func:`verify_lifecycle_webhook_signature` records verify-only timing;
+    this function additionally records one handler outcome per call with wall duration from entry to return (including
+    verify and JSON work). When ``metrics`` is ``None``, no metrics run and no monotonic timer is started for handler
+    metrics.
+
     See ``docs/SPEC_MINIMAL_HTTP_HANDLER.md`` for the full normative table.
     """
+    t_handler: float | None = time.monotonic() if metrics is not None else None
+
+    def finish(result: LifecycleWebhookHttpResult) -> LifecycleWebhookHttpResult:
+        if metrics is not None and t_handler is not None:
+            metrics.record_handler_outcome(
+                http_status=result.status,
+                error_code=_error_code_from_http_result(result),
+                duration_sec=time.monotonic() - t_handler,
+            )
+        return result
+
     if method.strip().upper() != "POST":
-        return _error_result(
-            HTTPStatus.METHOD_NOT_ALLOWED,
-            error="method_not_allowed",
-            message="Only POST is supported for this endpoint.",
-            extra_headers=(("Allow", "POST"),),
+        return finish(
+            _error_result(
+                HTTPStatus.METHOD_NOT_ALLOWED,
+                error="method_not_allowed",
+                message="Only POST is supported for this endpoint.",
+                extra_headers=(("Allow", "POST"),),
+            )
         )
 
     norm = _normalize_header_map(headers)
@@ -229,50 +250,63 @@ def handle_lifecycle_webhook_post(
             secret=secret,
             body=body,
             signature=signature,
+            metrics=metrics,
         )
     except WebhookSignatureMissingError:
-        return _error_result(
-            HTTPStatus.UNAUTHORIZED,
-            error="signature_required",
-            message="The Replayt-Signature header is missing or empty.",
+        return finish(
+            _error_result(
+                HTTPStatus.UNAUTHORIZED,
+                error="signature_required",
+                message="The Replayt-Signature header is missing or empty.",
+            )
         )
     except WebhookSignatureFormatError:
-        return _error_result(
-            HTTPStatus.UNAUTHORIZED,
-            error="signature_malformed",
-            message="The signature header is not a valid v1 value.",
+        return finish(
+            _error_result(
+                HTTPStatus.UNAUTHORIZED,
+                error="signature_malformed",
+                message="The signature header is not a valid v1 value.",
+            )
         )
     except WebhookSignatureMismatchError:
-        return _error_result(
-            HTTPStatus.FORBIDDEN,
-            error="signature_mismatch",
-            message="Signature does not match the request body.",
+        return finish(
+            _error_result(
+                HTTPStatus.FORBIDDEN,
+                error="signature_mismatch",
+                message="Signature does not match the request body.",
+            )
         )
 
     try:
         text = body.decode("utf-8")
         payload = json.loads(text)
     except (UnicodeDecodeError, json.JSONDecodeError):
-        return _error_result(
-            HTTPStatus.BAD_REQUEST,
-            error="invalid_json",
-            message="Request body is not valid UTF-8 JSON.",
+        return finish(
+            _error_result(
+                HTTPStatus.BAD_REQUEST,
+                error="invalid_json",
+                message="Request body is not valid UTF-8 JSON.",
+            )
         )
 
     if dedup_store is not None or replay_policy is not None:
         if not isinstance(payload, dict):
-            return _error_result(
-                HTTPStatus.BAD_REQUEST,
-                error="invalid_payload_shape",
-                message="Valid JSON but not the expected top-level object for lifecycle events.",
+            return finish(
+                _error_result(
+                    HTTPStatus.BAD_REQUEST,
+                    error="invalid_payload_shape",
+                    message="Valid JSON but not the expected top-level object for lifecycle events.",
+                )
             )
         try:
             event = parse_lifecycle_webhook_event(payload)
         except ValidationError:
-            return _error_result(
-                HTTPStatus.UNPROCESSABLE_ENTITY,
-                error="unknown_event_type",
-                message="Event type is not supported by this integration.",
+            return finish(
+                _error_result(
+                    HTTPStatus.UNPROCESSABLE_ENTITY,
+                    error="unknown_event_type",
+                    message="Event type is not supported by this integration.",
+                )
             )
 
         if replay_policy is not None and replay_policy.check_occurred_at:
@@ -284,20 +318,22 @@ def handle_lifecycle_webhook_post(
                     max_future_skew_seconds=replay_policy.max_future_skew_seconds,
                 )
             except ReplayFreshnessRejected:
-                return _error_result(
-                    HTTPStatus.UNPROCESSABLE_ENTITY,
-                    error="replay_rejected",
-                    message="Delivery is outside the accepted time window or was already processed.",
+                return finish(
+                    _error_result(
+                        HTTPStatus.UNPROCESSABLE_ENTITY,
+                        error="replay_rejected",
+                        message="Delivery is outside the accepted time window or was already processed.",
+                    )
                 )
 
         if dedup_store is not None:
             if not dedup_store.try_claim(event.event_id):
-                return LifecycleWebhookHttpResult(HTTPStatus.NO_CONTENT, (), b"")
+                return finish(LifecycleWebhookHttpResult(HTTPStatus.NO_CONTENT, (), b""))
 
     if on_success is not None:
         on_success(payload)
 
-    return LifecycleWebhookHttpResult(HTTPStatus.NO_CONTENT, (), b"")
+    return finish(LifecycleWebhookHttpResult(HTTPStatus.NO_CONTENT, (), b""))
 
 
 def _wsgi_header_name(env_key: str) -> str:
@@ -323,6 +359,7 @@ def make_lifecycle_webhook_wsgi_app(
     on_success: Callable[[Any], None] | None = None,
     dedup_store: LifecycleWebhookDedupStore | None = None,
     replay_policy: LifecycleWebhookReplayPolicy | None = None,
+    metrics: LifecycleWebhookMetrics | None = None,
     webhook_diagnostics: bool | None = None,
 ) -> Callable[[Mapping[str, Any], Callable[..., Any]], list[bytes]]:
     """Build a WSGI application that handles POST lifecycle webhooks.
@@ -372,6 +409,7 @@ def make_lifecycle_webhook_wsgi_app(
             on_success=on_success,
             dedup_store=dedup_store,
             replay_policy=replay_policy,
+            metrics=metrics,
         )
         if _resolve_webhook_diagnostics(webhook_diagnostics):
             _emit_webhook_request_diagnostic(
