@@ -35,6 +35,9 @@
   (`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`) — checklist **LG1–LG4** under **§ Backlog `0bab43f3`** below; normative
   contract **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic
   logging**); reference server rows **S10**–**S12** in **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**.
+- **SDist / wheel build + `twine check`** in CI (`78e3554b-2b50-4918-9859-85642ac1a84a`) — checklist **PK1**–**PK7** under
+  **§ Backlog `78e3554b`** below; normative **distribution contract** (package data, conditional **`py.typed`**) in that
+  section.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -67,6 +70,7 @@ behavioral coverage.
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
+| **SDist / wheel** build, **`twine check`**, declared package data, conditional **`py.typed`** | **§ Backlog `78e3554b`** below (**PK1**–**PK7**) |
 
 ## CI entrypoint (invariant)
 
@@ -314,7 +318,7 @@ runs on the same triggers and fails the workflow.
 | **RF1** | CI runs **`ruff check`** (non-zero exit on violations) on pushes and pull requests targeting **`master`** or **`mc/**`**, using **`.github/workflows/ci.yml`** (and any other merge-blocking workflow on those branches, if added later). | **`tests/test_ci_ruff_wiring.py`**; review **`.github/workflows/ci.yml`**; optional CI log from a branch that violates **ruff** |
 | **RF2** | Optional but **recommended:** CI also runs **`ruff format --check`** with the same install posture and trigger surface as **RF1**. If maintainers omit it initially, note that under **CHANGELOG.md** **Unreleased** (**Documentation** or **Changed**) so the gap is explicit. | **`tests/test_ci_ruff_wiring.py`**; review workflow + **CHANGELOG.md** |
 | **RF3** | **`pyproject.toml`** contains a minimal **`[tool.ruff]`** section **when** Ruff defaults are insufficient for this tree (for example **`target-version`** alignment with **`requires-python`**, **`line-length`**, or **`extend-exclude`** for generated paths). If defaults are sufficient, the section may be absent; the **Builder** commit message or **CHANGELOG** should make that choice obvious to reviewers. | Review **`pyproject.toml`** |
-| **RF4** | **README.md** documents local **`ruff check`** in at least one line (for example near **Running tests**). If **`ruff format --check`** is enabled in CI, mention **`ruff format`** for contributors too. There is no **CONTRIBUTING.md** today; adding one is optional as long as **README.md** satisfies this row. | Doc review |
+| **RF4** | **README.md** documents local **`ruff check`** in at least one line (for example near **Running tests**). If **`ruff format --check`** is enabled in CI, mention **`ruff format`** for contributors too. **CONTRIBUTING.md** may link or defer to **README.md** for **`ruff`** commands as long as contributors can discover them from the repo root docs. | Doc review |
 | **RF5** | Wiring **ruff** into CI is recorded under **CHANGELOG.md** **Unreleased** when the change is user-visible to contributors (typical **Added** or **Changed**). | Release hygiene |
 
 ## Backlog `23e2da29`: README operator sections
@@ -406,6 +410,45 @@ child) so the child does not need to print an OS-assigned port when **`--port 0`
 | **SUB7** | If the test is marked **`@pytest.mark.slow`** or conditionally skipped, **this document** states the fact under this table (reason: wall-clock, platform, and so on) and **either** (a) default **`pytest tests -q`** / CI still collects it, **or** (b) CI runs an explicit command that includes the marker (for example **`pytest tests -q -m slow`**) so the subprocess harness is **not** silently dropped. **Preferred default:** keep it in the main collection if runtime stays small. | Doc + workflow review |
 | **SUB8** | **`README.md`** (**Running tests**) **or** this section names the module (or marker) contributors use to run only this integration test when debugging (**`pytest … <path> -q`** or **`-k`** / **`-m`** as implemented). | **`README.md`** **Running tests** → **`pytest tests/test_reference_server_subprocess.py -q`** |
 
+## Backlog `78e3554b`: sdist / wheel build and `twine check` (CI)
+
+Checklist rows for **CI: `python -m build` + `twine check` on sdist/wheel**
+(`78e3554b-2b50-4918-9859-85642ac1a84a`). **Scope:** CI wiring + verification steps + contributor docs; **no** change to
+runtime library behavior except what packaging already implies (for example adding **`py.typed`** only if the project
+chooses to adopt **PEP 561** markers—optional and driven by **PK6**).
+
+**Normative distribution contract (this repository today):**
+
+- **`[tool.setuptools.package-data]`** in **`pyproject.toml`** declares JSON under
+  **`replayt_lifecycle_webhooks/fixtures/events/*.json`**. Those files **must** ship inside both the **wheel** and the
+  **sdist** produced by **`python -m build`**. **PK5** enforces at least one representative file.
+- **`py.typed`:** There is **no** committed **`py.typed`** marker at the time this spec was written. **PK6** applies **only
+  after** **`src/replayt_lifecycle_webhooks/py.typed`** exists; until then maintainers **may** add the marker under a
+  separate backlog if they want **PEP 561** compliance—this backlog’s CI **must** start enforcing the wheel member as soon
+  as the file appears in **`src/`**.
+
+**Workflow surface:** Prefer a **dedicated** job in **`.github/workflows/ci.yml`** (for example **`package`**) so **lint** /
+**test** failures stay visually distinct from packaging failures. The job **must** use the same **push** / **pull_request**
+branch filters as the existing **`lint`** and **`test`** jobs (**`master`**, **`mc/**`**), unless **CHANGELOG.md** and this
+section document a deliberate exception.
+
+**Install posture:** Use **`pip install build twine`** (or equivalent) with versions **pinned or lower-bounded** in the
+workflow **or** documented in **`CONTRIBUTING.md`** so CI does not float on unpinned **`pip`** resolution. Adding
+**`build`** / **`twine`** to **`[project.optional-dependencies] dev`** is **optional**; CI **must not** assume they are
+already installed from **`pip install -e ".[dev]"`** unless **`pyproject.toml`** is updated accordingly.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PK1** | CI runs a **packaging** job (or equivalent documented workflow) on **push** and **pull_request** for **`master`** and **`mc/**`**, consistent with **RF1**’s trigger story. | Review **`.github/workflows/ci.yml`** |
+| **PK2** | The job installs **`build`** and **`twine`** before building. | Review workflow logs |
+| **PK3** | The job runs **`python -m build`** from the **repository root** on a **clean** **`dist/`** directory (for example **`rm -rf dist`** immediately before the build step) so each run’s artifacts correspond only to the current tree. | Review workflow |
+| **PK4** | The job runs **`twine check dist/*`** (or an equivalent that checks **every** artifact in **`dist/`** from that build). **Non-zero** exit on long-description / README / metadata issues **must** fail the workflow. | Review workflow; optional negative PR |
+| **PK5** | **Package data:** After build, at least one **committed** JSON fixture that **`pyproject.toml`** claims under **`fixtures/events/`** (for example **`run_started.json`**) **must** be present inside the **wheel** at path prefix **`replayt_lifecycle_webhooks/fixtures/events/`** (wheels are zips—inspect members). The same file **must** appear inside the **sdist** archive under the setuptools layout (for example **`replayt_lifecycle_webhooks-*/src/replayt_lifecycle_webhooks/fixtures/events/`** or the layout **`build`** emits for this backend—assert by **`tar`**/path list, not by guessing intermediate temp dirs). | Workflow step **or** **`pytest`** module dedicated to packaging layout |
+| **PK6** | **`py.typed`:** If **`src/replayt_lifecycle_webhooks/py.typed`** exists, the built **wheel** **must** contain **`replayt_lifecycle_webhooks/py.typed`**. If it does **not** exist, **no** CI assertion is required for **`py.typed`** under this backlog. | Source tree + workflow when applicable |
+| **PK7** | **`CONTRIBUTING.md`** documents the **same** local commands (clean **`dist/`**, **`python -m build`**, **`twine check dist/*`**) **or** explicitly points to this section as the canonical copy-paste block. | Doc review |
+
+**Equivalence:** **`python -m build`** (no extra flags) is the **default** normative command. **`python -m build --sdist --wheel`** is an acceptable **documented** equivalent if maintainers prefer explicit formats.
+
 ## Related docs
 
 - **[README.md](../README.md)** — quick start; see **Running tests** for the canonical command.
@@ -420,3 +463,4 @@ child) so the child does not need to print an OS-assigned port when **`--port 0`
 - **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** — README operator sections, **OP1**–**OP8**.
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — operator reverse-proxy guide, **OG1**–**OG8**.
 - **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)** — optional **`docs/reference-documentation/`** workflow, **RD1**–**RD8**.
+- **`CONTRIBUTING.md`** — local **sdist** / **wheel** + **`twine check`** commands (**PK7**); **§ Backlog `78e3554b`** above is normative for CI acceptance.
