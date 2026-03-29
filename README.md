@@ -184,7 +184,7 @@ also runs **ruff** on **`src/`** and **`tests/`** (see **`.github/workflows/ci.y
 ```bash
 pytest tests/test_webhook_signature.py tests/test_lifecycle_events.py -q   # crypto + parsing only (example)
 pytest tests -m replayt_boundary -q                                         # replayt import + symbol checks only
-pytest tests/test_reference_server_subprocess.py -q                         # subprocess ``python -m`` server + loopback POST
+pytest tests/test_reference_server_subprocess.py -q                         # reference server via python -m; loopback POST
 ```
 
 Checklist rows **A1–A5** (minimum verification / parsing) and **R1–R5** (replayt boundary): **SPEC_AUTOMATED_TESTS** and
