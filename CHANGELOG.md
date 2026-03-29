@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`pip-audit` ignore alignment spec** (phase **2**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
+  automate pip-audit ignore review reminders*`): new **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** (workflow vs
+  **`docs/DEPENDENCY_AUDIT.md`** set equality, **`Next review (UTC)`** enforcement, strictness rules). **`docs/DEPENDENCY_AUDIT.md`**
+  gains contributor steps and structured fields for **CVE-2026-4539**. **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `bea2900c`**,
+  **PI1**–**PI7**), **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`CONTRIBUTING.md`** cross-link the
+  contract; implementation is deferred to phase **3**.
+
 ### Added
 
 - **Route map doc guards** (phase **3**, backlog **`b4c68e50-04df-4149-b9b5-f5d6280b38cc` / *Docs: machine-readable route/status map for the reference HTTP server*):

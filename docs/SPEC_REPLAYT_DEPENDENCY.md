@@ -106,4 +106,6 @@ Use this list for Spec gate and Builder sign-off. Rows **A5–A7** map to backlo
   symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) so renames break CI **here**.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — incoming webhook signature verification contract.
 - **[DEPENDENCY_AUDIT.md](DEPENDENCY_AUDIT.md)** — CI and accepted transitive risks.
+- **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)** — **`pip-audit --ignore-vuln`**
+  alignment with **DEPENDENCY_AUDIT** and **Next review** due dates (backlog **`bea2900c`**).
 - **[DESIGN_PRINCIPLES.md](DESIGN_PRINCIPLES.md)** — explicit contracts and consumer-side maintenance.

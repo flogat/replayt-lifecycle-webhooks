@@ -47,3 +47,14 @@ package runtime dependency), then run **`pre-commit install`** so Git runs the h
 
 This setup is **optional**. Contributors can open drive-by patches without installing hooks; **GitHub Actions** still runs the **`lint`**
 job on pushes and pull requests.
+
+## Supply-chain audit (`pip-audit`)
+
+CI runs **`pip-audit`** in the **`supply-chain`** job after **`pip install -e ".[dev]"`** (see **`.github/workflows/ci.yml`**).
+Accepted **`--ignore-vuln`** CVEs and contributor steps for adding one live in **`docs/DEPENDENCY_AUDIT.md`**.
+
+Normative alignment rules (workflow ignores ↔ doc headings, **`Next review (UTC)`** due dates) and automated test rows **PI1**–**PI7**
+are in **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** and **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `bea2900c`**).
+
+Once that backlog is implemented, local debugging should mirror the documented **`pytest`** or script command added in **README**
+(**Running tests** → **Focused runs**) or this section when the Builder wires it.
