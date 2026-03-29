@@ -87,13 +87,13 @@ These **module** invocations are **supported** public **CLI** surfaces (behavior
 | Command | Spec |
 | ------- | ---- |
 | `python -m replayt_lifecycle_webhooks` | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — reference **WSGI** server (default when no subcommand). |
-| `python -m replayt_lifecycle_webhooks verify` | **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** — offline **v1** MAC check for a saved raw body + **`Replayt-Signature`** value (**when implemented**; backlog **`845b4b11`**). |
+| `python -m replayt_lifecycle_webhooks verify` | **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** — offline **v1** MAC check for a saved raw body + **`Replayt-Signature`** value (backlog **`845b4b11`**). |
 | `python -m replayt_lifecycle_webhooks.demo_webhook` | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 
-**Note:** Until backlog **`845b4b11`** is implemented, the **`verify`** row documents the **planned** subcommand; **`python -m
-replayt_lifecycle_webhooks`** without **`verify`** remains the server-only entrypoint. If Builder chooses a **dedicated**
-**`-m`** module instead of a subcommand, replace the **`verify`** row’s **Command** column with that module path and keep a
-single **canonical** command in **README.md** per **SPEC_CLI_VERIFY_SAVED_WEBHOOK** **§ Entrypoint shape**.
+**Note:** **`python -m replayt_lifecycle_webhooks`** without **`verify`** starts the reference server only. If maintainers
+introduce a **dedicated** **`-m`** module instead of the **`verify`** subcommand, replace the **`verify`** row’s **Command**
+column with that module path and keep a single **canonical** command in **README.md** per **SPEC_CLI_VERIFY_SAVED_WEBHOOK**
+**§ Entrypoint shape**.
 
 Adding or renaming a **`-m`** entrypoint requires updating this table, the relevant feature spec, **README.md**, and **CHANGELOG.md**.
 

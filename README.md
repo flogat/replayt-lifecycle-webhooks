@@ -316,6 +316,18 @@ shared secret out of band and pass it into **`verify_lifecycle_webhook_signature
 name:** **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** (string secret; UTF-8 when used as the HMAC key via a `str` argument).
 Load it with your framework or `os.environ`, inject via a secret manager in production, and **never** log the raw value.
 
+**Offline CLI (saved captures):** **`python -m replayt_lifecycle_webhooks verify`** checks a file of raw POST bytes (or stdin
+when **`BODY`** is **`-`**) against a captured **`Replayt-Signature`** value using the same **v1** rules as the library.
+Set **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** (or pass **`--secret`** only for local debugging). Exit **0** prints **`ok`**;
+**1** means the MAC did not verify; **2** means fix usage, secret, or I/O.
+
+```bash
+export REPLAYT_LIFECYCLE_WEBHOOK_SECRET='your-shared-secret'
+python -m replayt_lifecycle_webhooks verify --signature "$REPLAYT_SIGNATURE" /path/to/captured_body.bin
+```
+
+Full contract: **[docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
+
 **HTTP failures:** on missing, malformed, or non-matching signatures, respond with **401 Unauthorized** and/or **403
 Forbidden** as described in
 **[HTTP responses and logging](docs/SPEC_WEBHOOK_SIGNATURE.md#http-responses-and-logging-normative-for-integrators)**.
