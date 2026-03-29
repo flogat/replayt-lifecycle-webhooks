@@ -78,6 +78,11 @@ acceptance table below (**CHANGELOG** + **SPEC_AUTOMATED_TESTS** pointer).
   code and message when no secret is configured is **recommended**.
 - **Optional hooks:** If **`on_success`** is exposed for the server wrapper, behavior **must** match **SPEC_MINIMAL_HTTP_HANDLER**
   (callback runs only after verify + successful JSON parse).
+- **Optional structured webhook diagnostics (backlog `0bab43f3`):** The reference server **may** emit **per-request**
+  **stdlib** **`logging`** records (and/or accept a **narrow** optional callback) when operators **explicitly opt in**.
+  Normative field construction, **default-off** behavior, **no** raw body in logs, logger naming, and **README**
+  discoverability are defined in **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional
+  diagnostic logging (serve and handler paths)**). **Do not** add third-party logging dependencies for this feature.
 
 ## Dependencies and changelog
 
@@ -103,6 +108,9 @@ When this backlog is implemented:
 | **S7** | Host, port, and (if supported) webhook path defaults are **documented** and stable; overrides are documented if present. | Doc review |
 | **S8** | Documented secret configuration (**env** and/or flags) does **not** contradict **SPEC_WEBHOOK_SIGNATURE**’s rule that **library** calls remain explicit-injection. | Doc review |
 | **S9** | At least one **pytest** exercises the **documented** **`python -m replayt_lifecycle_webhooks`** process (subprocess), **loopback-only** HTTP to **`GET /health`** and signed **POST** on the default webhook path, with clean teardown—checklist **SUB1**–**SUB8** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `83e07114`**). This **adds** operator-faithful wiring coverage alongside in-process **S3**/**S4**/**S6** tests. | **`pytest`**; **`tests/test_reference_server_subprocess.py`**; **`SPEC_AUTOMATED_TESTS`** **SUB** table |
+| **S10** | **Optional structured webhook diagnostics** (backlog **`0bab43f3`**): **README** documents how to enable and disable the feature, which **logger** name(s) to configure, and points to **SPEC_STRUCTURED_LOGGING_REDACTION** (**§ Optional diagnostic logging**). Examples with logging enabled use **safe** placeholders (no real secrets, no raw body, no full signature lines). | Doc review |
+| **S11** | Same backlog: **`pytest`** satisfies **LG1–LG4** in **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `0bab43f3`**), proving redaction and **default-off** behavior on representative **POST** paths (in-process **WSGI** and/or subprocess server—**at least one** path **must** cover the reference server stack). | **`pytest`** |
+| **S12** | Same backlog: implementation builds log **`extra`** with **`format_safe_webhook_log_extra`** / **`redact_*`** per **SPEC_STRUCTURED_LOGGING_REDACTION**; **no** new mandatory third-party logging packages. | Code review; **`pyproject.toml`** |
 
 ## Related docs
 

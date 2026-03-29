@@ -23,6 +23,8 @@ no JSON parsing runs until verification succeeds.
 from __future__ import annotations
 
 import json
+import logging
+import os
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from http import HTTPStatus
@@ -31,6 +33,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from .events import parse_lifecycle_webhook_event
+from .redaction import format_safe_webhook_log_extra
 from .replay_protection import (
     LifecycleWebhookDedupStore,
     LifecycleWebhookReplayPolicy,
@@ -47,6 +50,21 @@ from .signature import (
 
 _JSON_CONTENT_TYPE = "application/json; charset=utf-8"
 
+# Opt-in per-request diagnostics (stdlib ``logging`` only). See ``docs/SPEC_STRUCTURED_LOGGING_REDACTION.md``
+# § Optional diagnostic logging (serve and handler paths).
+WEBHOOK_DIAGNOSTIC_LOGGER_NAME = "replayt_lifecycle_webhooks.handler"
+
+
+def _env_webhook_diagnostics_enabled() -> bool:
+    v = os.environ.get("REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS", "").strip().lower()
+    return v in ("1", "true", "yes", "on")
+
+
+def _resolve_webhook_diagnostics(explicit: bool | None) -> bool:
+    if explicit is not None:
+        return explicit
+    return _env_webhook_diagnostics_enabled()
+
 
 def _json_error_body(error: str, message: str) -> bytes:
     return json.dumps(
@@ -54,6 +72,80 @@ def _json_error_body(error: str, message: str) -> bytes:
         separators=(",", ":"),
         ensure_ascii=True,
     ).encode("utf-8")
+
+
+@dataclass(frozen=True, slots=True)
+class LifecycleWebhookHttpResult:
+    """HTTP-style outcome from :func:`handle_lifecycle_webhook_post`."""
+
+    status: int
+    headers: tuple[tuple[str, str], ...] = ()
+    body: bytes = b""
+
+
+def _error_code_from_http_result(result: LifecycleWebhookHttpResult) -> str | None:
+    if result.status < 400:
+        return None
+    if not result.body:
+        return None
+    try:
+        obj = json.loads(result.body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    err = obj.get("error")
+    return str(err) if isinstance(err, str) else None
+
+
+def _lifecycle_fields_from_verified_json_body(body: bytes) -> dict[str, str]:
+    try:
+        payload = json.loads(body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return {}
+    if not isinstance(payload, dict):
+        return {}
+    try:
+        event = parse_lifecycle_webhook_event(payload)
+    except ValidationError:
+        return {}
+    corr = event.correlation
+    fields: dict[str, str] = {
+        "lifecycle_event_id": event.event_id,
+        "lifecycle_run_id": corr.run_id,
+        "lifecycle_workflow_id": corr.workflow_id,
+    }
+    if corr.approval_request_id is not None:
+        fields["lifecycle_approval_request_id"] = corr.approval_request_id
+    return fields
+
+
+def _emit_webhook_request_diagnostic(
+    *,
+    environ: Mapping[str, Any],
+    headers: Mapping[str, str],
+    raw_body_len: int,
+    raw_body: bytes,
+    result: LifecycleWebhookHttpResult,
+) -> None:
+    log = logging.getLogger(WEBHOOK_DIAGNOSTIC_LOGGER_NAME)
+    path = str(environ.get("PATH_INFO", "") or "/")
+    method = str(environ.get("REQUEST_METHOD", "")).upper()
+    err = _error_code_from_http_result(result)
+    lf: dict[str, str] = {}
+    if result.status == HTTPStatus.NO_CONTENT:
+        lf = _lifecycle_fields_from_verified_json_body(raw_body)
+    extra = format_safe_webhook_log_extra(
+        headers=headers,
+        method=method,
+        path=path,
+        status_code=result.status,
+        error_code=err,
+        webhook_body_bytes_len=raw_body_len,
+        lifecycle_event_id=lf.get("lifecycle_event_id"),
+        lifecycle_run_id=lf.get("lifecycle_run_id"),
+        lifecycle_workflow_id=lf.get("lifecycle_workflow_id"),
+        lifecycle_approval_request_id=lf.get("lifecycle_approval_request_id"),
+    )
+    log.info("lifecycle_webhook_request", extra=extra)
 
 
 def _error_result(
@@ -69,15 +161,6 @@ def _error_result(
         ("Content-Type", _JSON_CONTENT_TYPE),
     )
     return LifecycleWebhookHttpResult(status, hdrs, body)
-
-
-@dataclass(frozen=True, slots=True)
-class LifecycleWebhookHttpResult:
-    """HTTP-style outcome from :func:`handle_lifecycle_webhook_post`."""
-
-    status: int
-    headers: tuple[tuple[str, str], ...] = ()
-    body: bytes = b""
 
 
 def _normalize_header_map(
@@ -240,11 +323,18 @@ def make_lifecycle_webhook_wsgi_app(
     on_success: Callable[[Any], None] | None = None,
     dedup_store: LifecycleWebhookDedupStore | None = None,
     replay_policy: LifecycleWebhookReplayPolicy | None = None,
+    webhook_diagnostics: bool | None = None,
 ) -> Callable[[Mapping[str, Any], Callable[..., Any]], list[bytes]]:
     """Build a WSGI application that handles POST lifecycle webhooks.
 
     Reads the raw body from ``wsgi.input`` (honors ``CONTENT_LENGTH``), collects ``HTTP_*`` headers
     into wire names, and delegates to :func:`handle_lifecycle_webhook_post`.
+
+    **Optional diagnostics:** When ``webhook_diagnostics`` is ``True``, or when it is ``None`` and the environment
+    variable ``REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS`` is truthy (``1``, ``true``, ``yes``, ``on``, case-insensitive),
+    each handled request emits one **INFO** record on logger :data:`WEBHOOK_DIAGNOSTIC_LOGGER_NAME` using
+    :func:`replayt_lifecycle_webhooks.redaction.format_safe_webhook_log_extra`. ``False`` disables diagnostics even
+    when the environment variable is set.
 
     **Run locally (stdlib):**
 
@@ -283,6 +373,14 @@ def make_lifecycle_webhook_wsgi_app(
             dedup_store=dedup_store,
             replay_policy=replay_policy,
         )
+        if _resolve_webhook_diagnostics(webhook_diagnostics):
+            _emit_webhook_request_diagnostic(
+                environ=environ,
+                headers=hdrs,
+                raw_body_len=len(raw),
+                raw_body=raw,
+                result=result,
+            )
         status_enum = HTTPStatus(result.status)
         status_line = f"{result.status} {status_enum.phrase}"
         start_response(status_line, list(result.headers))
