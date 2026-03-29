@@ -50,6 +50,19 @@ def _parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
             "is not passed on the shell; this flag is intended for local debugging only."
         ),
     )
+    p.add_argument(
+        "--webhook-diagnostics",
+        action="store_true",
+        help=(
+            "Emit one structured INFO log per webhook request (redacted headers, no raw body). "
+            "Overrides REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS when set."
+        ),
+    )
+    p.add_argument(
+        "--no-webhook-diagnostics",
+        action="store_true",
+        help="Disable webhook diagnostic logs even if REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS is set.",
+    )
     return p.parse_args(list(argv) if argv is not None else None)
 
 
@@ -64,9 +77,23 @@ def main(argv: Sequence[str] | None = None) -> None:
         )
         sys.exit(2)
 
+    if args.webhook_diagnostics and args.no_webhook_diagnostics:
+        print(
+            "error: --webhook-diagnostics and --no-webhook-diagnostics cannot be used together.",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    if args.webhook_diagnostics:
+        webhook_diagnostics = True
+    elif args.no_webhook_diagnostics:
+        webhook_diagnostics = False
+    else:
+        webhook_diagnostics = None
+
     app = make_reference_lifecycle_webhook_wsgi_app(
         secret=secret,
         webhook_path=args.webhook_path,
+        webhook_diagnostics=webhook_diagnostics,
     )
     with make_server(args.host, args.port, app) as httpd:
         base = f"http://{args.host}:{args.port}"

@@ -33,13 +33,18 @@ def make_reference_lifecycle_webhook_wsgi_app(
     *,
     webhook_path: str = DEFAULT_WEBHOOK_PATH,
     on_success: Callable[[Any], None] | None = None,
+    webhook_diagnostics: bool | None = None,
 ) -> Callable[[Mapping[str, Any], Callable[..., Any]], list[bytes]]:
     """WSGI app: ``GET /health`` plus ``POST`` on ``webhook_path`` (default ``/webhook``).
 
     All other requests receive **404** with a short plain-text body. Webhook **POST** semantics
     match :func:`make_lifecycle_webhook_wsgi_app` / ``docs/SPEC_MINIMAL_HTTP_HANDLER.md``.
     """
-    inner = make_lifecycle_webhook_wsgi_app(secret, on_success=on_success)
+    inner = make_lifecycle_webhook_wsgi_app(
+        secret,
+        on_success=on_success,
+        webhook_diagnostics=webhook_diagnostics,
+    )
     mount = _normalize_path(webhook_path)
     if not mount.startswith("/"):
         mount = "/" + mount

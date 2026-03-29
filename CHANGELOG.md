@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Optional webhook diagnostics** (phase **3**, backlog **`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`** /
+  *Serve path: optional structured logging hook using `redaction` helpers*): WSGI factories
+  **`make_lifecycle_webhook_wsgi_app`** and **`make_reference_lifecycle_webhook_wsgi_app`** take keyword-only
+  **`webhook_diagnostics=`** (**`None`** reads **`REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS`**; **`False`** forces off). The
+  **`python -m replayt_lifecycle_webhooks`** entrypoint (and **`replayt-lifecycle-webhooks-serve`**) accepts
+  **`--webhook-diagnostics`** and **`--no-webhook-diagnostics`**. When enabled, each webhook request emits one **INFO**
+  line on logger **`replayt_lifecycle_webhooks.handler`** built with **`format_safe_webhook_log_extra`** (redacted headers,
+  **`webhook_body_bytes_len`**, no raw POST body). **`README.md`** documents switches and precedence.
+  **`tests/test_serve_handler_logging.py`** satisfies **LG1**–**LG4** in **`docs/SPEC_AUTOMATED_TESTS.md`**.
+
 ### Documentation
 
 - **Optional serve / handler structured logging** (phase **2** spec, backlog **`0bab43f3-cb59-40ff-96c3-31fb2703cfb0`** /

@@ -153,6 +153,39 @@ The **library** still does not read the environment for **`verify_lifecycle_webh
 **`handle_lifecycle_webhook_post`**; only this **process** entrypoint loads **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** by
 default (**[docs/SPEC_WEBHOOK_SIGNATURE.md](docs/SPEC_WEBHOOK_SIGNATURE.md)**).
 
+**Optional webhook diagnostics:** Default is **off** (no extra per-request **`logging`** records on the webhook path).
+Enable structured **INFO** lines with redacted headers, response status, body length, and (when the POST parses as a
+supported lifecycle event) correlation ids from **verified** JSON—**never** the raw POST body or full signature values.
+Normative rules: **[docs/SPEC_STRUCTURED_LOGGING_REDACTION.md](docs/SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional
+diagnostic logging**).
+
+| Switch | Effect |
+| ------ | ------ |
+| **`REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS`** | If set to **`1`**, **`true`**, **`yes`**, or **`on`** (case-insensitive), enables diagnostics for WSGI apps that use the default **`webhook_diagnostics=None`**. |
+| **`python -m replayt_lifecycle_webhooks --webhook-diagnostics`** | Forces diagnostics **on** for that process. |
+| **`python -m replayt_lifecycle_webhooks --no-webhook-diagnostics`** | Forces diagnostics **off**, even when the environment variable is set. |
+| **`make_lifecycle_webhook_wsgi_app(..., webhook_diagnostics=…)`** / **`make_reference_lifecycle_webhook_wsgi_app`** | **`True`** or **`False`** overrides the environment variable; **`None`** reads **`REPLAYT_LIFECYCLE_WEBHOOK_DIAGNOSTICS`**. |
+
+Configure the stdlib logger **`replayt_lifecycle_webhooks.handler`** (for example level **INFO** and your handler of
+choice). With logging enabled, a representative record’s **`extra`** fields resemble:
+
+```python
+{
+    "webhook_method": "POST",
+    "webhook_path": "/webhook",
+    "webhook_status_code": 204,
+    "webhook_body_bytes_len": 120,
+    "webhook_headers": {
+        "Content-Type": "application/json; charset=utf-8",
+        "Replayt-Signature": "[REDACTED]",
+        "Authorization": "[REDACTED]",
+    },
+    "lifecycle_event_id": "00000000-0000-4000-8000-000000000001",
+    "lifecycle_run_id": "run_example_id",
+    "lifecycle_workflow_id": "wf_example",
+}
+```
+
 Secondary console scripts (equivalent): **`replayt-lifecycle-webhooks-serve`** (reference server),
 **`replayt-lifecycle-webhooks-demo-post`** (signed demo POST).
 
