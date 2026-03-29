@@ -290,7 +290,7 @@ do **not** replace **RP4**, **I3**/**I4**, or **R1–R5**.
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
-| SQ1 | **Duplicate key** — Two **`try_claim`** calls with the same **`key`** before expiry → first **`True`**, second **`False`**. | **`pytest`**, no network (implementation module TBD, e.g. **`tests/test_sqlite_idempotency_store.py`**) |
+| SQ1 | **Duplicate key** — Two **`try_claim`** calls with the same **`key`** before expiry → first **`True`**, second **`False`**. | **`pytest`**, no network (**`tests/test_sqlite_idempotency_store.py`**) |
 | SQ2 | **Expiry** — After advancing injected clock past TTL, **`try_claim`** for the same **`key`** returns **`True`** again. | **`pytest`**, no network |
 | SQ3 | **Concurrency / locking** — Per **SPEC_SQLITE_IDEMPOTENCY_STORE** **§ Concurrency and SQLite locking**: either a **network-free** threaded **`pytest`** or a **`pytest`** that asserts required docstring substrings (**`timeout`**, **`locked`**, **`WAL`** or **`journal_mode`**). | **`pytest`** |
 | SQ4 | **Handler integration** — Two **`handle_lifecycle_webhook_post`** calls with SQLite **`dedup_store`**, same **`event_id`**, valid MACs → **204** both times; **`on_success`** once. | **`pytest`**, no network |
