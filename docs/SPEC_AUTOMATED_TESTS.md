@@ -501,7 +501,7 @@ Checklist rows for **Operator guide: reverse proxy in front of reference WSGI se
 replace signature, parsing, boundary, or public-API coverage.
 
 Implement **network-free** assertions by reading **`docs/OPERATOR_REVERSE_PROXY.md`** and **`README.md`** from disk (same
-pattern as **OP1**–**OP8**). **Builder** may use a dedicated module (for example **`tests/test_operator_reverse_proxy_doc.py`**)
+pattern as **OP1**–**OP9**). **Builder** may use a dedicated module (for example **`tests/test_operator_reverse_proxy_doc.py`**)
 or extend an existing README doc-guard module if maintainers prefer one file—**Tester** ensures all **OG** rows are covered.
 
 | # | Criterion | Verification |

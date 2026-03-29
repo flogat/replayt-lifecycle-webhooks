@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
-- **ASGI integrator recipe** (phases **2**–**3**, backlog **`c631fe3f-8a66-4a9d-a900-bab855860c7b` / *Integrator recipe: FastAPI / Starlette verified-first handler*): **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** now includes **FastAPI** (**`verify_lifecycle_webhook_signature`**) and **Starlette** (**`handle_lifecycle_webhook_post`**) copy-paste examples under **§ Copy-paste examples** (**AF1**–**AF5**). **`README.md`** **`## Verifying webhook signatures`** links that guide (**AF6**). Phase **2** added the normative spec, **`docs/SPEC_README_OPERATOR_SECTIONS.md`** link rule, and traceability in **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `c631fe3f`**), **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, and the **`README.md`** project layout table.
+- **ASGI integrator recipe** (phases **2**–**3**, backlog **`c631fe3f-8a66-4a9d-a900-bab855860c7b` / *Integrator recipe: FastAPI / Starlette verified-first handler*): **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** now includes **FastAPI** (**`verify_lifecycle_webhook_signature`**) and **Starlette** (**`handle_lifecycle_webhook_post`**) copy-paste examples under **§ Copy-paste examples** (**AF1**–**AF5**). **`README.md`** **`## Verifying webhook signatures`** links that guide (**AF6**). Phase **2** added the normative spec, **`docs/SPEC_README_OPERATOR_SECTIONS.md`** link rule, and traceability in **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `c631fe3f`**), **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, **`docs/SPEC_MINIMAL_HTTP_HANDLER.md`**, **`docs/SPEC_WEBHOOK_SIGNATURE.md`**, and the **`README.md`** project layout table. Phase **5** architect review aligns **OP1**–**OP9** wording in **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `dc212184`** doc-guard pattern), and older **`CHANGELOG`** **`23e2da29`** bullets that still said **OP8**.
 
 - **CI Python matrix beyond 3.12** (phases **2**–**3**, backlog **`8e58aa9c-0d62-4649-852a-766babcd8218` / *CI: expand Python interpreter matrix beyond 3.12*`): **`docs/SPEC_REPLAYT_DEPENDENCY.md`** **§ CI**, checklist **A11**–**A14**, and compatibility matrix **CI-tested Python**; **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `8e58aa9c`** (**PYM1**–**PYM7**), traceability, **CI entrypoint**, and **RF1**/**RF2** notes; **`docs/MISSION.md`** success metrics (**3.13** matrix). Phase **3** wires **`3.13`** into **`.github/workflows/ci.yml`**, **README.md**, **CONTRIBUTING.md**, and **`tests/test_ci_ruff_wiring.py`** / **`tests/test_replayt_dependency.py`**.
 
@@ -153,14 +153,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`README.md`** (phase **3**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
   `23e2da29-8042-4721-a1eb-e44a2076273f`): operator block uses **`## Troubleshooting`**, **`## Approval webhook flow`**, and
   **`## Verifying webhook signatures`** (misconfiguration checklist, log pointers, **`event_type`** names and optional
-  Mermaid sequence, copy-paste verification path). **`tests/test_readme_operator_sections.py`** covers **OP1**–**OP8** in
+  Mermaid sequence, copy-paste verification path). **`tests/test_readme_operator_sections.py`** covers **OP1**–**OP9** in
   **`docs/SPEC_AUTOMATED_TESTS.md`**.
 
 - **`docs/SPEC_README_OPERATOR_SECTIONS.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/MISSION.md`**, **`README.md`** project layout (phase **2**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
-  `23e2da29-8042-4721-a1eb-e44a2076273f`): normative contract for **`README.md`** headings (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**), content bullets (misconfigs, logs, error-catalog links, approval **`event_type`** names, copy-paste verify path, secrets hygiene), and **pytest** checklist **OP1**–**OP8** for the Builder phase.
+  `23e2da29-8042-4721-a1eb-e44a2076273f`): normative contract for **`README.md`** headings (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**), content bullets (misconfigs, logs, error-catalog links, approval **`event_type`** names, copy-paste verify path, secrets hygiene), and **pytest** checklist **OP1**–**OP9** for the Builder phase.
 
 - **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, **`docs/SPEC_AUTOMATED_TESTS.md`** (phase **5**, backlog **Expand README with operator troubleshooting and approval-flow walkthrough** /
-  `23e2da29-8042-4721-a1eb-e44a2076273f`): **OP1**–**OP8** are described as enforced by **`tests/test_readme_operator_sections.py`** (removed stale “when implemented” wording after the README operator tests landed).
+  `23e2da29-8042-4721-a1eb-e44a2076273f`): **OP1**–**OP9** are described as enforced by **`tests/test_readme_operator_sections.py`** (removed stale “when implemented” wording after the README operator tests landed).
 
 ### Changed
 
