@@ -7,7 +7,8 @@ Revise as the project matures. Defaults below are minimal—expand with rules fo
 3. **Observable automation** — Local scripts and CI produce clear logs and exit codes. The **pytest** suite and CI
    command are normative for regressions on public contracts; see **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)**
    (no smoke-only **`assert True`** as substitute for verification / parsing coverage; **ruff** lint/format CI rows
-   **RF1**–**RF5** under backlog **`5a3f5a7f`**). **Webhook request logging**
+   **RF1**–**RF5** under backlog **`5a3f5a7f`**; **sdist**/**wheel** **`python -m build`** + **`twine check`**, declared
+   **package-data**, and conditional **`py.typed`** under backlog **`78e3554b`**, **PK1**–**PK7**). **Webhook request logging**
    convention: **structured** **`logging`** with **`snake_case`** **`extra=`** keys (**`webhook_*`**, **`lifecycle_*`**),
    package **`redact_*`** helpers, and **no default raw POST body** in log records—see
    **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Recommended structured field names**,
