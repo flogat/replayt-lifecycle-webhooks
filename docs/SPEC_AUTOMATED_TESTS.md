@@ -28,6 +28,9 @@
   **`2db687f4-23d2-4aff-8827-c3da11cdf283`**) — checklist **RD1**–**RD8** (pytest) in
   **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`** below;
   **`tests/test_reference_documentation_workflow.py`**.
+- Subprocess integration test against the real **`python -m replayt_lifecycle_webhooks`** entrypoint
+  (`83e07114-fbec-46ab-9944-d2aa3bca0024`) — checklist **SUB1**–**SUB8** under **§ Backlog `83e07114`** below;
+  normative server contract **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**).
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -44,7 +47,7 @@ behavioral coverage.
 | ----- | -------------- |
 | Signature verification behavior and **W** rows | **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** |
 | Optional HTTP handler status codes (**H1–H12**) | **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** |
-| Reference HTTP server entrypoint (**S1–S8**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
+| Reference HTTP server entrypoint (**S1–S9**), when implemented | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** |
 | Operator reverse-proxy guide (**OG1–OG8**) | **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; **§ Backlog `dc212184`** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
@@ -58,6 +61,7 @@ behavioral coverage.
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
+| Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
 
 ## CI entrypoint (invariant)
 
@@ -69,8 +73,10 @@ behavioral coverage.
 
 - **CI** (`.github/workflows/ci.yml`) may invoke the same suite as  
   `python -m pytest tests -q` plus optional flags (for example `--tb=short`). That is **equivalent** for acceptance as long
-  as it collects **only** tests under **`tests/`** and does not require network I/O for the signing / parsing / handler
-  unit tests mandated in the specs above.
+  as it collects **only** tests under **`tests/`** and does not require **outbound** or **public** network I/O for the
+  signing / parsing / handler unit tests mandated in the specs above. **Loopback HTTP** to a **child process** started by
+  the test suite (backlog **`83e07114`**, rows **SUB1**–**SUB8**) is **allowed** and is **not** an “extra service” as
+  long as it uses **`127.0.0.1`** / **`localhost`** only and needs no Docker, databases, or remote endpoints.
 
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
@@ -119,6 +125,11 @@ When **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** is imp
 include **network-free** tests that fail if the documented **POST** webhook path or **`GET /health`** (or the spec-chosen
 health path) regresses per checklist **S3**, **S4**, and **S6** in that document. Those tests **must not** replace items
 **1**–**3**.
+
+When backlog **`83e07114`** is implemented, the suite **must** additionally include at least one test module satisfying
+**SUB1**–**SUB8** below (**subprocess** + **loopback HTTP**). That harness **complements** **S3**/**S4**/**S6** (in-process
+WSGI): it catches **argv**, **environment**, **`wsgiref`**, and **real `-m`** wiring regressions operators would see. It
+**must not** replace items **1**–**3** or the in-process **S** rows.
 
 When **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** is implemented, the suite **must** additionally include
 **network-free** tests that satisfy checklist **D3**, **D7**, and **D8** in that document (signing agrees with
@@ -342,6 +353,30 @@ workflow** acceptance enforced by **`pytest`** (not a substitute for signature, 
 | **RD6** | Each committed **`docs/reference-documentation/*.md`** except **`README.md`** includes **`## Source and licensing`** with **provenance** and **license** or **attribution** language. | **`pytest`** (same module) |
 | **RD7** | **SPEC_REFERENCE_DOCUMENTATION** **§ Repeatable snapshot commands** documents **git**, **curl**, and **rsync** (or equivalent) toward **`_upstream_snapshot/`**. | **`pytest`** (same module) |
 | **RD8** | Root **`README.md`** **Reference documentation (optional)** and/or **`CONTRIBUTING.md`** **Reference documentation snapshots** states **when** to refresh, **small** default clone expectations, and **`_upstream_snapshot/`** as **gitignore**/**gitignored** bulk storage. | **`pytest`** (same module) |
+
+## Backlog `83e07114`: subprocess reference server integration (`python -m`)
+
+Checklist rows for **Integration test: subprocess POST against `python -m` reference server**
+(`83e07114-fbec-46ab-9944-d2aa3bca0024`). Normative server CLI and routes:
+**[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)**. These **complement** in-process **S3**/**S4**/**S6**
+in **`tests/test_reference_server.py`**; they do **not** replace **A1**–**A5**, **R1**–**R5**, or **§ Minimum behavioral
+coverage** items **1**–**4**.
+
+**Scope:** **Tests only**; production code changes are **out of scope** unless minimally required for testability (for
+example a bug that prevents binding or health checks). Prefer **no** server changes: the parent test process **should**
+choose a free TCP port (for example bind **`127.0.0.1:0`** in the parent, read the assigned port, pass **`--port`** to the
+child) so the child does not need to print an OS-assigned port when **`--port 0`** is used.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **SUB1** | Starts the **real** package entrypoint with **`sys.executable -m replayt_lifecycle_webhooks`** (no importing **`__main__`** as a shortcut for the spawn alone—may import helpers for assertions). Passes **`--host 127.0.0.1`** (or the spec default host if it remains loopback-only) and **`--port <chosen>`** where **`<chosen>`** is a free port on the runner. Sets **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** in the **child** environment to a **non-empty** test secret (fixed string is fine). | **`pytest`**; module e.g. **`tests/test_reference_server_subprocess.py`** or an agreed split under **`tests/`** |
+| **SUB2** | Waits until **`GET /health`** on the child’s base URL returns **HTTP 200** within a **bounded** timeout (poll loop or equivalent); treats non-200 or connection errors as failure after the timeout. | **`pytest`** (same module) |
+| **SUB3** | Sends **POST** to the configured webhook path (default **`/webhook`** per **SPEC_HTTP_SERVER_ENTRYPOINT**) with **raw body bytes** from a **committed** lifecycle fixture under **`tests/fixtures/events/`** (or the same JSON bytes as an existing golden test) and a correct **`Replayt-Signature`** header (**`sha256=…`**) computed with **`compute_lifecycle_webhook_signature_header`** or the same HMAC rule as **`verify_lifecycle_webhook_signature`**. | **`pytest`** (same module) |
+| **SUB4** | Asserts the webhook **POST** response is **2xx** on the success path (expected **`204 No Content`** per **SPEC_MINIMAL_HTTP_HANDLER** / reference wiring). | **`pytest`** (same module) |
+| **SUB5** | **Teardown** is reliable on **Linux CI**: terminate the child (for example **`terminate()`** then **`kill()`** / **`wait()`** with timeouts), close any client connections, and avoid leaving a listening socket behind across tests (flaky follow-on tests are a failure). | Code review; repeated **`pytest`** runs locally optional |
+| **SUB6** | **CI posture:** passes on **`ubuntu-latest`** (or the project’s canonical Linux CI image) **without** Docker, systemd user services, or other **extra** daemons—only the spawned **`python`** process and loopback HTTP. | **`.github/workflows/ci.yml`** + green run |
+| **SUB7** | If the test is marked **`@pytest.mark.slow`** or conditionally skipped, **this document** states the fact under this table (reason: wall-clock, platform, and so on) and **either** (a) default **`pytest tests -q`** / CI still collects it, **or** (b) CI runs an explicit command that includes the marker (for example **`pytest tests -q -m slow`**) so the subprocess harness is **not** silently dropped. **Preferred default:** keep it in the main collection if runtime stays small. | Doc + workflow review |
+| **SUB8** | **`README.md`** (**Running tests**) **or** this section names the module (or marker) contributors use to run only this integration test when debugging (**`pytest … <path> -q`** or **`-k`** / **`-m`** as implemented). | **`README.md`** **Running tests** → **`pytest tests/test_reference_server_subprocess.py -q`** |
 
 ## Related docs
 
