@@ -68,14 +68,13 @@ status story including **422**, **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HT
 | **RM4** | **`README.md`** links to this spec (see **§ Publication surfaces**). | Doc review; **`pytest`** **`tests/test_reference_http_server_route_map_doc.py`** |
 | **RM5** | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)** documents the README link requirement for this backlog (traceability for **OP** tests). | Doc review |
 | **RM6** | **SPEC_HTTP_SERVER_ENTRYPOINT** and **SPEC_AUTOMATED_TESTS** reference this document for gateway / operator matrix discoverability. | Doc review |
-| **RM7** | **No new runtime API**—docs and links only. | Doc / manifest review |
+| **RM7** | **No new integrator-facing runtime API**—docs, cross-links, and optional **pytest** doc guards only. | Doc / manifest review |
 
-**Tester note:** Rows **RM1**–**RM7** are **documentation acceptance** unless the project adds an explicit **pytest** guard;
-subprocess and handler behavior remain covered by **S3**/**S4**/**S6**/**S9**/**H1**–**H12**/**SUB1**–**SUB8** as applicable.
+**Tester note:** **RM1**–**RM3** stay **doc review** unless extended with **pytest**; **RM4** includes **`tests/test_reference_http_server_route_map_doc.py`**; **RM5**–**RM7** stay **doc review**. Subprocess and handler behavior remain covered by **S3**/**S4**/**S6**/**S9**/**H1**–**H12**/**SUB1**–**SUB8** as applicable.
 
 ## Related docs
 
-- **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — entrypoint command, health contract, **S1–S12**.
+- **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** — entrypoint command, health contract, **S1–S13**.
 - **[SPEC_MINIMAL_HTTP_HANDLER.md](SPEC_MINIMAL_HTTP_HANDLER.md)** — **`handle_lifecycle_webhook_post`** / WSGI status table **H1–H12**.
 - **[SPEC_WEBHOOK_FAILURE_RESPONSES.md](SPEC_WEBHOOK_FAILURE_RESPONSES.md)** — stable JSON **`error`** codes and HTTP mapping.
 - **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** — **`Replayt-Signature`**, verification procedure, leakage rules.
