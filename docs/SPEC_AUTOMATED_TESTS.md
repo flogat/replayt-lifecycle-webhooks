@@ -3,7 +3,8 @@
 **Backlogs (normative traceability):**
 
 - Replace smoke-only test with real package behavior assertions (`a91574f0-1e57-4b34-9922-763f92448a18`).
-- Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+- Ship contract or integration tests at the replayt boundary (`d9d6b302-40c7-4e08-af2d-faabb923f2fe`) — see **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** (**R1–R5**).
+- Contract tests: replayt version bump guardrails (`2b5bb9f6-af49-4c68-a76f-132ec40769d5`) — checklist **G1–G7** in **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**; **§ Backlog `2b5bb9f6`** below.
 - Replace scaffold smoke tests with unit and boundary coverage (`2b4c6927-573a-463c-b59f-f2f91dfb6381`) — rows **A6–A10** under **Backlog `2b4c6927`** below.
 - Local demo webhook POST (`ab0bfe3c-a94c-4711-8a5b-eeb47c886d2c`) — checklist **D1–D9** in **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)**.
 - Structured logging with default sensitive-key redaction (`fa75ecf3-a113-418e-99cc-aa0c31237eba`; workflow
@@ -86,7 +87,7 @@ behavioral coverage.
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
 | **replayt** dependency / doc contract (**A1**–**A10**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
-| **`replayt` import / API stability at the dependency seam** | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
+| **`replayt` import / API stability at the dependency seam** (**R1–R5**, **G1–G7**) | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | Optional **serve** / **handler** diagnostic logging + redaction (**LG1–LG4**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic logging**); **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S10**–**S12**) |
@@ -161,7 +162,8 @@ The suite **must** include **network-free** **pytest** tests that fail when the 
    apply, the same module also holds duplicate-delivery fixture checks and the signed duplicate-**POST** dedupe pattern.
    Existing coverage is expected under **`tests/test_lifecycle_events.py`** and **`tests/fixtures/events/`**.
 3. **Replayt boundary (dependency seam)** — At least one module **imports `replayt`** and asserts **documented** public
-   symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)**.
+   symbols (**`RunResult`**, **`RunFailed`**, **`ApprovalPending`**) per **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** (**R1–R5**).
+   Backlog **`2b5bb9f6`** adds **G1–G7** guardrails in the same file (**`__all__` superset**, actionable failure text, network-free default, contributor docs for markers/workflows).
    This is **in addition to** items **1** and **2**, not a substitute. Existing **`tests/test_replayt_dependency.py`** work
    counts toward the **version / pyproject** story only when combined with those **import** checks (same module or a
    dedicated **`tests/test_replayt_boundary.py`**).
@@ -226,7 +228,8 @@ tests **must not** replace items **1**–**4** in **§ Minimum behavioral covera
 ## Acceptance criteria (checklist)
 
 Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows **R1–R5** in
-**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** cover backlog **`d9d6b302`**.
+**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** cover backlog **`d9d6b302`**. Rows **G1–G7** in the
+same document cover backlog **`2b5bb9f6`** (*Contract tests: replayt version bump guardrails*).
 
 | # | Criterion | Verification |
 |---|-----------|--------------|
@@ -235,6 +238,24 @@ Use for Spec gate, Builder, and Tester sign-off for backlog **`a91574f0`**. Rows
 | A3 | **pytest** exercises **`parse_lifecycle_webhook_event`** (or the handler’s verify-then-parse path) on valid and invalid lifecycle JSON per **EVENTS.md** **T3–T5**. | **`pytest tests -q`**; review **`tests/test_lifecycle_events.py`** / fixtures |
 | A4 | CI runs **`pytest tests -q`** or **`python -m pytest tests -q`** (optional extra flags) against **`tests/`**. | Review **`.github/workflows/ci.yml`** |
 | A5 | Doc or contract changes to the CI command or minimum coverage appear under **CHANGELOG.md** **Unreleased** when user-visible to contributors. | Release hygiene |
+
+## Backlog `2b5bb9f6`: replayt version bump guardrails
+
+Checklist rows for **Contract tests: replayt version bump guardrails**
+(`2b5bb9f6-af49-4c68-a76f-132ec40769d5`). Normative detail and failure-message rules live in
+**[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** (**§ Version bump guardrails**). These extend **R1–R5**;
+they do not replace them. Maintainer bump flow when tests fail: **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**
+**§ When boundary or guardrail tests fail**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| G1 | Required **`replayt`** symbols and **`__all__` superset** per **SPEC_REPLAYT_BOUNDARY_TESTS** **G1**. | **`tests/test_replayt_boundary.py`** |
+| G2 | Actionable failure text per **SPEC_REPLAYT_BOUNDARY_TESTS** **§ Failure messages**. | Code review; forced failure stderr |
+| G3 | Network-free default **`pytest`** for guardrail tests. | Code review |
+| G4 | **README** / **CONTRIBUTING** documents full vs focused runs and any opt-in upstream marker. | **README.md** (**Running tests**) |
+| G5 | Optional upstream workflow is non-merge-blocking and documented, or docs state absence. | **README**; workflows |
+| G6 | Explicit **`assert`** / **`pytest.fail`** with messages (**G6**). | **`tests/test_replayt_boundary.py`** |
+| G7 | Guardrails co-located with **R1** in **`tests/test_replayt_boundary.py`**. | Module layout |
 
 ## Backlog `2b4c6927`: smoke replacement and module imports
 

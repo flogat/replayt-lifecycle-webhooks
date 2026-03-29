@@ -96,6 +96,44 @@ Use for Spec gate, Builder, and Tester sign-off for backlog **`d9d6b302`**.
 | R4 | **`replayt_boundary` marker** registered in **`pyproject.toml`** and used on boundary tests. | Inspect **`pyproject.toml`** + tests |
 | R5 | Doc or CI changes to boundary policy appear under **CHANGELOG.md** **Unreleased** when contributor-visible. | Release hygiene |
 
+**Backlog split:** Checklist **R1–R5** above closes **`d9d6b302`**. Checklist **G1–G7** below closes **`2b5bb9f6`** (*Contract tests: replayt version bump guardrails*).
+
+## Version bump guardrails (backlog `2b5bb9f6`)
+
+**Backlog id:** `2b5bb9f6-af49-4c68-a76f-132ec40769d5`.
+
+These rows extend **R1–R5** with maintainer-facing guardrails when **replayt** bumps change public names or **`replayt.__all__`**.
+
+### Failure messages (normative for **G2**)
+
+When a guardrail fails, the failure path **must** use **`AssertionError`** (for example **`assert …, msg`**) or **`pytest.fail(msg)`**. The message **must** include these **literal substrings** so logs point maintainers at bump policy, release notes, and this spec:
+
+- **`docs/SPEC_REPLAYT_DEPENDENCY.md`**
+- **`CHANGELOG.md`**
+- **`docs/SPEC_REPLAYT_BOUNDARY_TESTS.md`**
+
+### Network and optional upstream probes (**G3** / **G4**)
+
+Merge-blocking **`pytest`** for this backlog **must** stay **network-free**. Any live PyPI or other outbound **replayt** probe **must** live behind a **registered opt-in** **pytest** marker, documented under **`[tool.pytest.ini_options]`** in **`pyproject.toml`** and in **README.md** (**Running tests**) / **CONTRIBUTING.md** when present.
+
+### Optional scheduled workflow (**G5**)
+
+A **non-merge-blocking** scheduled or manual workflow that hits upstream is allowed. Until one exists, **README.md** (**Running tests**) **should** state that there is no in-repo opt-in upstream **pytest** marker or cron job.
+
+## Acceptance criteria — version bump guardrails (G1–G7)
+
+Use for Spec gate, Builder, Tester, and Architect sign-off for backlog **`2b5bb9f6`**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| G1 | **`RunResult`**, **`RunFailed`**, and **`ApprovalPending`** stay importable from **`replayt`** with the same object identity as **`from replayt import …`** (same bar as **R1**). Additionally, **`set(replayt.__all__)`** **must** be a **superset** of those names so upstream-only **`__all__`** additions do **not** fail this repo. | **`tests/test_replayt_boundary.py`** |
+| G2 | Failure messages satisfy **§ Failure messages** above. | Code review; **`pytest`** stderr on a forced failure |
+| G3 | Default full **`pytest tests`** path does **not** require network I/O for these guardrails. | Code review; no sockets / HTTP client use in **`tests/test_replayt_boundary.py`** |
+| G4 | **README.md** and/or **CONTRIBUTING.md** documents default full suite vs focused runs (**`-m replayt_boundary`**) and documents any opt-in upstream marker when added. | Doc review |
+| G5 | Optional upstream workflow (if any) is **non-merge-blocking** and documented; if absent, docs say so. | **README**; **`.github/workflows/`** when present |
+| G6 | Guardrails use explicit **`assert`** / **`pytest.fail`** with actionable messages (no bare failures with no maintainer hint). | **`tests/test_replayt_boundary.py`** |
+| G7 | **G1**/**G2** guardrails live in the **same** module as **R1** (**`tests/test_replayt_boundary.py`**). | Module layout |
+
 ## Related docs
 
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI entrypoint and minimum verification / parsing coverage.
