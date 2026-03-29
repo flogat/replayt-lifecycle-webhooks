@@ -100,8 +100,11 @@ def test_readme_documents_integrator_compatibility() -> None:
     assert "3.11" in matrix_versions and "3.12" in matrix_versions, (
         f"expected lint+test matrix to include 3.11 and 3.12, got {matrix_versions!r}"
     )
-    assert "Python 3.11" in text and "Python 3.12" in text, (
-        "README must name both merge-blocking CI Python minors (see SPEC A8 / backlog 6cd22a7b)"
+    assert "3.13" in matrix_versions, (
+        f"expected lint+test matrix to include 3.13 (backlog 8e58aa9c), got {matrix_versions!r}"
+    )
+    assert "Python 3.11" in text and "Python 3.12" in text and "Python 3.13" in text, (
+        "README must name merge-blocking CI Python minors (SPEC A8 / 6cd22a7b + 8e58aa9c)"
     )
 
 
@@ -137,7 +140,9 @@ def test_a8_lint_test_matrix_and_single_interpreter_jobs() -> None:
         versions = [
             str(v) for v in wf["jobs"][job]["strategy"]["matrix"]["python-version"]
         ]
-        assert "3.11" in versions and "3.12" in versions, f"{job} matrix: {versions!r}"
+        assert "3.11" in versions and "3.12" in versions and "3.13" in versions, (
+            f"{job} matrix: {versions!r}"
+        )
     quoted = _quoted_setup_python_versions()
     assert quoted, "expected at least one literal python-version (package/supply-chain)"
     assert set(quoted) == {"3.12"}, (
@@ -158,8 +163,8 @@ def test_a8_spec_matrix_aligns_requires_python_ci_and_workflow_path() -> None:
         f"compatibility matrix must echo pyproject requires-python {req_py!r} "
         "(SPEC_REPLAYT_DEPENDENCY.md ## Compatibility matrix)"
     )
-    assert "3.11" in matrix and "3.12" in matrix, (
-        "compatibility matrix must list both CI-tested minors for lint+test"
+    assert "3.11" in matrix and "3.12" in matrix and "3.13" in matrix, (
+        "compatibility matrix must list CI-tested minors for lint+test (incl. 3.13, backlog 8e58aa9c)"
     )
     assert ".github/workflows/ci.yml" in matrix
 

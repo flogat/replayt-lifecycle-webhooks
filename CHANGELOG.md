@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **CI Python matrix beyond 3.12** (phases **2**–**3**, backlog **`8e58aa9c-0d62-4649-852a-766babcd8218` / *CI: expand Python interpreter matrix beyond 3.12*`): **`docs/SPEC_REPLAYT_DEPENDENCY.md`** **§ CI**, checklist **A11**–**A14**, and compatibility matrix **CI-tested Python**; **`docs/SPEC_AUTOMATED_TESTS.md`** **§ Backlog `8e58aa9c`** (**PYM1**–**PYM7**), traceability, **CI entrypoint**, and **RF1**/**RF2** notes; **`docs/MISSION.md`** success metrics (**3.13** matrix). Phase **3** wires **`3.13`** into **`.github/workflows/ci.yml`**, **README.md**, **CONTRIBUTING.md**, and **`tests/test_ci_ruff_wiring.py`** / **`tests/test_replayt_dependency.py`**.
+
 - **PEP 561 / typing spec** (phase **2**, backlog **`2ec2c21c-1107-4eb7-b5e4-b250f75cabeb` / *Packaging: ship `py.typed` and optional static typing gate*`):
   **`docs/SPEC_AUTOMATED_TESTS.md`** adds **§ Backlog `2ec2c21c`** (**TP1**–**TP6**); **`docs/SPEC_PUBLIC_API.md`** adds **§ Static typing (PEP 561)** and acceptance **TYP1**–**TYP3**; **`docs/MISSION.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`CONTRIBUTING.md`** cross-link the backlog.
 
@@ -20,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **CI Python 3.11 contract** (phase **2**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`docs/SPEC_REPLAYT_DEPENDENCY.md`** (**§ CI**, matrix **A9**–**A10**, compatibility matrix target state), **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `6cd22a7b`**, **CI1**–**CI6**, interpreter skip guidance), **`README.md`** compatibility paragraph, and **`docs/MISSION.md`** success metrics.
 
-- **CONTRIBUTING / CI matrix** (phase **5**, architecture review, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`CONTRIBUTING.md`** optional **ruff** section notes **`lint`** runs on **Python 3.11** and **3.12** per **`.github/workflows/ci.yml`**.
+- **CONTRIBUTING / CI matrix** (phase **5**, architecture review, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`; refreshed for **`8e58aa9c`**): **`CONTRIBUTING.md`** optional **ruff** section notes **`lint`** runs on **Python 3.11**, **3.12**, and **3.13** per **`.github/workflows/ci.yml`**.
 
 - **`pip-audit` ignore alignment spec** (phase **2**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
   automate pip-audit ignore review reminders*`): new **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** (workflow vs

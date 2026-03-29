@@ -51,7 +51,7 @@ pyright src/replayt_lifecycle_webhooks/__init__.py src/replayt_lifecycle_webhook
 
 ## Optional pre-commit (ruff)
 
-**Source of truth:** **`.github/workflows/ci.yml`**, job **`lint`** (merge-blocking **ruff** steps run on **Python 3.11** and **3.12**
+**Source of truth:** **`.github/workflows/ci.yml`**, job **`lint`** (merge-blocking **ruff** steps run on **Python 3.11**, **3.12**, and **3.13**
 via the workflow matrix) — **`pip install "ruff>=0.6.0"`**, then **`ruff check src tests`**
 and **`ruff format --check src tests`**. If those commands change in CI, update **`.pre-commit-config.yaml`** and this section so
 local hooks stay aligned.

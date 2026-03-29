@@ -46,6 +46,8 @@
   **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**.
 - **CI: run pytest and ruff on Python 3.11 (minimum supported)** (`6cd22a7b-72bc-4d34-ba7c-a6878b68907d`) — checklist **CI1**–**CI6**
   under **§ Backlog `6cd22a7b`** below; compatibility matrix and **A9**–**A10** in **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)**.
+- **CI: expand Python interpreter matrix beyond 3.12** (`8e58aa9c-0d62-4649-852a-766babcd8218`) — checklist **PYM1**–**PYM7**
+  under **§ Backlog `8e58aa9c`** below; **SPEC_REPLAYT_DEPENDENCY** **§ CI** ( **`8e58aa9c`** bullets) and checklist **A11**–**A14**.
 - Reference HTTP server **route / HTTP status** matrix for gateways (`b4c68e50-04df-4149-b9b5-f5d6280b38cc`) —
   checklist **RM1**–**RM7** in **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** (**RM1**–**RM4**:
   **`tests/test_reference_http_server_route_map_doc.py`**);
@@ -110,7 +112,9 @@ behavioral coverage.
 - **Python minors:** Merge-blocking **`test`** jobs **must** run that command (or equivalent) on **Python 3.11**, the
   **`requires-python` floor**, per **§ Backlog `6cd22a7b`** and **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** **§ CI** / **A9**.
   If the workflow uses a **matrix**, **every** leg that claims to satisfy **A9** must run the **full** **`test`** step list;
-  optional **3.12** legs are **recommended** but not a substitute for **3.11**.
+  optional **3.12** legs are **recommended** but not a substitute for **3.11**. Per **§ Backlog `8e58aa9c`**, merge-blocking
+  **`lint`** and **`test`** **must** also include **3.13** so **`requires-python >=3.11`** is exercised above **3.12**—see
+  **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** **§ CI** and checklist **PYM1**–**PYM2**.
 
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
@@ -341,9 +345,7 @@ and **PI7**’s workflow expectations; they do **not** replace **pytest** behavi
 | **CI5** | Any **`skip`**, **`xfail`**, **`pytest.mark.skipif`**, or **`importorskip`** tied to **`sys.version_info`** / **`platform.python_version()`** is documented in this file (**§ Interpreter-conditioned skips**) **or** in a **`Reason:`** / adjacent comment that names the backlog and the interpreter rule. | Code + doc review |
 | **CI6** | **README** compatibility / CI prose matches the matrix (minimum **3.11** exercised for **lint**/**test**). | **`README.md`** review |
 
-**Builder note:** After adding a matrix, consider extending **`tests/test_ci_ruff_wiring.py`** (or a sibling guard) so CI
-cannot regress **CI1** silently—for example by asserting **`python-version: "3.11"`** (or **`3.11`** in a **`strategy.matrix`**
-block) appears under **`lint`** and **`test`**. Phase **2** is spec-only; phase **3** owns workflow and test updates.
+**Builder note:** **`tests/test_ci_ruff_wiring.py`** asserts **`3.11`** under **`lint`** and **`test`** (and **`3.12`**, **`3.13`**) so CI cannot regress **CI1**/**PYM1**–**PYM2** silently. **`tests/test_replayt_dependency.py`** cross-checks the same matrix against **README** and **SPEC_REPLAYT_DEPENDENCY** (**A8**, **PYM4**–**PYM5**).
 
 ### Interpreter-conditioned skips
 
@@ -351,6 +353,26 @@ There are **no** interpreter-version **xfail**/**skip** markers in the suite at 
 future test must diverge by CPython minor (for example a **stdlib** or **typing** difference), **prefer** fixing the
 implementation for all supported minors. If a skip is unavoidable, add **CI5** documentation here (one row per marker or
 group) and keep **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** truthful about what “full **pytest**” means.
+
+## Backlog `8e58aa9c`: CI Python matrix beyond 3.12 (**ruff** + **pytest**)
+
+Checklist rows for **CI: expand Python interpreter matrix beyond 3.12**
+(`8e58aa9c-0d62-4649-852a-766babcd8218`). Normative workflow rules and matrix checklist **A11**–**A14**:
+**[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** (**§ CI**, **Compatibility matrix** **Notes**). These rows extend
+**CI1**–**CI6**, **A4**, **RF1**–**RF2**, and **CI4**/**CI6**; they do **not** relax the **`requires-python` floor** requirement
+from backlog **`6cd22a7b`**.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PYM1** | **`lint`** job **`strategy.matrix.python-version`** includes **`3.13`** and still includes **`3.11`** and **`3.12`**. | **`.github/workflows/ci.yml`** + CI logs |
+| **PYM2** | **`test`** job matrix includes the same three minors (**`3.11`**, **`3.12`**, **`3.13`**) with the same **`setup-python`** wiring pattern as today. | **`.github/workflows/ci.yml`** + CI logs |
+| **PYM3** | Each **`lint`** matrix leg runs **`ruff check src tests`** and **`ruff format --check src tests`**; each **`test`** leg runs the full install + **`python -m pytest tests -q`** (or documented equivalent) + existing **`test`** prerequisites—**no** reduced “smoke only” subset on **3.13**. | Workflow YAML + CI logs |
+| **PYM4** | **`docs/SPEC_REPLAYT_DEPENDENCY.md`** **compatibility matrix** **CI-tested Python** column lists **3.11**, **3.12**, and **3.13** for **`lint`** + **`test`**, and **Notes** stay consistent with **`package`** / **`supply-chain`** single-interpreter jobs. | Doc diff vs **`ci.yml`** |
+| **PYM5** | **`README.md`** and **`CONTRIBUTING.md`** sentences that name CI Python matrix minors match **`.github/workflows/ci.yml`** (including **3.13**). | Doc review |
+| **PYM6** | Any **`skip`**, **`xfail`**, **`pytest.mark.skipif`**, or **`importorskip`** that depends on **3.13** vs other minors satisfies **CI5** (this **§ Interpreter-conditioned skips** table or adjacent **`Reason:`** / workflow comment naming **`8e58aa9c`**). | Code + this document |
+| **PYM7** | Contributor-visible CI matrix expansion is recorded under **`CHANGELOG.md`** **Unreleased** (**Changed** or **Documentation**). | **`CHANGELOG.md`** review |
+
+**Builder note:** Phase **3** (backlog **`8e58aa9c`**) added **`3.13`** assertions alongside **`6cd22a7b`** guards in **`tests/test_ci_ruff_wiring.py`** and **`tests/test_replayt_dependency.py`**.
 
 ## Backlog `5a3f5a7f`: **ruff** in CI (lint and optional format)
 
@@ -363,7 +385,8 @@ runs on **push** and **pull_request** for **`master`** and **`mc/**`** (and **`w
 that file unless the project adds another workflow that is also required for merges to **`master`** / **`mc/**`**—if so,
 **every** such workflow must run the same **ruff** gates (or the spec and **CHANGELOG.md** must record a deliberate
 exception). When backlog **`6cd22a7b`** is implemented, **RF1**/**RF2** apply to **each** merge-blocking **`lint`** matrix
-leg that satisfies **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** **A9** (including **3.11**).
+leg that satisfies **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** **A9** (including **3.11**). When backlog
+**`8e58aa9c`** is implemented, **RF1**/**RF2** also apply to the **`3.13`** **`lint`** legs (**PYM1**, **PYM3**).
 
 **Scope on disk:** **`ruff check`** must cover Python sources the project maintains for this package—at minimum
 **`src/`** and **`tests/`** (and any other tracked project Python at the repo root the maintainer group treats as
