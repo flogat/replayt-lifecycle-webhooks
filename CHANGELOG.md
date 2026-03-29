@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Documentation
 
+- **CI Python 3.11 contract** (phase **2**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`docs/SPEC_REPLAYT_DEPENDENCY.md`** (**§ CI**, matrix **A9**–**A10**, compatibility matrix target state), **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `6cd22a7b`**, **CI1**–**CI6**, interpreter skip guidance), **`README.md`** compatibility paragraph, and **`docs/MISSION.md`** success metrics. Phase **3** implements **`.github/workflows/ci.yml`** and any doc-guard test updates.
+
 - **`pip-audit` ignore alignment spec** (phase **2**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
   automate pip-audit ignore review reminders*`): new **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** (workflow vs
   **`docs/DEPENDENCY_AUDIT.md`** set equality, **`Next review (UTC)`** enforcement, strictness rules). **`docs/DEPENDENCY_AUDIT.md`**
