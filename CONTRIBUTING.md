@@ -50,7 +50,8 @@ job on pushes and pull requests.
 
 ## Supply-chain audit (`pip-audit`)
 
-CI runs **`pip-audit`** in the **`supply-chain`** job after **`pip install -e ".[dev]"`** (see **`.github/workflows/ci.yml`**).
+In **`supply-chain`**, CI installs **`pip install -e ".[dev]"`**, runs **`python scripts/pip_audit_suppression_alignment.py`**, then
+**`pip-audit`** (see **`.github/workflows/ci.yml`**).
 Accepted **`--ignore-vuln`** CVEs and contributor steps for adding one live in **`docs/DEPENDENCY_AUDIT.md`**.
 
 Normative alignment rules (workflow ignores ↔ doc headings, **`Next review (UTC)`** due dates) and automated test rows **PI1**–**PI7**

@@ -33,8 +33,9 @@ note any **pip-audit** delta for installs that include that extra.
 
 ---
 
-CI **`supply-chain`** runs `pip-audit --ignore-vuln CVE-2026-4539 --desc` after `pip install -e ".[dev]"`. PyPA **pip-audit**
-has no `--severity-high` flag; add further `--ignore-vuln` entries only with a short write-up under **Accepted risks**.
+CI **`supply-chain`** runs **`pip install -e ".[dev]"`**, then **`python scripts/pip_audit_suppression_alignment.py`**, then
+**`pip-audit --ignore-vuln CVE-2026-4539 --desc`**. PyPA **pip-audit** has no **`--severity-high`** flag; add further
+**`--ignore-vuln`** entries only with a short write-up under **Accepted risks**.
 
 ## Accepted risks
 
