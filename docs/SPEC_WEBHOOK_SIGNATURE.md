@@ -50,10 +50,11 @@ Operators need to **authenticate** HTTP payloads before handling replayt (or com
   when encoded for HMAC). Document this name in **README.md** so operators and platforms align on one convention.
 - **Operational hygiene:** inject the secret via your platform’s secret store or env; **do not** commit it, **do not**
   print it in startup banners, and **do not** log it when loading configuration.
-- **Offline verify CLI (backlog `845b4b11`):** A **documented** **`python -m`** operator tool **may** read
-  **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** and invoke **`verify_lifecycle_webhook_signature`** on a saved raw body file (or
-  **stdin**) plus a **`Replayt-Signature`** field-value per **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
-  That **does not** change the rule above: **library** code paths remain **explicit** **`secret=`** injection only.
+- **Offline verify CLI (backlog `845b4b11`):** **`python -m replayt_lifecycle_webhooks verify`** reads
+  **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** by default (or **`--secret`** for local debugging) and calls
+  **`verify_lifecycle_webhook_signature`** on a saved raw body file (or **stdin**) plus a **`Replayt-Signature`** field-value
+  per **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**. That **does not** change the rule above:
+  **library** code paths remain **explicit** **`secret=`** injection only.
 
 **Header value format (v1)**
 

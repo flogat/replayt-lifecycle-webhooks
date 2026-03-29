@@ -162,9 +162,9 @@ The section **must**:
 1. Link the **Verification procedure (integrators)** subsection in
    **`docs/SPEC_WEBHOOK_SIGNATURE.md`** (anchor **`#verification-procedure-integrators`**), matching how other
    **`docs/…`** links are written from **`README.md`**.
-2. When backlog **`845b4b11`** is implemented, include a markdown link to **`docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md`**
-   and the **canonical** offline verify command (placeholders only for secrets and signature material) so operators can
-   triage captured POSTs without ad-hoc scripts (**VW1**).
+2. Include a markdown link to **`docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md`** and the **canonical** offline verify command
+   (placeholders only for secrets and signature material) so operators can triage captured POSTs without ad-hoc scripts
+   (**VW1**).
 3. Include **copy-paste ready** examples that use **placeholders only** for secrets, for example
    **`your-shared-secret`** or **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**—see **§ Secrets and examples hygiene**.
 4. Show **at least one** of:  

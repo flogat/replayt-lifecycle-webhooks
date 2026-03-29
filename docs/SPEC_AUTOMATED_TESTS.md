@@ -83,7 +83,7 @@ behavioral coverage.
 | Reference server **HTTP surface** matrix for gateways (**RM1**–**RM7**), documentation | **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**; **§ Backlog `b4c68e50`** below |
 | Operator reverse-proxy guide (**OG1–OG8**) | **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; **§ Backlog `dc212184`** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
-| Offline verify CLI (**VW1**–**VW8**), when implemented | **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**; **§ Backlog `845b4b11`** below |
+| Offline verify CLI (**VW1**–**VW8**) | **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**; **§ Backlog `845b4b11`** below |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
@@ -193,7 +193,7 @@ When **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** is implemented
 **`verify_lifecycle_webhook_signature`**; non-success HTTP maps to non-zero exit or equivalent tested behavior). Those
 tests **must not** replace items **1**–**3**.
 
-When backlog **`845b4b11`** (**[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**) is implemented, the suite **must** additionally include **network-free** **pytest** rows **VW1**–**VW8** under **§ Backlog `845b4b11`** below (subprocess **CLI**, golden vectors from **`tests/fixtures/events/`**, **no** secret or full MAC leakage on failure). Those tests **must not** replace items **1**–**3** or **W** rows.
+For backlog **`845b4b11`** (**[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**), the suite **must** include **network-free** **pytest** rows **VW1**–**VW8** under **§ Backlog `845b4b11`** below (subprocess **CLI**, golden vectors from **`tests/fixtures/events/`**, **no** secret or full MAC leakage on failure). Those tests **must not** replace items **1**–**3** or **W** rows.
 
 When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** is implemented, the suite **must**
 additionally include **network-free** tests that satisfy checklist **L1–L9** under **Backlog `fa75ecf3`** below. Those

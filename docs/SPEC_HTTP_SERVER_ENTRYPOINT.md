@@ -57,8 +57,8 @@ script) if **README** labels one as **primary** and **`pyproject.toml`** lists b
 
 ### Companion: offline body verification (backlog `845b4b11`)
 
-When backlog **`845b4b11`** is implemented, **`python -m replayt_lifecycle_webhooks verify`** (or the **single** documented
-alternate **`-m`** module per **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**) performs **offline**
+**`python -m replayt_lifecycle_webhooks verify`** (or the **single** documented alternate **`-m`** module per
+**[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** if maintainers ever switch shapes) performs **offline**
 **v1** MAC verification for a saved raw body and **`Replayt-Signature`** header value. It **reuses** the **recommended**
 secret env var (**`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**) with the same hygiene story as **§ Configuration** below but does
 **not** change **S1**–**S13** acceptance for the HTTP listener itself.
@@ -134,8 +134,7 @@ When this backlog is implemented:
 - **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** — local **signed** fixture POST; default URL **must** stay
   aligned with this spec’s host, port, and **`/webhook`** defaults unless both docs change together (**D2**).
 - **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)** — offline verify CLI for saved body + signature
-  (**VW1**–**VW8**; backlog **`845b4b11`**); shares **`python -m replayt_lifecycle_webhooks`** when implemented as a
-  **`verify`** subcommand.
+  (**VW1**–**VW8**; backlog **`845b4b11`**); shares **`python -m replayt_lifecycle_webhooks`** via the **`verify`** subcommand.
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — reverse proxy in front of the
   reference server; acceptance **OG1**–**OG8**; deliverable **`docs/OPERATOR_REVERSE_PROXY.md`**.
 - **[MISSION.md](MISSION.md)** — optional HTTP glue scope; no mandatory framework for library-only installs.
