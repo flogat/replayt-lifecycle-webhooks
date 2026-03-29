@@ -9,7 +9,8 @@ Revise as the project matures. Defaults below are minimal—expand with rules fo
    (no smoke-only **`assert True`** as substitute for verification / parsing coverage; **ruff** lint/format CI rows
    **RF1**–**RF5** under backlog **`5a3f5a7f`**; optional local **pre-commit** mirroring those **ruff** invocations
    **PC1**–**PC7** under backlog **`c39b2a5f`**; **sdist**/**wheel** **`python -m build`** + **`twine check`**, declared
-   **package-data**, and conditional **`py.typed`** under backlog **`78e3554b`**, **PK1**–**PK7**). **Webhook request logging**
+   **package-data**, and conditional **`py.typed`** under backlog **`78e3554b`**, **PK1**–**PK7**; optional **Hypothesis**
+   **`property_fuzz`** rows **PF1**–**PF10** under backlog **`dcffe5d5`**). **Webhook request logging**
    convention: **structured** **`logging`** with **`snake_case`** **`extra=`** keys (**`webhook_*`**, **`lifecycle_*`**),
    package **`redact_*`** helpers, and **no default raw POST body** in log records—see
    **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Recommended structured field names**,

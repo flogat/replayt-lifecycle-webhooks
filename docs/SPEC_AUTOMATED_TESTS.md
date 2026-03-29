@@ -178,11 +178,10 @@ Backlog **`dc212184`** (**[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_
 **pytest** rows **OG1**–**OG8** under **Backlog `dc212184`** below (**`tests/test_operator_reverse_proxy_doc.py`**). Those
 tests **must not** replace items **1**–**4** in **§ Minimum behavioral coverage**.
 
-When backlog **`dcffe5d5`** is implemented, the repository **may** ship **optional** **Hypothesis**-backed tests that
-satisfy **PF1**–**PF10** under **§ Backlog `dcffe5d5`** below. Those tests **complement** **A2**, **A3**, and **§ Minimum
-behavioral coverage** items **1**–**2**; they **must not** replace them. Unless **CHANGELOG.md** and this document record a
-deliberate policy change, **default** **`pytest tests -q`** and merge-blocking **CI** **must** remain **green** on an
-install that does **not** include **Hypothesis** (skip, marker exclusion, or equivalent).
+**Optional** **Hypothesis**-backed tests (**PF1**–**PF10**) live under **§ Backlog `dcffe5d5`** below. They **complement**
+**A2**, **A3**, and **§ Minimum behavioral coverage** items **1**–**2**; they **must not** replace them. Unless
+**CHANGELOG.md** and this document record a deliberate policy change, **default** **`pytest tests -q`** and merge-blocking
+**CI** **must** remain **green** on an install that does **not** include **Hypothesis** (skip, marker exclusion, or equivalent).
 
 ## Acceptance criteria (checklist)
 

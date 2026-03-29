@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **SPEC_WEBHOOK_FAILURE_RESPONSES** — **§ Fuzz / property tests**: exception expectations for optional **Hypothesis**
+  **PF5**–**PF8** coverage and HTTP **`error`** mapping; **PF9** handler fuzzing noted as omitted in the current suite
+  (phase **5** / architect review, backlog **`dcffe5d5`**).
+
 - **Property / fuzz tests** (phase **3**, backlog **`dcffe5d5-7f7c-4585-aca0-a882653f20dd` / *Tests: property-based fuzzing for event parse and signature edge cases*):
   optional **`[project.optional-dependencies] property`** (**`hypothesis>=6.0`**), **`property_fuzz`** **pytest** marker, and
   **`tests/test_property_fuzz_signature.py`** / **`tests/test_property_fuzz_parse.py`** (**PF1**–**PF8**, **PF10**; **PF9** handler fuzzing omitted by choice). Modules use **`pytest.importorskip("hypothesis")`** so **`pip install -e ".[dev]"`** stays **Hypothesis-free**. **`docs/SPEC_AUTOMATED_TESTS.md`** documents the **PF3** strategy.
