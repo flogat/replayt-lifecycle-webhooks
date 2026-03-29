@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **CI Python matrix** (phase **3**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`): **`.github/workflows/ci.yml`** runs **`lint`** and **`test`** on **3.11** and **3.12** (`strategy.matrix`); **`package`** and **`supply-chain`** stay on **3.12** only. **`tests/test_ci_ruff_wiring.py`** asserts the matrix (**CI1**–**CI2**, **A9**–**A10**); **`tests/test_replayt_dependency.py`** guards **A8** against the split matrix vs single-interpreter jobs; **`tests/test_packaging_layout.py`** skips when **`build`** is missing (dev extra). **`docs/SPEC_REPLAYT_DEPENDENCY.md`** adds a **Workflow definition** line under **Compatibility matrix**; **Notes** and **`README.md`** CI wording match the workflow.
+- **CI Python matrix** (phase **3**, backlog **`6cd22a7b-72bc-4d34-ba7c-a6878b68907d` / *CI: run pytest and ruff on Python 3.11 (minimum supported)*`; **3.13** leg per **`8e58aa9c-0d62-4649-852a-766babcd8218`**): **`.github/workflows/ci.yml`** runs **`lint`** and **`test`** on **3.11**, **3.12**, and **3.13** (`strategy.matrix`); **`package`** and **`supply-chain`** stay on **3.12** only. **`tests/test_ci_ruff_wiring.py`** asserts the matrix (**CI1**–**CI2**, **A9**–**A10**, **PYM1**–**PYM2**); **`tests/test_replayt_dependency.py`** guards **A8** against the split matrix vs single-interpreter jobs; **`tests/test_packaging_layout.py`** skips when **`build`** is missing (dev extra). **`docs/SPEC_REPLAYT_DEPENDENCY.md`** adds a **Workflow definition** line under **Compatibility matrix**; **Notes** and **`README.md`** CI wording match the workflow.
 
 ### Documentation
 
