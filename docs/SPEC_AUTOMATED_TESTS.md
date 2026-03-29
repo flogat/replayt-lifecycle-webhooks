@@ -41,6 +41,9 @@
   section.
 - Property-based fuzzing for **`parse_lifecycle_webhook_event`** and signature verification
   (`dcffe5d5-7f7c-4585-aca0-a882653f20dd`) — checklist **PF1**–**PF10** under **§ Backlog `dcffe5d5`** below.
+- **`pip-audit`** suppression alignment and review dates (`bea2900c-17e9-4bf8-9623-0830105386a2`) — checklist **PI1**–**PI7**
+  under **§ Backlog `bea2900c`** below; normative parsing and governance rules in
+  **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**.
 - Reference HTTP server **route / HTTP status** matrix for gateways (`b4c68e50-04df-4149-b9b5-f5d6280b38cc`) —
   checklist **RM1**–**RM7** in **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)** (**RM1**–**RM4**:
   **`tests/test_reference_http_server_route_map_doc.py`**);
@@ -82,6 +85,7 @@ behavioral coverage.
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
 | **SDist / wheel** build, **`twine check`**, declared package data, conditional **`py.typed`** | **§ Backlog `78e3554b`** below (**PK1**–**PK7**) |
 | Optional **Hypothesis** fuzzing for verify + parse (no default install) | **§ Backlog `dcffe5d5`** below (**PF1**–**PF10**) |
+| **`pip-audit --ignore-vuln`** alignment vs **`docs/DEPENDENCY_AUDIT.md`**, review due dates | **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**; **§ Backlog `bea2900c`** below (**PI1**–**PI7**) |
 
 ## CI entrypoint (invariant)
 
@@ -108,6 +112,11 @@ behavioral coverage.
 
 - **Optional pre-commit** (local only; **not** a merge gate) is specified under **§ Backlog `c39b2a5f`**. It must stay
   aligned with the **`lint`** job; it does **not** replace **RF1**/**RF2**.
+
+- **`supply-chain`** (**`pip-audit`** after **`pip install -e ".[dev]"`**) is specified in **`.github/workflows/ci.yml`**.
+  **§ Backlog `bea2900c`** is enforced by **`tests/test_pip_audit_suppression_alignment.py`** (**PI1**–**PI6**) and a
+  **`supply-chain`** step that runs **`python scripts/pip_audit_suppression_alignment.py`** before **`pip-audit`** (**PI7**
+  keeps the existing **`pip-audit`** invocation with **`--desc`**).
 
 ## Prohibited patterns
 
@@ -581,6 +590,30 @@ pytest tests/test_property_fuzz_signature.py -q
 pytest tests/test_property_fuzz_parse.py -q
 ```
 
+## Backlog `bea2900c`: pip-audit suppression alignment and review reminders
+
+Checklist rows for **Supply chain: automate pip-audit ignore review reminders**
+(`bea2900c-17e9-4bf8-9623-0830105386a2`). **Normative contract:**
+**[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)**. **Scope:** **CI** step(s), optional
+**`scripts/`** helper, and **docs** only — **no** runtime **`src/`** API.
+
+**Install graph:** The audited environment remains **`pip install -e ".[dev]"`** in the **`supply-chain`** job unless
+**DEPENDENCY_AUDIT** documents a deliberate change; alignment checks read **disk** only (workflow + markdown), **no** network.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **PI1** | Extract suppression ids from the **`supply-chain`** job’s **`pip-audit`** **`run:`** per **SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT** (**workflow extraction**). | **`pytest`** (preferred) or **CI** step with **non-zero** exit on parse errors |
+| **PI2** | Extract suppression ids from **`docs/DEPENDENCY_AUDIT.md`** level-3 headings under **`## Accepted risks`** per **SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT** (**markdown extraction**). | **`pytest`** or **CI** step |
+| **PI3** | **Set equality:** workflow ids and documented ids match exactly; failures print **workflow-only** and **doc-only** lists. | **`pytest`** or **CI** step |
+| **PI4** | **`docs/DEPENDENCY_AUDIT.md`** includes contributor steps for a new ignore (heading shape, link, rationale, **Next review**, CI flag). | Doc review |
+| **PI5** | Each **Accepted risks** subsection includes **`Next review (UTC): YYYY-MM-DD`** (parseable). Missing or invalid dates **fail** the check. | **`pytest`** or **CI** step |
+| **PI6** | If **Next review** is **strictly before** today’s UTC date, the check **fails** with the overdue CVE ids (maintainer renews or resolves in the same PR). | **`pytest`** or **CI** step |
+| **PI7** | Default **`pip-audit`** invocation in **`supply-chain`** remains present with **`--desc`** (or a documented superset); alignment automation **must not** replace or skip it. | Workflow review |
+
+**Implementation hints (non-normative):** a small **stdlib** Python module under **`scripts/`** invoked from **CI** and
+**`pytest`** via **`subprocess`** keeps argv parsing consistent; alternatively **`pytest`** may parse files directly without
+shelling out.
+
 ## Related docs
 
 - **[README.md](../README.md)** — quick start; see **Running tests** for the canonical command.
@@ -596,3 +629,4 @@ pytest tests/test_property_fuzz_parse.py -q
 - **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)** — operator reverse-proxy guide, **OG1**–**OG8**.
 - **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)** — optional **`docs/reference-documentation/`** workflow, **RD1**–**RD8**.
 - **`CONTRIBUTING.md`** — local **sdist** / **wheel** + **`twine check`** commands (**PK7**); **§ Backlog `78e3554b`** above is normative for CI acceptance.
+- **[SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md](SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md)** — **`pip-audit`** ignore alignment and **Next review** rules (**PI1**–**PI7**).

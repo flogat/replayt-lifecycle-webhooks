@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+
+- **`pip-audit` ignore alignment spec** (phase **2**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
+  automate pip-audit ignore review reminders*`): new **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** (workflow vs
+  **`docs/DEPENDENCY_AUDIT.md`** set equality, **`Next review (UTC)`** enforcement, strictness rules). **`docs/DEPENDENCY_AUDIT.md`**
+  gains contributor steps and structured fields for **CVE-2026-4539**. **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `bea2900c`**,
+  **PI1**–**PI7**), **`docs/SPEC_REPLAYT_DEPENDENCY.md`**, **`docs/DESIGN_PRINCIPLES.md`**, and **`CONTRIBUTING.md`** cross-link the
+  contract. Phase **3** adds the checker, tests, and CI wiring (see **Added** below).
+
 ### Added
+
+- **`pip-audit` suppression alignment** (phase **3**, backlog **`bea2900c-17e9-4bf8-9623-0830105386a2` / *Supply chain:
+  automate pip-audit ignore review reminders*`): **`scripts/pip_audit_suppression_alignment.py`** compares **`supply-chain`**
+  **`pip-audit --ignore-vuln`** ids to **`docs/DEPENDENCY_AUDIT.md`** **`## Accepted risks`** subsections, requires advisory URLs and
+  **`Next review (UTC)`**, and fails when the review date is before today UTC. **`tests/test_pip_audit_suppression_alignment.py`**
+  covers **PI1**–**PI6**; **`.github/workflows/ci.yml`** runs the script before **`pip-audit`** (**PI7**). Dev dependency **`pyyaml>=6.0.1`**;
+  **`pyproject.toml`** sets **`[tool.pytest.ini_options] pythonpath = ["scripts"]`** for imports. **README.md** and **CONTRIBUTING.md**
+  document focused commands; **SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT** clarifies line-start **`## Accepted risks`** matching.
 
 - **Route map doc guards** (phase **3**, backlog **`b4c68e50-04df-4149-b9b5-f5d6280b38cc` / *Docs: machine-readable route/status map for the reference HTTP server*):
   **`tests/test_reference_http_server_route_map_doc.py`** enforces **RM1**–**RM4** from **`docs/SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md`**

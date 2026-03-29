@@ -47,3 +47,15 @@ package runtime dependency), then run **`pre-commit install`** so Git runs the h
 
 This setup is **optional**. Contributors can open drive-by patches without installing hooks; **GitHub Actions** still runs the **`lint`**
 job on pushes and pull requests.
+
+## Supply-chain audit (`pip-audit`)
+
+In **`supply-chain`**, CI installs **`pip install -e ".[dev]"`**, runs **`python scripts/pip_audit_suppression_alignment.py`**, then
+**`pip-audit`** (see **`.github/workflows/ci.yml`**).
+Accepted **`--ignore-vuln`** CVEs and contributor steps for adding one live in **`docs/DEPENDENCY_AUDIT.md`**.
+
+Normative alignment rules (workflow ignores ↔ doc headings, **`Next review (UTC)`** due dates) and automated test rows **PI1**–**PI7**
+are in **`docs/SPEC_PIP_AUDIT_SUPPRESSION_ALIGNMENT.md`** and **`docs/SPEC_AUTOMATED_TESTS.md`** (**§ Backlog `bea2900c`**).
+
+Local check (same logic as CI): from the repo root, **`pip install -e ".[dev]"`**, then **`python scripts/pip_audit_suppression_alignment.py`**
+(or **`pytest tests/test_pip_audit_suppression_alignment.py -q`**). See **README.md** (**Running tests** → **Focused runs**).
