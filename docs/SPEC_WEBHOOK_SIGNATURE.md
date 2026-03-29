@@ -167,6 +167,17 @@ Use this list for Spec gate, Builder, and Tester sign-off.
 - **Signature:** precomputed using the **same** algorithm the implementation uses, so tests remain deterministic.
 - **Wrong secret:** MAC computed with a different secret than passed to `verify_lifecycle_webhook_signature`.
 
+## Performance regression guard (optional)
+
+**Backlog:** `1b3df584-4ac8-4f16-99cf-c14404c7692a` — *Performance regression guard for signature verification hot path*.
+
+This section does **not** change verification semantics or **W** checklist rows. When implemented, maintainers get **opt-in**
+tooling ( **`pytest`** marker **`perf_hotpath`** and/or a **`scripts/`** benchmark) that measures **success-path**
+**`verify_lifecycle_webhook_signature`** cost on **fixed** secrets and body sizes, with **loose** thresholds aimed at
+**order-of-magnitude** regressions — **not** merge-blocking micro-benchmarks on shared CI by default.
+
+**Normative checklist:** **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `1b3df584`** (**PG1**–**PG8**).
+
 ## Related docs
 
 - **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** — CI **`pytest tests -q`** invariant; minimum suite coverage

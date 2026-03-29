@@ -236,6 +236,10 @@ python scripts/pip_audit_suppression_alignment.py                           # sa
 **`tests/test_property_fuzz_parse.py`** skip at import (**`pytest.importorskip`**), so the default suite stays lean.
 Normative rows **PF1**–**PF10**: **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `dcffe5d5`**).
 
+**Verify hot-path performance guard (optional, backlog `1b3df584`):** opt-in **`pytest -m perf_hotpath`** and/or a **`scripts/`**
+benchmark — **not** merge-blocking by default. Uses **fixed** body sizes and secrets; thresholds target **order-of-magnitude**
+slowdowns (see **PG6**). Normative rows **PG1**–**PG8**: **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `1b3df584`**).
+
 Checklist rows **A1–A5** (minimum verification / parsing), **R1–R5**, and **G1–G7** (version bump guardrails): **SPEC_AUTOMATED_TESTS** and
 **SPEC_REPLAYT_BOUNDARY_TESTS**.
 

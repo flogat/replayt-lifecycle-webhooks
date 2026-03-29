@@ -150,6 +150,7 @@ Integrators and operators are responsible for:
   checklist **L1–L9** for that backlog. The suite must **not** rely on placeholder tests (e.g. bare **`assert True`**) as the only
   proof that verification or parsing works. Contributors run **`pytest tests -q`** for the full collection; **[README.md](../README.md)**
   (**Running tests**) lists optional focused commands.
+  An optional **verify hot-path** performance regression guard (**PG1**–**PG8**, backlog **`1b3df584`**, **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `1b3df584`**) stays **out of merge-blocking CI** by default when implemented.
 - **Packaging gate (PyPI readiness)** — **CI** runs **`python -m build`** and **`twine check`** on the **sdist** and **wheel**
   (**job `package`** in **`.github/workflows/ci.yml`**; backlog **`78e3554b`**). The **pytest** suite checks **declared package data**
   per **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `78e3554b`** (**PK1**–**PK7**). **PEP 561** marker
