@@ -57,6 +57,7 @@ def _run_twine_check(dist_dir: pathlib.Path) -> None:
 
 
 def test_built_wheel_contains_declared_event_fixture(tmp_path: pathlib.Path) -> None:
+    """PK5: wheel contains fixtures/events/*.json as declared in pyproject.toml."""
     dist = tmp_path / "dist"
     dist.mkdir()
     _run_build(dist)
@@ -68,12 +69,10 @@ def test_built_wheel_contains_declared_event_fixture(tmp_path: pathlib.Path) -> 
     assert _WHEEL_FIXTURE_MEMBER in names, (
         f"missing {_WHEEL_FIXTURE_MEMBER!r} in wheel; sample names: {names[:20]!r}"
     )
-    assert _WHEEL_PY_TYPED in names, (
-        f"missing {_WHEEL_PY_TYPED!r} in wheel (TP3); sample names: {names[:20]!r}"
-    )
 
 
 def test_built_sdist_contains_declared_event_fixture(tmp_path: pathlib.Path) -> None:
+    """PK5: sdist contains fixtures/events/*.json as declared in pyproject.toml."""
     dist = tmp_path / "dist"
     dist.mkdir()
     _run_build(dist)
@@ -84,6 +83,29 @@ def test_built_sdist_contains_declared_event_fixture(tmp_path: pathlib.Path) -> 
     assert any(m.endswith(_SDIST_FIXTURE_SUFFIX) for m in members), (
         f"no member ending with {_SDIST_FIXTURE_SUFFIX!r}; sample: {members[:25]!r}"
     )
+
+
+def test_built_wheel_includes_py_typed_when_present_in_source(
+    tmp_path: pathlib.Path,
+) -> None:
+    """TP3: wheel and sdist contain PEP 561 py.typed marker file."""
+    dist = tmp_path / "dist"
+    dist.mkdir()
+    _run_build(dist)
+    _run_twine_check(dist)
+
+    wheels = list(dist.glob("*.whl"))
+    assert len(wheels) == 1, f"expected one wheel, got {[p.name for p in wheels]}"
+    with zipfile.ZipFile(wheels[0]) as zf:
+        names = zf.namelist()
+    assert _WHEEL_PY_TYPED in names, (
+        f"missing {_WHEEL_PY_TYPED!r} in wheel; sample names: {names[:20]!r}"
+    )
+
+    sdists = list(dist.glob("*.tar.gz"))
+    assert len(sdists) == 1, f"expected one sdist, got {[p.name for p in sdists]}"
+    with tarfile.open(sdists[0], "r:gz") as tf:
+        members = [m.name.replace("\\", "/") for m in tf.getmembers() if m.isfile()]
     assert any(m.endswith(_SDIST_PY_TYPED_SUFFIX) for m in members), (
         f"no member ending with {_SDIST_PY_TYPED_SUFFIX!r}; sample: {members[:25]!r}"
     )
