@@ -85,7 +85,9 @@ def test_built_sdist_contains_declared_event_fixture(tmp_path: pathlib.Path) -> 
     )
 
 
-def test_built_wheel_includes_py_typed_when_present_in_source(tmp_path: pathlib.Path) -> None:
+def test_built_wheel_includes_py_typed_when_present_in_source(
+    tmp_path: pathlib.Path,
+) -> None:
     """TP3: wheel and sdist contain PEP 561 py.typed marker file."""
     dist = tmp_path / "dist"
     dist.mkdir()
