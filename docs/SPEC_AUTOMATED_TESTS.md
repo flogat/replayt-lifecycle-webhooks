@@ -23,8 +23,6 @@
 - README operator sections: troubleshooting, approval flow, signature verification (`23e2da29-8042-4721-a1eb-e44a2076273f`) —
   checklist **OP1**–**OP9** under **Backlog `23e2da29`** below (**OP9** from backlog **`c631fe3f`**); normative contract
   **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**.
-- Coordinated security disclosure and root **`SECURITY.md`** (`87e7edae-033d-45af-87fc-066fca51db96`) — checklist **SEC1**–**SEC9**
-  under **§ Backlog `87e7edae`** below; normative contract **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**.
 - Integrator **ASGI** verified-first recipe (`c631fe3f-8a66-4a9d-a900-bab855860c7b`) — checklist **AF1**–**AF7** in
   **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** below
   (**pytest** for **AF1**–**AF6**; **AF7** review).
@@ -64,14 +62,7 @@
   **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** (**§ Static typing (PEP 561)**).
 - Optional metrics hooks for verify / handler outcomes (`42b8d5a9-a246-4c47-b167-f39ac371789e`) — checklist **M1**–**M8**
   under **§ Backlog `42b8d5a9`** below; normative contract **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**.
-<<<<<<< HEAD
-- SQLite reference idempotency store for **`event_id`** (`d10cf76f-e11e-4674-9d81-6d06899b4a64`) — checklist **SQ1**–**SQ7**
-  under **§ Backlog `d10cf76f`** below; normative contract **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
-=======
-- Performance regression guard for **`verify_lifecycle_webhook_signature`** hot path (`1b3df584-4ac8-4f16-99cf-c14404c7692a`) —
-  checklist **PG1**–**PG8** under **§ Backlog `1b3df584`** below; normative context **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**
-  (**§ Performance regression guard**).
->>>>>>> master
+- Offline verify CLI for saved webhook body + **`Replayt-Signature`** (`845b4b11-847d-48cb-a9f3-e75f3e4862ef`) — checklist **VW1**–**VW8** under **§ Backlog `845b4b11`** below; normative contract **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
 
 **Audience:** Spec gate (2b), Builder (3), Tester (4), maintainers, contributors.
 
@@ -92,22 +83,20 @@ behavioral coverage.
 | Reference server **HTTP surface** matrix for gateways (**RM1**–**RM7**), documentation | **[SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md](SPEC_REFERENCE_HTTP_SERVER_ROUTE_MAP.md)**; **§ Backlog `b4c68e50`** below |
 | Operator reverse-proxy guide (**OG1–OG8**) | **[SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**; **§ Backlog `dc212184`** |
 | Local signed demo POST (**D1–D9**), when implemented | **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** |
+| Offline verify CLI (**VW1**–**VW8**) | **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**; **§ Backlog `845b4b11`** below |
 | Lifecycle JSON shapes and typed parsing (**E***, **T***) | **[EVENTS.md](EVENTS.md)** |
 | Lifecycle event digest text and **`digest/1`** record (**DG1**–**DG6**) | **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** |
 | **`event_id`** duplicate fixtures and handler dedupe patterns (**I3**, **I4**) | **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** |
 | Replay / freshness vs duplicate delivery (**RP4**, **RP5**) | **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** |
-| Optional **SQLite** dedupe store (**SQ1**–**SQ7**), when implemented | **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**; **§ Backlog `d10cf76f`** below |
 | **replayt** dependency / doc contract (**A1**–**A10**, matrix **Python** + CI) | **[SPEC_REPLAYT_DEPENDENCY.md](SPEC_REPLAYT_DEPENDENCY.md)** |
 | **`replayt` import / API stability at the dependency seam** (**R1–R5**, **G1–G7**) | **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** |
 | **This package’s supported exports** (`__all__`, import paths, CLI **`-m`**, deprecation) | **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)** |
 | Structured logging + redaction (**L1–L9**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** |
 | Optional **serve** / **handler** diagnostic logging + redaction (**LG1–LG4**), when implemented | **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** (**§ Optional diagnostic logging**); **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S10**–**S12**) |
 | Optional verify / handler **metrics** callbacks (**M1**–**M8**), when implemented | **[SPEC_METRICS_HOOKS.md](SPEC_METRICS_HOOKS.md)**; **§ Backlog `42b8d5a9`** below |
-| Optional **verify** hot-path **performance** guard (**PG1**–**PG8**), non-default in CI | **§ Backlog `1b3df584`** below; **[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)** (**§ Performance regression guard**) |
 | **Ruff** lint (and optional format check) in CI | **§ Backlog `5a3f5a7f`** in this document |
 | Optional **pre-commit** for local **ruff** (same argv / version floor as CI) | **§ Backlog `c39b2a5f`** in this document |
 | README operator-facing sections (**Troubleshooting**, **Approval webhook flow**, **Verifying webhook signatures**) | **[SPEC_README_OPERATOR_SECTIONS.md](SPEC_README_OPERATOR_SECTIONS.md)**; **§ Backlog `23e2da29`** |
-| Root **`SECURITY.md`** disclosure policy + **README** / **CONTRIBUTING** cross-links (**SEC1**–**SEC9**) | **[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**; **§ Backlog `87e7edae`** |
 | ASGI (**FastAPI** / **Starlette**) verified-first integrator guide (**AF1**–**AF7**) | **[SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md](SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md)**; **§ Backlog `c631fe3f`** |
 | Optional **`docs/reference-documentation/`** workflow (**RD1**–**RD8** pytest) | **[SPEC_REFERENCE_DOCUMENTATION.md](SPEC_REFERENCE_DOCUMENTATION.md)**; **§ Backlog `eb884da9`**; **`tests/test_reference_documentation_workflow.py`** |
 | Subprocess **`python -m`** reference server + loopback POST (**SUB1**–**SUB8**) | **[SPEC_HTTP_SERVER_ENTRYPOINT.md](SPEC_HTTP_SERVER_ENTRYPOINT.md)** (**S9**); **§ Backlog `83e07114`** below |
@@ -139,10 +128,6 @@ behavioral coverage.
 
 - **Do not** change the workflow to a different test root or drop **`tests/`** without updating this document,
   **README.md**, and **CHANGELOG.md**.
-
-- **Performance timing tests** (**§ Backlog `1b3df584`**, **PG1**–**PG8**) **must not** run as part of merge-blocking
-  **`pytest`** unless the workflow explicitly opts in with **documented** loose thresholds (maintainer choice). Default
-  **`pytest tests -q`** stays **green** on shared CI runners without flaky wall-clock failures.
 
 - **Ruff** (**`ruff check`**, **`ruff format --check`**) is specified under **§ Backlog `5a3f5a7f`** and implemented in
   **`.github/workflows/ci.yml`** (**`lint`** job). **Removing** or **weakening** those steps requires updating this
@@ -208,6 +193,8 @@ When **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** is implemented
 **`verify_lifecycle_webhook_signature`**; non-success HTTP maps to non-zero exit or equivalent tested behavior). Those
 tests **must not** replace items **1**–**3**.
 
+For backlog **`845b4b11`** (**[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**), the suite **must** include **network-free** **pytest** rows **VW1**–**VW8** under **§ Backlog `845b4b11`** below (subprocess **CLI**, golden vectors from **`tests/fixtures/events/`**, **no** secret or full MAC leakage on failure). Those tests **must not** replace items **1**–**3** or **W** rows.
+
 When **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** is implemented, the suite **must**
 additionally include **network-free** tests that satisfy checklist **L1–L9** under **Backlog `fa75ecf3`** below. Those
 tests **must not** replace items **1**–**3**.
@@ -225,10 +212,6 @@ When **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** is implemented, 
 **network-free** tests that satisfy **RP4** and **RP5** under **Backlog `f9677140`** below (**RP5** may alias **I4**).
 Those tests **must not** replace items **1**–**3**.
 
-When **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** is implemented (backlog **`d10cf76f`**), the
-suite **must** additionally include **network-free** tests that satisfy **SQ1**–**SQ7** under **§ Backlog `d10cf76f`**
-below. Those tests **must not** replace items **1**–**4** or **RP4**/**RP5**.
-
 When **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** ships formatters in-tree, the suite **must** additionally include
 **network-free** tests that satisfy **DG1**–**DG6** under **Backlog `069e0240`** below. Those tests **must not** replace
 items **1**–**3**.
@@ -245,10 +228,6 @@ tests **must not** replace items **1**–**4** in **§ Minimum behavioral covera
 **A2**, **A3**, and **§ Minimum behavioral coverage** items **1**–**2**; they **must not** replace them. Unless
 **CHANGELOG.md** and this document record a deliberate policy change, **default** **`pytest tests -q`** and merge-blocking
 **CI** **must** remain **green** on an install that does **not** include **Hypothesis** (skip, marker exclusion, or equivalent).
-
-**Optional** hot-path **performance** checks (**PG1**–**PG8**, **§ Backlog `1b3df584`**) **complement** **A2** and **§ Minimum
-behavioral coverage** item **1**; they **must not** replace **W3** or correctness tests. They are **off** merge-blocking **CI**
-by default (marker exclusion, env gate, or **`scripts/`**-only harness).
 
 ## Acceptance criteria (checklist)
 
@@ -307,6 +286,24 @@ These complement **H8** message checks in **`tests/test_http_handler.py`**; they
 |---|-----------|--------------|
 | FR5 | Committed **`tests/fixtures/webhook_failure_responses/*.json`** stay byte-identical to **`handle_lifecycle_webhook_post`** error bodies (compact JSON, no trailing newline) and cover every stable **`error`** code in that folder. | **`tests/test_webhook_failure_response_fixtures.py`** |
 
+## Backlog `845b4b11`: offline verify CLI (saved body + `Replayt-Signature`)
+
+Checklist rows for **Support CLI: verify saved webhook (body file + signature header)**
+(`845b4b11-847d-48cb-a9f3-e75f3e4862ef`). Normative contract: **[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
+These extend **A1–A5** and **§ Minimum behavioral coverage** item **1** (signature verification) by exercising the **CLI**
+wrapper; they do **not** replace **`tests/test_webhook_signature.py`** **W** coverage or items **1**–**3**.
+
+| ID | Criterion | Verification |
+| -- | --------- | ------------ |
+| **VW1** | **README.md** documents the canonical **`python -m …`** invocation and links **SPEC_CLI_VERIFY_SAVED_WEBHOOK**. | Doc review; optional **`tests/test_readme_operator_sections.py`** extension if **SPEC_README_OPERATOR_SECTIONS** maps **OP** rows |
+| **VW2** | **`--help`** output includes **raw body discipline**, **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**, and exit codes **0** / **1** / **2**. | Subprocess or **`pytest`** string assertions |
+| **VW3** | Subprocess: committed **`tests/fixtures/events/`** body file + valid **`--signature`** → exit **0**, stdout **`ok\n`**. | **`pytest`** (module name aligned with implementation, e.g. **`tests/test_cli_verify_saved_webhook.py`**) |
+| **VW4** | Subprocess: MAC failure → exit **1**; combined **stdout**/**stderr** **must not** contain a distinctive **secret** substring or the **full** expected **64-hex** digest used in the test. | **`pytest`** |
+| **VW5** | Subprocess: body from **stdin** (**`-`**) + valid signature → exit **0**. | **`pytest`** |
+| **VW6** | Missing / empty secret → exit **2**. | **`pytest`** |
+| **VW7** | **SPEC_PUBLIC_API** CLI table and **CHANGELOG.md** **Unreleased** record the shipped entrypoint. | Doc review |
+| **VW8** | All cases above are **network-free** (no outbound HTTP). | Code review; **CI** |
+
 ## Backlog `4280c054`: delivery idempotency (`event_id`)
 
 Checklist rows for **Specify idempotency and replay-safe delivery semantics**
@@ -330,23 +327,6 @@ These extend **A1–A5** and **§ Minimum behavioral coverage** item **2**; they
 |---|-----------|--------------|
 | RP4 | At least one **network-free** test: valid MAC, parsed payload, **`occurred_at`** outside configured freshness window → **`replay_rejected`** (or equivalent) and **no** spurious side effects. | **`tests/test_replay_protection.py`** — **`test_rp4_stale_occurred_at_valid_mac_replay_rejected_no_on_success`**; **`tests/test_http_handler.py`** — **`test_h8_error_messages_match_failure_response_spec`** (**`replay_rejected`** copy) |
 | RP5 | At least one **network-free** test: same **`event_id`** delivered twice with valid MACs → idempotent side effects. | **`tests/test_lifecycle_events.py`** — **`test_i4_duplicate_signed_post_idempotent_side_effects_pattern`**; **`tests/test_replay_protection.py`** — **`test_rp5_dedup_store_second_post_204_without_on_success`** |
-
-## Backlog `d10cf76f`: SQLite reference idempotency store
-
-Checklist rows for **Reference SQLite-backed idempotency store for `event_id`**
-(`d10cf76f-e11e-4674-9d81-6d06899b4a64`). Normative contract:
-**[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**. These extend **A1–A5**, **H10**, and **RP5**; they
-do **not** replace **RP4**, **I3**/**I4**, or **R1–R5**.
-
-| # | Criterion | Verification |
-|---|-----------|--------------|
-| SQ1 | **Duplicate key** — Two **`try_claim`** calls with the same **`key`** before expiry → first **`True`**, second **`False`**. | **`pytest`**, no network (**`tests/test_sqlite_idempotency_store.py`**) |
-| SQ2 | **Expiry** — After advancing injected clock past TTL, **`try_claim`** for the same **`key`** returns **`True`** again. | **`pytest`**, no network |
-| SQ3 | **Concurrency / locking** — Per **SPEC_SQLITE_IDEMPOTENCY_STORE** **§ Concurrency and SQLite locking**: either a **network-free** threaded **`pytest`** or a **`pytest`** that asserts required docstring substrings (**`timeout`**, **`locked`**, **`WAL`** or **`journal_mode`**). | **`pytest`** |
-| SQ4 | **Handler integration** — Two **`handle_lifecycle_webhook_post`** calls with SQLite **`dedup_store`**, same **`event_id`**, valid MACs → **204** both times; **`on_success`** once. | **`pytest`**, no network |
-| SQ5 | **README** links **SPEC_SQLITE** from the idempotency / **`dedup_store`** area; copy-paste normative example in **SPEC_SQLITE** **§ Wiring** (README may mirror when stable). | Doc review |
-| SQ6 | **`SqliteLifecycleWebhookDedupStore`** in package root **`__all__`**, **SPEC_PUBLIC_API** replay-protection row, **`tests/test_public_api.py`** order tuple, **CHANGELOG** **Added**. | **`pytest`** + doc review |
-| SQ7 | **No new mandatory PyPI dependencies** for this feature (**`sqlite3`** stdlib only). | **`pyproject.toml`** review |
 
 ## Backlog `fa75ecf3`: structured logging and redaction
 
@@ -570,29 +550,6 @@ between consecutive **`## `** headings so each row scopes content to the right s
 | **OP7** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** with fragment **`#verification-procedure-integrators`** (substring match). | **`pytest`** |
 | **OP8** | Under **Verifying webhook signatures**, prose mentions **`verify_lifecycle_webhook_signature`** **or** **`replayt_lifecycle_webhooks.demo_webhook`** / **`python -m replayt_lifecycle_webhooks.demo_webhook`** (local verify path). | **`pytest`** |
 | **OP9** | Under **Verifying webhook signatures**, prose links **`docs/SPEC_INTEGRATOR_ASGI_VERIFIED_FIRST.md`** (backlog **`c631fe3f`**). | **`pytest`** (same module) |
-
-## Backlog `87e7edae`: coordinated security disclosure (`SECURITY.md`)
-
-Checklist rows for **SECURITY.md and coordinated disclosure process**
-(`87e7edae-033d-45af-87fc-066fca51db96`). Normative contract:
-**[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)** (**SC1**–**SC11**). These rows are **documentation**
-acceptance; they **do not** replace signature, parsing, boundary, or **pytest** minima in **§ Minimum behavioral coverage**.
-
-Implement **network-free** assertions by reading **`SECURITY.md`**, **`README.md`**, and **`CONTRIBUTING.md`** from disk
-(prefer a dedicated module such as **`tests/test_security_disclosure_doc.py`**). Matching is **case-insensitive** where
-noted below.
-
-| # | Criterion | Verification |
-|---|-----------|--------------|
-| **SEC1** | Repository root **`SECURITY.md`** exists (same directory as **`README.md`**). | **`pytest`** |
-| **SEC2** | **`SECURITY.md`** contains a level-1 markdown heading (line starts with **`# `**) whose title includes **`security`** (substring match). | **`pytest`** |
-| **SEC3** | **`SECURITY.md`** contains a **`## `** heading line that includes **`in scope`** (substring match). | **`pytest`** |
-| **SEC4** | **`SECURITY.md`** contains a **`## `** heading line that includes **`out of scope`** (substring match) **and** body text (full file) mentions **`replayt`** (case-insensitive). | **`pytest`** |
-| **SEC5** | **`SECURITY.md`** mentions **`acknowledg`** **or** **`business day`** **or** **`72`** (case-insensitive) — response-expectations prose per **SC6**. | **`pytest`** |
-| **SEC6** | **`SECURITY.md`** contains **`mailto:`** **or** (**`github`** **and** **`security`** substrings, case-insensitive) — reporting channel per **SC4**. | **`pytest`** |
-| **SEC7** | **`SECURITY.md`** links **`docs/SPEC_WEBHOOK_SIGNATURE.md`** **or** **`docs/SPEC_STRUCTURED_LOGGING_REDACTION.md`** **or** **`docs/DESIGN_PRINCIPLES.md`** (path substring as written for repo-relative markdown links). | **`pytest`** |
-| **SEC8** | Root **`README.md`** contains a markdown link with target **`SECURITY.md`** or **`./SECURITY.md`** (substring **`](SECURITY.md)`** or **`](./SECURITY.md)`**). | **`pytest`** |
-| **SEC9** | **`CONTRIBUTING.md`** contains a markdown link to **`docs/SPEC_SECURITY_DISCLOSURE.md`** **and** names **`SECURITY.md`** as repository-root policy (plain text or markdown link). | **`pytest`** |
 
 ## Backlog `c631fe3f`: integrator ASGI verified-first recipe
 
@@ -821,39 +778,6 @@ pytest tests/test_property_fuzz_signature.py -q
 pytest tests/test_property_fuzz_parse.py -q
 ```
 
-## Backlog `1b3df584`: verify hot-path performance regression guard
-
-Checklist rows for **Performance regression guard for signature verification hot path**
-(`1b3df584-4ac8-4f16-99cf-c14404c7692a`). **Scope:** **`tests/`** and/or **`scripts/`** only — **no** change to
-**`verify_lifecycle_webhook_signature`** semantics, wire format, or public contract (**[SPEC_WEBHOOK_SIGNATURE.md](SPEC_WEBHOOK_SIGNATURE.md)**).
-**Goal:** catch accidental **large** slowdowns in the **success-path** verify loop (integrators may verify at high QPS); **not**
-micro-benchmark noise on shared CI.
-
-### Posture vs default CI
-
-| # | Criterion | Verification |
-|---|-----------|--------------|
-| **PG1** | **Non-default:** Merge-blocking **`lint`** / **`test`** jobs **do not** require timing assertions on **`verify_lifecycle_webhook_signature`**. Implement **one** of: **`pytest -m "not perf_hotpath"`** in CI while the marker exists; **no** collection of perf tests unless an env var (e.g. **`RUN_PERF_HOTPATH=1`**) is set; perf lives only under **`scripts/`** with **no** **`pytest`** import; or equivalent documented in this section and **README.md** once shipped. | Workflow YAML + **README**; code review |
-| **PG2** | **Opt-in surface:** Ship **either** (a) **`pytest`** tests behind a registered marker **`perf_hotpath`** in **`pyproject.toml`** **`[tool.pytest.ini_options] markers`**, **or** (b) a **`scripts/`** **stdlib-only** helper (or both). Every timed **`pytest`** item uses **`@pytest.mark.perf_hotpath`**. Docstring or module comment ties rows to this backlog id. | **`pytest --markers`**; code review |
-| **PG3** | **Fixed inputs:** Use **deterministic** **`secret`** (**`str` or `bytes`**, UTF-8 when **`str`**) and **`body: bytes`** at **fixed** length(s) documented here (recommended: **one** representative size **≤ 64 KiB**, e.g. **4 KiB** or **16 KiB** buffer of stable octets — **JSON-shaped** body not required; opaque bytes are fine). Build a **valid** v1 **`Replayt-Signature`** value for that pair using **`compute_lifecycle_webhook_signature_header`** in setup **or** a committed header string (same rules as **A6** / golden vectors). | Code review |
-| **PG4** | **Hot path under test:** Time the **success** path only: **`verify_lifecycle_webhook_signature(secret=…, body=…, signature=…)`** completes **without** raising. Default **`metrics=None`** unless the Builder documents a separate row comparing **`metrics`** disabled vs enabled (optional). | Code review |
-| **PG5** | **Warm-up:** Before collecting samples, run **at least one** untimed iteration (or discard first **N** timed samples) so one-off allocation / import effects do not dominate. | Code review |
-| **PG6** | **Egregious-only thresholds:** Any **assertion** on wall time **must** target **order-of-magnitude** regressions, not percent-level drift. **Preferred:** compare median (or trimmed mean) cost of **PG4** to a **same-interpreter, same-run** **stdlib** control — e.g. **`hmac.new(key, body, hashlib.sha256).digest()`** (or equivalent minimal HMAC over the **same** key material and body) — and require **`t_verify ≤ K × t_hmac`** for a **documented** **`K`** large enough to absorb parsing / **`compare_digest`** overhead but **small enough** to catch accidental **≥~10×** inflation vs that ratio’s expected range (Builder documents **`K`** and rationale in the test module or this section). **Alternative:** env-gated baseline file + **≥~10×** slowdown check documented for **manual** / scheduled workflows only (**PG1** still satisfied). | Code review |
-| **PG7** | **Noise hygiene:** Timed sections **must not** include **sleep**, **subprocess**, **network**, or **disk I/O**. Prefer **`time.perf_counter()`** (or **`timeit`** for scripts). Document in **README** that laptops and CI VMs vary; contributors treat failures as **investigate**, not **block merge**, unless an opt-in job is added. | Code review |
-| **PG8** | **Contributor docs:** **README.md** (**Running tests**) lists copy-paste commands (install deps unchanged — **no** new mandatory deps for this backlog). Example pattern: **`pytest tests -m perf_hotpath -q`** **or** **`python scripts/<name>.py`** when **`scripts/`** is the harness. | Doc review |
-
-### Contributor commands (normative examples)
-
-Exact module names are **Builder-chosen**; replace placeholders after implementation:
-
-```bash
-# If pytest-marked (opt-in; not merge-blocking by default):
-pytest tests -m perf_hotpath -q
-
-# If a script is provided:
-python scripts/benchmark_verify_lifecycle_webhook_signature.py
-```
-
 ## Backlog `bea2900c`: pip-audit suppression alignment and review reminders
 
 Checklist rows for **Supply chain: automate pip-audit ignore review reminders**
@@ -886,7 +810,6 @@ shelling out.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
-- **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** — optional **SQLite** **`LifecycleWebhookDedupStore`**, **SQ1**–**SQ7**.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**;
   optional **serve** / **handler** diagnostics, **LG1–LG4** (**§ Optional diagnostic logging**).
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.

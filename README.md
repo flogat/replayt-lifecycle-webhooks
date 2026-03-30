@@ -20,7 +20,8 @@ handler** (mounting, status codes, test bar): **[docs/SPEC_MINIMAL_HTTP_HANDLER.
 listener (raw POST body, limits, timeouts): contract **[docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md](docs/SPEC_REVERSE_PROXY_REFERENCE_SERVER.md)**;
 operator guide **[docs/OPERATOR_REVERSE_PROXY.md](docs/OPERATOR_REVERSE_PROXY.md)** (**OG1**–**OG8**). **Local signed demo POST** (one command,
 dev fixtures, same **v1** signing as verification): **[docs/SPEC_LOCAL_WEBHOOK_DEMO.md](docs/SPEC_LOCAL_WEBHOOK_DEMO.md)**
-(checklist **D1–D9**). **Run / approval JSON envelope** (field
+(checklist **D1–D9**). **Offline verify CLI** (saved raw body + **`Replayt-Signature`**; spec **VW1**–**VW8**, backlog **`845b4b11`**):
+**[docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**. **Run / approval JSON envelope** (field
 definitions and examples): **[docs/EVENTS.md](docs/EVENTS.md)**. **PM/support digest** (deterministic text + optional JSON
 record after parse; **DG1–DG6**): **[docs/SPEC_EVENT_DIGEST.md](docs/SPEC_EVENT_DIGEST.md)** — digest output can still include
 identifiers or sender-controlled text that is **not suitable for external sharing**; read **SPEC_EVENT_DIGEST** section
@@ -331,6 +332,18 @@ before **`json.loads`** or typed body parsing—copy-paste patterns and **401**/
 shared secret out of band and pass it into **`verify_lifecycle_webhook_signature`**. **Recommended environment variable
 name:** **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** (string secret; UTF-8 when used as the HMAC key via a `str` argument).
 Load it with your framework or `os.environ`, inject via a secret manager in production, and **never** log the raw value.
+
+**Offline CLI (saved captures):** **`python -m replayt_lifecycle_webhooks verify`** checks a file of raw POST bytes (or stdin
+when **`BODY`** is **`-`**) against a captured **`Replayt-Signature`** value using the same **v1** rules as the library.
+Set **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`** (or pass **`--secret`** only for local debugging). Exit **0** prints **`ok`**;
+**1** means the MAC did not verify; **2** means fix usage, secret, or I/O.
+
+```bash
+export REPLAYT_LIFECYCLE_WEBHOOK_SECRET='your-shared-secret'
+python -m replayt_lifecycle_webhooks verify --signature "$REPLAYT_SIGNATURE" /path/to/captured_body.bin
+```
+
+Full contract: **[docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
 
 **HTTP failures:** on missing, malformed, or non-matching signatures, respond with **401 Unauthorized** and/or **403
 Forbidden** as described in

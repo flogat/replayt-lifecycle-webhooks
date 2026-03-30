@@ -78,6 +78,16 @@ Cross-cutting README rule for **Integrator recipe: FastAPI / Starlette verified-
 | ---------------- | ---------------------------- |
 | README cross-link to the ASGI verified-first recipe | **§ Content requirements** — **`## Verifying webhook signatures`** — **ASGI / FastAPI / Starlette recipe link** |
 
+## Backlog acceptance mapping (`845b4b11`)
+
+Cross-cutting README rule for **Support CLI: verify saved webhook (body file + signature header)**
+(`845b4b11-847d-48cb-a9f3-e75f3e4862ef`). Normative CLI contract and checklist **VW1**–**VW8** live in
+**[SPEC_CLI_VERIFY_SAVED_WEBHOOK.md](SPEC_CLI_VERIFY_SAVED_WEBHOOK.md)**.
+
+| Source criterion | Where addressed in this spec |
+| ---------------- | ---------------------------- |
+| README documents the canonical **`python -m`** verify invocation and links **SPEC_CLI_VERIFY_SAVED_WEBHOOK** | **§ Content requirements** — **`## Verifying webhook signatures`** — include a **short** pointer (one command + link); **VW1** in **SPEC_AUTOMATED_TESTS** |
+
 ## Required sections (`README.md`)
 
 Use these **exact markdown headings** (level-2 `## …`) so doc-guard tests and readers can rely on stable anchors:
@@ -171,9 +181,12 @@ The section **must**:
 1. Link the **Verification procedure (integrators)** subsection in
    **`docs/SPEC_WEBHOOK_SIGNATURE.md`** (anchor **`#verification-procedure-integrators`**), matching how other
    **`docs/…`** links are written from **`README.md`**.
-2. Include **copy-paste ready** examples that use **placeholders only** for secrets, for example
+2. Include a markdown link to **`docs/SPEC_CLI_VERIFY_SAVED_WEBHOOK.md`** and the **canonical** offline verify command
+   (placeholders only for secrets and signature material) so operators can triage captured POSTs without ad-hoc scripts
+   (**VW1**).
+3. Include **copy-paste ready** examples that use **placeholders only** for secrets, for example
    **`your-shared-secret`** or **`REPLAYT_LIFECYCLE_WEBHOOK_SECRET`**—see **§ Secrets and examples hygiene**.
-3. Show **at least one** of:  
+4. Show **at least one** of:  
    (a) a **minimal** **`verify_lifecycle_webhook_signature`** snippet (secret + raw **`bytes`** + header value variable), or  
    (b) the **documented local loop**: reference server + **`python -m replayt_lifecycle_webhooks.demo_webhook`** per
    **[SPEC_LOCAL_WEBHOOK_DEMO.md](SPEC_LOCAL_WEBHOOK_DEMO.md)** with env-based secret (no literal secret strings).
