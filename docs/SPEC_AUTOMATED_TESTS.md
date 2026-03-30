@@ -14,6 +14,8 @@
   **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**; **`tests/test_lifecycle_events.py`** and packaged duplicate fixture under **Backlog `4280c054`** below.
 - Replay protection and idempotency hooks (`f9677140-0803-41c7-9d1c-82fc85f25f8d`) — acceptance **RP4**/**RP5** in
   **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**; **Backlog `f9677140`** table below (**RP5** overlaps **I4**).
+- SQLite reference idempotency store (`d10cf76f-e11e-4674-9d81-6d06899b4a64`) — acceptance **SQ1**–**SQ7** in
+  **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**; **§ Backlog `d10cf76f`** below.
 - PM/support lifecycle event digest format (`069e0240-54c5-44a9-bba3-ad0a80a52c60`) — acceptance **DG1**–**DG6** in
   **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**; **Backlog `069e0240`** table below.
 - Add replayt dependency declaration and compatibility matrix stub (`8b16060d-f6e6-4111-bed2-4978b965ff52`) — **SPEC_REPLAYT_DEPENDENCY** matrix (**Python** / CI-tested columns), **A8**, stub checklist when **`replayt`** is absent from **`pyproject.toml`**. Rows **A9**–**A10** (CI Python floor) are backlog **`6cd22a7b`**.
@@ -327,6 +329,25 @@ These extend **A1–A5** and **§ Minimum behavioral coverage** item **2**; they
 |---|-----------|--------------|
 | RP4 | At least one **network-free** test: valid MAC, parsed payload, **`occurred_at`** outside configured freshness window → **`replay_rejected`** (or equivalent) and **no** spurious side effects. | **`tests/test_replay_protection.py`** — **`test_rp4_stale_occurred_at_valid_mac_replay_rejected_no_on_success`**; **`tests/test_http_handler.py`** — **`test_h8_error_messages_match_failure_response_spec`** (**`replay_rejected`** copy) |
 | RP5 | At least one **network-free** test: same **`event_id`** delivered twice with valid MACs → idempotent side effects. | **`tests/test_lifecycle_events.py`** — **`test_i4_duplicate_signed_post_idempotent_side_effects_pattern`**; **`tests/test_replay_protection.py`** — **`test_rp5_dedup_store_second_post_204_without_on_success`** |
+
+## Backlog `d10cf76f`: SQLite reference idempotency store
+
+Checklist rows for **Reference SQLite-backed idempotency store for `event_id`**
+(`d10cf76f-e11e-4674-9d81-6d06899b4a64`). Normative contract:
+**[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
+
+These extend **A1–A5**, **I3–I4**, and **RP4–RP5** with filesystem-backed deduplication;
+they do not replace in-memory or custom **`LifecycleWebhookDedupStore`** implementations.
+
+| # | Criterion | Verification |
+|---|-----------|--------------|
+| **SQ1** | **Duplicate key** — Two **`try_claim`** calls with the same **`key`** before expiry → first **`True`**, second **`False`**. | **`pytest`** — **`tests/test_sqlite_idempotency_store.py`** — **`test_sq1_duplicate_key_first_true_second_false`** |
+| **SQ2** | **Expiry** — After advancing injected **`now`** past TTL, **`try_claim`** for the same **`key`** returns **`True`** again (re-claim). | **`pytest`** — **`tests/test_sqlite_idempotency_store.py`** — **`test_sq2_expiry_allows_reclaim`** |
+| **SQ3** | Thread-safe concurrent claims — multiple threads racing for the same key result in exactly one winner. | **`pytest`** — **`tests/test_sqlite_idempotency_store.py`** — **`test_sq3_concurrent_try_claim_single_winner`** |
+| **SQ4** | Handler integration — Two **`handle_lifecycle_webhook_post`** calls with the same verified **`event_id`** and SQLite **`dedup_store`** → **204** both times; **`on_success`** runs once. | **`pytest`** — **`tests/test_sqlite_idempotency_store.py`** — **`test_sq4_handler_duplicate_post_sqlite_dedup_on_success_once`** |
+| **SQ5** | Integrator discoverability — **README** links **SPEC_SQLITE_IDEMPOTENCY_STORE** from the handler / idempotency area. | **`tests/test_readme_operator_sections.py`** or doc review |
+| **SQ6** | Public surface — **`SqliteLifecycleWebhookDedupStore`** in package root **`__all__`** and **SPEC_PUBLIC_API** table; **CHANGELOG** **Unreleased** **Added**. | **`tests/test_public_api.py`** + doc review |
+| **SQ7** | No new mandatory deps — **`pyproject.toml`** **`[project].dependencies`** unchanged for this feature. | **`pyproject.toml`** review |
 
 ## Backlog `fa75ecf3`: structured logging and redaction
 
@@ -810,6 +831,7 @@ shelling out.
 - **[SPEC_REPLAYT_BOUNDARY_TESTS.md](SPEC_REPLAYT_BOUNDARY_TESTS.md)** — **`replayt`** import and documented symbol checks.
 - **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)** — at-least-once delivery, **`event_id`** dedupe, **I3**/**I4** tests.
 - **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)** — freshness, dedupe store, **RP4**/**RP5** (overlaps **I4** for duplicates).
+- **[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)** — optional **SQLite** dedupe store, **SQ1**–**SQ7**.
 - **[SPEC_STRUCTURED_LOGGING_REDACTION.md](SPEC_STRUCTURED_LOGGING_REDACTION.md)** — redaction defaults, public API, **L1–L9**;
   optional **serve** / **handler** diagnostics, **LG1–LG4** (**§ Optional diagnostic logging**).
 - **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)** — digest text, **`digest/1`** record, **DG1**–**DG6**.
