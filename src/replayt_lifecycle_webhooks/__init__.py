@@ -37,6 +37,7 @@ from .replay_protection import (
     ReplayFreshnessRejected,
     ensure_occurred_at_within_replay_window,
 )
+from .sqlite_idempotency import SqliteLifecycleWebhookDedupStore
 from .redaction import (
     DEFAULT_SENSITIVE_HEADER_NAMES,
     DEFAULT_SENSITIVE_MAPPING_KEYS,
@@ -91,6 +92,7 @@ __all__ = [
     "make_lifecycle_webhook_wsgi_app",
     "LifecycleWebhookDedupStore",
     "InMemoryLifecycleWebhookDedupStore",
+    "SqliteLifecycleWebhookDedupStore",
     "LifecycleWebhookReplayPolicy",
     "ReplayFreshnessRejected",
     "ensure_occurred_at_within_replay_window",

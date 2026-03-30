@@ -20,10 +20,14 @@ Local **signed demo POST** contract (contributor try-it flow): **[SPEC_LOCAL_WEB
 **[SPEC_DELIVERY_IDEMPOTENCY.md](SPEC_DELIVERY_IDEMPOTENCY.md)**.
 **Replay protection** (freshness, optional wire headers, dedupe store hooks):
 **[SPEC_REPLAY_PROTECTION.md](SPEC_REPLAY_PROTECTION.md)**.
+**Optional SQLite idempotency store** (reference **`event_id`** persistence, **SQ1**–**SQ7**):
+**[SPEC_SQLITE_IDEMPOTENCY_STORE.md](SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
 **Public Python import surface** and **deprecation** policy (**`__all__`**, internal modules, **CHANGELOG** alignment):
 **[SPEC_PUBLIC_API.md](SPEC_PUBLIC_API.md)**.
 **PM/support lifecycle digests** (fixed English lines and **`digest/1`** record from parsed events; **DG0**–**DG6**):
 **[SPEC_EVENT_DIGEST.md](SPEC_EVENT_DIGEST.md)**.
+**Coordinated security disclosure** (root **`SECURITY.md`** policy, scope vs upstream **replayt**, reporting channel):
+**[SPEC_SECURITY_DISCLOSURE.md](SPEC_SECURITY_DISCLOSURE.md)**.
 Repository map and quick links:
 **[README.md](../README.md)**.
 
@@ -150,6 +154,7 @@ Integrators and operators are responsible for:
   checklist **L1–L9** for that backlog. The suite must **not** rely on placeholder tests (e.g. bare **`assert True`**) as the only
   proof that verification or parsing works. Contributors run **`pytest tests -q`** for the full collection; **[README.md](../README.md)**
   (**Running tests**) lists optional focused commands.
+  An optional **verify hot-path** performance regression guard (**PG1**–**PG8**, backlog **`1b3df584`**, **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `1b3df584`**) stays **out of merge-blocking CI** by default when implemented.
 - **Packaging gate (PyPI readiness)** — **CI** runs **`python -m build`** and **`twine check`** on the **sdist** and **wheel**
   (**job `package`** in **`.github/workflows/ci.yml`**; backlog **`78e3554b`**). The **pytest** suite checks **declared package data**
   per **[SPEC_AUTOMATED_TESTS.md](SPEC_AUTOMATED_TESTS.md)** **§ Backlog `78e3554b`** (**PK1**–**PK7**). **PEP 561** marker

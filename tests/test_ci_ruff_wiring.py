@@ -67,6 +67,15 @@ def test_ci_test_job_matrix_includes_python_311_312_and_313() -> None:
     assert "3.13" in versions
 
 
+def test_ci_test_job_excludes_perf_hotpath_marker() -> None:
+    """PG1 (backlog 1b3df584): merge-blocking pytest does not run perf_hotpath timing."""
+    text = (_repo_root() / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "pytest tests -q" in text or "pytest tests" in text
+    assert "not perf_hotpath" in text
+
+
 @pytest.mark.parametrize("job", ("package", "supply-chain"))
 def test_ci_package_and_supply_chain_stay_on_single_python_312(job: str) -> None:
     """A10: packaging and pip-audit jobs are not matrixed across Python minors (backlog 6cd22a7b)."""

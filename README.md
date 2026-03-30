@@ -28,7 +28,9 @@ identifiers or sender-controlled text that is **not suitable for external sharin
 **Fields and artifacts not suitable for external sharing** before publishing to untrusted channels. **Delivery retries, duplicate POSTs, and `event_id`**
 idempotency:** **[docs/SPEC_DELIVERY_IDEMPOTENCY.md](docs/SPEC_DELIVERY_IDEMPOTENCY.md)**. **Replay protection** (freshness
 on **`occurred_at`**, clock skew, optional wire headers, pluggable dedupe store contract, test rows **RP4**/**RP5**):
-**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**. Informative **JSON Schema** mirror (**Draft-07**):
+**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**. **Optional SQLite idempotency store** (reference
+**`dedup_store`**, backlog **`d10cf76f`**): **[docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md](docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md)**.
+Informative **JSON Schema** mirror (**Draft-07**):
 **[docs/schemas/lifecycle_webhook_payload-1-0.schema.json](docs/schemas/lifecycle_webhook_payload-1-0.schema.json)**.
 **Scope, success, and release expectations:** **[docs/MISSION.md](docs/MISSION.md)**. **Automated test bar and CI
 entrypoint:** **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)**. **Public Python API** (`__all__`, supported
@@ -60,6 +62,8 @@ python -c "import importlib.metadata as m; print(m.version('replayt'))"
 that history (and upstream’s own changelog or GitHub Releases when you need prose per release).
 
 **Report breakage:** Open an issue on [GitHub Issues](https://github.com/flogat/replayt-lifecycle-webhooks/issues). Include both the installed **replayt** version and **replayt-lifecycle-webhooks** version.
+
+**Security-sensitive issues:** Use the private reporting path described in **[SECURITY.md](SECURITY.md)** (do not post undisclosed exploit details in public Issues).
 
 **Compatibility matrix** (**replayt** and **Python** support, CI-tested interpreter, bump policy, optional upper bound): **[docs/SPEC_REPLAYT_DEPENDENCY.md](docs/SPEC_REPLAYT_DEPENDENCY.md)** (section **Compatibility matrix**).
 
@@ -235,6 +239,19 @@ python scripts/pip_audit_suppression_alignment.py                           # sa
 **`tests/test_property_fuzz_parse.py`** skip at import (**`pytest.importorskip`**), so the default suite stays lean.
 Normative rows **PF1**–**PF10**: **[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `dcffe5d5`**).
 
+**Verify hot-path performance guard (optional, backlog `1b3df584`):** **`pytest tests -q`** omits **`perf_hotpath`** items by
+default (see **`tests/conftest.py`**); **CI** also passes **`-m "not perf_hotpath"`**. Opt-in runs use **fixed** 4 KiB bodies
+and a UTF-8 secret; the assertion compares median verify time to a **stdlib** **`hmac.new`** control with **`K = 256`**
+(documented in **`tests/test_perf_verify_hotpath.py`**). Laptops and CI VMs vary — treat a local failure as a signal to
+inspect recent changes, not as a merge blocker unless you add a dedicated job. Normative rows **PG1**–**PG8**:
+**[docs/SPEC_AUTOMATED_TESTS.md](docs/SPEC_AUTOMATED_TESTS.md)** (**§ Backlog `1b3df584`**).
+
+```bash
+pytest tests -m perf_hotpath -q
+RUN_PERF_HOTPATH=1 pytest tests -q          # full suite including perf_hotpath
+python scripts/benchmark_verify_lifecycle_webhook_signature.py
+```
+
 Checklist rows **A1–A5** (minimum verification / parsing), **R1–R5**, and **G1–G7** (version bump guardrails): **SPEC_AUTOMATED_TESTS** and
 **SPEC_REPLAYT_BOUNDARY_TESTS**.
 
@@ -402,7 +419,29 @@ log.debug("headers=%s", redact_headers(request_headers))
 **401** / **403** / **400** / **422** / **204** as in **[docs/SPEC_MINIMAL_HTTP_HANDLER.md](docs/SPEC_MINIMAL_HTTP_HANDLER.md)**.
 **MAC mismatch** uses **403**; missing or malformed **`Replayt-Signature`** uses **401**. Verification runs before
 **`json.loads`**. Optional **`dedup_store`** and **`replay_policy`** implement **`event_id`** dedupe and **`occurred_at`**
-freshness after verify (**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**).
+freshness after verify (**[docs/SPEC_REPLAY_PROTECTION.md](docs/SPEC_REPLAY_PROTECTION.md)**). For a **filesystem** reference
+store (stdlib **SQLite** only, optional—**not** required for other deployments), see
+**[docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md](docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md)** (acceptance **SQ1**–**SQ7**; wiring
+example in that spec).
+
+Optional **SQLite** persistence (stdlib only; same **`dedup_store=`** contract):
+
+```python
+from replayt_lifecycle_webhooks import SqliteLifecycleWebhookDedupStore, handle_lifecycle_webhook_post
+
+dedup = SqliteLifecycleWebhookDedupStore(
+    path="/var/lib/myapp/webhook_idempotency.sqlite",
+    ttl_seconds=86_400,
+)
+result = handle_lifecycle_webhook_post(
+    secret=secret,
+    method=method,
+    body=body,
+    headers=headers,
+    dedup_store=dedup,
+    on_success=on_success,
+)
+```
 
 **Callable (any framework):** pass method, raw body bytes, and headers (names are matched case-insensitively):
 
@@ -498,9 +537,12 @@ local tooling entries. Adapt or remove optional directories to match your team�
 | `docs/SPEC_STRUCTURED_LOGGING_REDACTION.md` | Structured **`logging`** helpers; default sensitive-key redaction; tests **L1–L9** |
 | `docs/SPEC_METRICS_HOOKS.md` | Optional **`LifecycleWebhookMetrics`** / **`metrics=`** contract; verify vs handler timing; tests **M1**–**M8** (backlog **`42b8d5a9`**) |
 | `docs/SPEC_README_OPERATOR_SECTIONS.md` | Normative **README** operator sections (**Troubleshooting**, **Approval webhook flow**, **Verifying**); tests **OP1–OP9** |
+| `docs/SPEC_SECURITY_DISCLOSURE.md` | Coordinated disclosure: root **`SECURITY.md`** requirements, scope vs **replayt** upstream, **README**/**CONTRIBUTING** links; tests **SEC1–SEC9** (backlog **`87e7edae`**) |
+| `SECURITY.md` | **Security policy** at repo root (GitHub **Security** tab when private reporting is enabled); **SPEC_SECURITY_DISCLOSURE**, **pytest** **SEC1–SEC9** |
 | `docs/EVENTS.md` | Lifecycle webhook JSON: **`event_type`**, **`occurred_at`**, **`event_id`**, correlation ids, **`summary`**, **`schema_version`**, synthetic examples |
 | `docs/SPEC_DELIVERY_IDEMPOTENCY.md` | At-least-once delivery assumptions, **`event_id`** dedupe rules, idempotency store TTL guidance |
 | `docs/SPEC_REPLAY_PROTECTION.md` | Stale capture replay vs duplicates; **`occurred_at`** freshness; optional headers; dedupe store protocol; **RP4**/**RP5** |
+| `docs/SPEC_SQLITE_IDEMPOTENCY_STORE.md` | Optional **SQLite** **`LifecycleWebhookDedupStore`** for **`event_id`**; handler wiring; concurrency notes; **SQ1**–**SQ7** (backlog **`d10cf76f`**) |
 | `docs/schemas/lifecycle_webhook_payload-1-0.schema.json` | Informative JSON Schema for **`1.0`**-family payloads (non-Python integrators) |
 | `docs/SPEC_REFERENCE_DOCUMENTATION.md` | Optional **`docs/reference-documentation/`** workflow: what to commit, local `_upstream_snapshot/`, CI hygiene, licensing, snapshot commands; **RD1**–**RD8** |
 | `CONTRIBUTING.md` | Contributor entry; optional reference-documentation snapshot task (links **SPEC_REFERENCE_DOCUMENTATION**) |
